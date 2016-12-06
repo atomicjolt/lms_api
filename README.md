@@ -1,9 +1,9 @@
-= Canvas
+# Canvas
 
 This project describes a wrapper around the Canvas REST API.
 
 
-== Installation
+## Installation
 
 To install, add `canvas` to your Gemfile:
 
@@ -12,7 +12,7 @@ To install, add `canvas` to your Gemfile:
 ```
 
 
-== Configuration
+## Configuration
 
 Your app must tell the gem which model is used to represent the
 authentication state. For instance, if you're using ActiveRecord, you
@@ -36,7 +36,7 @@ expires, and do so in a way that respects multiple processes all trying
 to do so in parallel.
 
 
-== Usage
+## Usage
 
 To use the API wrapper, instantiate a `Canvas::API` instance with the
 url of the Canvas instance you want to communicate with, as well as the
