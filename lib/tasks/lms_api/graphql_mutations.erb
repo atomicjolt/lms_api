@@ -1,0 +1,6 @@
+const Mutuation = new GraphQLObjectType({
+  name: 'Lms Api Mutations',
+  fields: {
+    <%=@content.join("\n\n")%>
+  }
+});

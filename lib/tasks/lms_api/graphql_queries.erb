@@ -1,0 +1,7 @@
+const Query = new GraphQLObjectType({
+  name: 'Lms Api Queries',
+  description: "Root of the Lms Api",
+  fields: () => ({
+    <%=@content.join("\n\n")%>
+  })
+});
