@@ -1,14 +1,14 @@
-# Canvas
+# LMS::API
 
-This project describes a wrapper around the Canvas REST API.
+This project describes a wrapper around LMS REST APIs.
 
 
 ## Installation
 
-To install, add `canvas` to your Gemfile:
+To install, add `lms-api` to your Gemfile:
 
 ```ruby
-    gem "canvas"
+    gem "lms-api"
 ```
 
 
@@ -28,7 +28,7 @@ end
 Then, you tell the gem about this model:
 
 ```ruby
-Canvas::API.auth_state_model = Authentication
+LMS::API.auth_state_model = Authentication
 ```
 
 This allows the gem to transparently refresh the token when the token
@@ -38,21 +38,21 @@ to do so in parallel.
 
 ## Usage
 
-To use the API wrapper, instantiate a `Canvas::API` instance with the
-url of the Canvas instance you want to communicate with, as well as the
+To use the API wrapper, instantiate a `LMS::API` instance with the
+url of the LMS instance you want to communicate with, as well as the
 current authentication object, and (optionally) a hash of options to use
 when refreshing the API token.
 
 ```ruby
 auth = Authentication.first # or however you are storing global auth state
-api = Canvas::API.new("http://your.canvas.instance", auth, 
+api = LMS::API.new("http://your.canvas.instance", auth, 
         client_id: "...",
         client_secret: "..."
         redirect_uri: "..."
         refresh_token: "...")
 ```
 
-You can get the URL for a given Canvas interface via the `::canvas_url`
+You can get the URL for a given LMS interface via the `::lms_url`
 class method:
 
 ```ruby
@@ -64,7 +64,7 @@ params = {
   all_dates: true,
   other_param: "foobar"}
 
-url = Canvas::API.canvas_url("GET_SINGLE_ASSIGNMENT", params)
+url = LMS::API.lms_url("GET_SINGLE_ASSIGNMENT", params)
 ```
 
 Once you have the URL, you can send the request by using `api_*_request`
