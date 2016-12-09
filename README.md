@@ -1,6 +1,6 @@
 # LMS::API
 
-This project describes a wrapper around LMS REST APIs.
+This project provides a wrapper around the Instructure Canvas API.
 
 
 ## Installation
