@@ -14,7 +14,7 @@ RDoc::Task.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-load './lib/tasks/lms_api.rake'
+load './lib/tasks/canvas_api.rake'
 
 Bundler::GemHelper.install_tasks
 

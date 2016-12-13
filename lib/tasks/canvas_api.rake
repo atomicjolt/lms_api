@@ -242,33 +242,33 @@ namespace :canvas do
         resource["apis"].each do |resource_api|
           resource_api["operations"].each do |operation|
             parameters = operation["parameters"]
-            constants << Render.new("./lms_api/constant.erb", api, resource, resource_api, operation, parameters, nil, nil).render
-            lms_urls_rb << Render.new("./lms_api/rb_url.erb", api, resource, resource_api, operation, parameters, nil, nil).render
-            lms_urls_js << Render.new("./lms_api/js_url.erb", api, resource, resource_api, operation, parameters, nil, nil).render
+            constants << Render.new("./canvas_api/constant.erb", api, resource, resource_api, operation, parameters, nil, nil).render
+            lms_urls_rb << Render.new("./canvas_api/rb_url.erb", api, resource, resource_api, operation, parameters, nil, nil).render
+            lms_urls_js << Render.new("./canvas_api/js_url.erb", api, resource, resource_api, operation, parameters, nil, nil).render
             if "GET" == operation["method"].upcase
-              queries << Render.new("./lms_api/graphql_query.erb", api, resource, resource_api, operation, parameters, nil, nil).render
+              queries << Render.new("./canvas_api/graphql_query.erb", api, resource, resource_api, operation, parameters, nil, nil).render
             else
-              mutations << Render.new("./lms_api/graphql_mutation.erb", api, resource, resource_api, operation, parameters, nil, nil).render
+              mutations << Render.new("./canvas_api/graphql_mutation.erb", api, resource, resource_api, operation, parameters, nil, nil).render
             end
           end
         end
         resource["models"].map do |_name, model|
           if model["properties"] # Don't generate models without properties
-            models << Render.new("./lms_api/graphql_model.erb", api, resource, nil, nil, nil, nil, model).render
+            models << Render.new("./canvas_api/graphql_model.erb", api, resource, nil, nil, nil, nil, model).render
           end
         end
         # Generate one file of constants for every LMS API
-        constants_renderer = Render.new("./lms_api/constants.erb", api, resource, nil, nil, nil, constants, nil)
+        constants_renderer = Render.new("./canvas_api/constants.erb", api, resource, nil, nil, nil, constants, nil)
         constants_renderer.save("#{atomic_client}/client/js/libs/canvas/constants/#{constants_renderer.name}.js")
       end
 
-      Render.new("./lms_api/rb_urls.erb", nil, nil, nil, nil, nil, lms_urls_rb, nil).save("#{project_root}/lib/lms/canvas_urls.rb")
-      Render.new("./lms_api/js_urls.erb", nil, nil, nil, nil, nil, lms_urls_js, nil).save("#{atomic_lti}/lib/canvas/urls.js")
+      Render.new("./canvas_api/rb_urls.erb", nil, nil, nil, nil, nil, lms_urls_rb, nil).save("#{project_root}/lib/lms/canvas_urls.rb")
+      Render.new("./canvas_api/js_urls.erb", nil, nil, nil, nil, nil, lms_urls_js, nil).save("#{atomic_lti}/lib/canvas/urls.js")
 
       # GraphQL - still not complete
-      Render.new("./lms_api/graphql_types.erb", nil, nil, nil, nil, nil, models.compact, nil).save("#{atomic_lti}/lib/canvas/graphql_types.js")
-      Render.new("./lms_api/graphql_queries.erb", nil, nil, nil, nil, nil, queries, nil).save("#{atomic_lti}/lib/canvas/graphql_queries.js")
-      Render.new("./lms_api/graphql_mutations.erb", nil, nil, nil, nil, nil, mutations, nil).save("#{atomic_lti}/lib/canvas/graphql_mutations.js")
+      Render.new("./canvas_api/graphql_types.erb", nil, nil, nil, nil, nil, models.compact, nil).save("#{atomic_lti}/lib/canvas/graphql_types.js")
+      Render.new("./canvas_api/graphql_queries.erb", nil, nil, nil, nil, nil, queries, nil).save("#{atomic_lti}/lib/canvas/graphql_queries.js")
+      Render.new("./canvas_api/graphql_mutations.erb", nil, nil, nil, nil, nil, mutations, nil).save("#{atomic_lti}/lib/canvas/graphql_mutations.js")
     end
 
   end
