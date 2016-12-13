@@ -1,4 +1,4 @@
 module LMS
 end
 
-require 'lms/api'
+require "lms/api"
