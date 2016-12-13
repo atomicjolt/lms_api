@@ -7,4 +7,4 @@
 //
 // Example:<%=parameters_doc%>
 // return canvasRequest(<%=@nickname%>, {<%=@args.join(', ')%>}<%= parameters_doc.present? ? ", query" : ""%>);
-export const <%=@nickname.camelize%> = { type: "<%=@nickname.upcase%>", method: "<%=@method.downcase%>", key: "<%=reducer_key(@nickname, @args)%>", required: <%=js_args(@args)%> };
+export const <%=@nickname.camelcase(:lower)%> = { type: "<%=@nickname.upcase%>", method: "<%=@method.downcase%>", key: "<%=reducer_key(@nickname, @args)%>", required: <%=js_args(@args)%> };
