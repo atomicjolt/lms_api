@@ -1,9 +1,9 @@
-require 'active_support'
-require 'active_support/core_ext/object/blank'
-require 'active_support/core_ext/object/to_query'
-require 'active_support/core_ext/hash/keys'
+require "active_support"
+require "active_support/core_ext/object/blank"
+require "active_support/core_ext/object/to_query"
+require "active_support/core_ext/hash/keys"
 
-require 'lms/urls'
+require "lms/canvas_urls"
 
 module LMS
   class API
@@ -25,7 +25,7 @@ module LMS
 
     # callback must accept a single parameter (the API object itself)
     # and return the new authentication object.
-    def self.on_auth(callback=nil, &block)
+    def self.on_auth(callback = nil, &block)
       @@on_auth = callback || block
     end
 
@@ -40,7 +40,6 @@ module LMS
       end
     end
 
-
     attr_reader :authentication
 
     # The authentication parameter must be either a string (indicating
@@ -48,7 +47,7 @@ module LMS
     #   - #id
     #   - #token
     #   - #update(hash) -- which should update #token with hash[:token]:noh
-    def initialize(lms_uri, authentication, refresh_token_options=nil)
+    def initialize(lms_uri, authentication, refresh_token_options = nil)
       @per_page = 100
       @lms_uri = lms_uri
       @refresh_token_options = refresh_token_options
@@ -74,8 +73,8 @@ module LMS
     def lock
       auth_state_model.transaction do
         record = auth_state_model.
-                    lock(true).
-                    find(authentication.id)
+          lock(true).
+          find(authentication.id)
 
         yield record
 
@@ -90,8 +89,8 @@ module LMS
       }.merge(additional_headers)
     end
 
-    def full_url(api_url, use_api_prefix=true)
-      if api_url[0...4] == 'http'
+    def full_url(api_url, use_api_prefix = true)
+      if api_url[0...4] == "http"
         api_url
       else
         if use_api_prefix
@@ -139,12 +138,12 @@ module LMS
     end
 
     def api_get_blocks_request(api_url, additional_headers = {})
-      connector = api_url.include?('?') ? '&' : '?'
+      connector = api_url.include?("?") ? "&" : "?"
       next_url = "#{api_url}#{connector}per_page=#{@per_page}"
       while next_url do
         result = api_get_request(next_url, additional_headers)
         yield result
-        next_url = get_next_url(result.headers['link'])
+        next_url = get_next_url(result.headers["link"])
       end
     end
 
@@ -159,21 +158,20 @@ module LMS
 
     def refresh_token
       payload = {
-        grant_type: 'refresh_token'
+        grant_type: "refresh_token"
       }.merge(@refresh_token_options)
       url = full_url("login/oauth2/token", false)
       result = HTTParty.post(url, headers: headers, body: payload)
       raise LMS::API::RefreshTokenFailedException, api_error(result) unless [200, 201].include?(result.response.code.to_i)
-      result['access_token']
+      result["access_token"]
     end
 
     def check_result(result)
-
       code = result.response.code.to_i
 
       return result if [200, 201].include?(code)
 
-      if code == 401 && result.headers['www-authenticate'] == 'Bearer realm="canvas-lms"'
+      if code == 401 && result.headers["www-authenticate"] == 'Bearer realm="canvas-lms"'
         raise LMS::API::RefreshTokenRequired
       end
 
@@ -188,22 +186,21 @@ module LMS
 
     def get_next_url(link)
       return nil if link.blank?
-      if url = link.split(',').find{|l| l.split(";")[1].strip == 'rel="next"' }
-        url.split(';')[0].gsub(/[\<\>\s]/, "")
+      if url = link.split(",").find{ |l| l.split(";")[1].strip == 'rel="next"' }
+        url.split(";")[0].gsub(/[\<\>\s]/, "")
       end
     end
 
     def proxy(type, params, payload = nil, get_all = false)
-
       additional_headers = {
         "Content-Type" => "application/json"
       }
 
-      method = LMS::URLs[type][:method]
+      method = LMS::CANVAS_URLs[type][:method]
       url = LMS::API.lms_url(type, params, payload)
 
       case method
-      when 'GET'
+      when "GET"
         if block_given?
           api_get_blocks_request(url, additional_headers) do |result|
             yield result
@@ -213,25 +210,24 @@ module LMS
         else
           api_get_request(url, additional_headers)
         end
-      when 'POST'
+      when "POST"
         api_post_request(url, payload, additional_headers)
-      when 'PUT'
+      when "PUT"
         api_put_request(url, payload, additional_headers)
-      when 'DELETE'
+      when "DELETE"
         api_delete_request(url, additional_headers)
       else
         raise LMS::API::InvalidAPIMethodRequestException "Invalid method type: #{method}"
       end
 
-      rescue LMS::API::InvalidAPIRequestException => ex
-        error = ex.to_s
-        error << "API Request Url: #{url} \n"
-        error << "API Request Params: #{params} \n"
-        error << "API Request Payload: #{payload} \n"
-        new_ex = LMS::API::InvalidAPIRequestFailedException.new(error)
-        new_ex.set_backtrace(ex.backtrace)
-        raise new_ex
-
+    rescue LMS::API::InvalidAPIRequestException => ex
+      error = ex.to_s
+      error << "API Request Url: #{url} \n"
+      error << "API Request Params: #{params} \n"
+      error << "API Request Payload: #{payload} \n"
+      new_ex = LMS::API::InvalidAPIRequestFailedException.new(error)
+      new_ex.set_backtrace(ex.backtrace)
+      raise new_ex
     end
 
     # Ignore required params for specific calls. For example, the external tool calls
@@ -245,7 +241,7 @@ module LMS
     end
 
     def self.lms_url(type, params, payload = nil)
-      endpoint = LMS::URLs[type]
+      endpoint = LMS::CANVAS_URLs[type]
       parameters = endpoint[:parameters]
 
       # Make sure all required parameters are present
@@ -275,7 +271,7 @@ module LMS
       uri = args.blank? ? uri_proc.call : uri_proc.call(**args)
 
       # Generate the query string
-      query_parameters = parameters.find_all{|p| p["paramType"] == "query"}.map{|p| p["name"].to_sym}
+      query_parameters = parameters.find_all{ |p| p["paramType"] == "query" }.map{ |p| p["name"].to_sym }
 
       # always allow paging parameters
       query_parameters << :per_page
@@ -288,9 +284,7 @@ module LMS
       else
         uri
       end
-
     end
-
 
     #
     # Helper methods
@@ -306,7 +300,6 @@ module LMS
       end
       all
     end
-
 
     #
     # Exceptions

@@ -1,23 +1,26 @@
-namespace :lms do
+require "httparty"
+require "active_support/core_ext/object/blank"
+require "active_support/core_ext/string/inflections"
 
+namespace :canvas do
   module GraphQLHelpers
 
-    def graphQLType(name, property, resource_name)
+    def graphql_type(name, property)
       if property["$ref"]
-        "#{property["$ref"]}, resolve: function(model){ return model.#{name}; }"
+        "#{property['$ref']}, resolve: function(model){ return model.#{name}; }"
       else
-        type = property['type']
+        type = property["type"]
         case type
         when "integer", "string", "boolean", "datetime", "number"
-          graphQLPrimitive(type, property['format'])
+          graphql_primitive(type, property["format"])
         when "array"
           begin
             if property["items"]["$ref"]
               type = property["items"]["$ref"]
             else
-              type = graphQLPrimitive(property["items"]["type"], property["items"]["format"])
+              type = graphql_primitive(property["items"]["type"], property["items"]["format"])
             end
-          rescue => ex
+          rescue
             type = "GraphQLString"
           end
           "new GraphQLList(#{type})"
@@ -30,15 +33,15 @@ namespace :lms do
       end
     end
 
-    def graphQLResolve(name, property, resource_name)
+    def graphql_resolve(name, property)
       if property["$ref"]
         "function(model){ return model.#{name}; }"
-      elsif property['type'] == "array" && property["items"] && property["items"]["$ref"]
+      elsif property["type"] == "array" && property["items"] && property["items"]["$ref"]
         "function(model){ return model.#{name}; }"
       end
     end
 
-    def graphQLPrimitive(type, format)
+    def graphql_primitive(type, format)
       case type
       when "integer"
         "GraphQLInt"
@@ -60,32 +63,31 @@ namespace :lms do
     end
 
     def fields(model, resource_name)
-      model['properties'].map do |name, property|
-
-        # HACK. This property doesn't have any metadata. Throw in a couple lines of code specific to this field.
+      model["properties"].map do |name, property|
+        # HACK. This property doesn't have any metadata. Throw in a couple lines of code
+        # specific to this field.
         if name == "created_source" && property == "manual|sis|api"
           "#{name}: new GraphQLEnumType({ name: '#{name}', values: { manual: { value: 'manual' }, sis: { value: 'sis' }, api: { value: 'api' } } })"
         else
 
           description = ""
           if property["description"].present? && property["example"].present?
-            description << "#{safeJs(property["description"])}. Example: #{safeJs(property["example"])}".gsub("..", "").gsub("\n", " ")
+            description << "#{safe_js(property['description'])}. Example: #{safe_js(property['example'])}".gsub("..", "").gsub("\n", " ")
           end
 
-          if type = graphQLType(name, property, resource_name)
-            resolve = graphQLResolve(name, property, resource_name)
+          if type = graphql_type(name, property)
+            resolve = graphql_resolve(name, property)
             resolve = "resolve: #{resolve}, " if resolve.present?
             "#{name}: { type: #{type}, #{resolve}description: \"#{description}\" }"
           end
 
         end
-
       end.compact
     end
 
-    def safeJs(str)
-      str = str.join(', ') if str.is_a?(Array)
-      str = str.map{|k, v| v}.join(', ') if str.is_a?(Hash)
+    def safe_js(str)
+      str = str.join(", ") if str.is_a?(Array)
+      str = str.map { |_k, v| v }.join(", ") if str.is_a?(Hash)
       return str unless str.is_a?(String)
       str.gsub('"', "'")
     end
@@ -98,7 +100,7 @@ namespace :lms do
           arg = part.gsub(/[\{\}]/, "")
           "args['#{arg}']"
         else
-          %Q{"#{part}"}
+          %{"#{part}"}
         end
       end
     end
@@ -113,17 +115,17 @@ namespace :lms do
 
     def parameters_doc(operation)
       if operation["parameters"].present?
-        parameters = operation["parameters"]
-          .reject{|p| p["paramType"] == "path"}
-          .map{|p| "#{p['name']}#{p['required'] ? ' (required)' : ''}" }
-          .compact
-        if parameters.length > 0
+        parameters = operation["parameters"].
+          reject { |p| p["paramType"] == "path" }.
+          map { |p| "#{p['name']}#{p['required'] ? ' (required)' : ''}" }.
+          compact
+        if parameters.present?
           "\n// const query = {\n//   #{parameters.join("\n//   ")}\n// }"
         else
-          ''
+          ""
         end
       else
-        ''
+        ""
       end
     end
 
@@ -172,36 +174,43 @@ namespace :lms do
       end
       if resource_api
         @resource_api = resource_api
-        @api_url      = resource_api['path'].gsub("/v1/", "")
+        @api_url      = resource_api["path"].gsub("/v1/", "")
         @args         = args(@api_url)
       end
       if operation
         nickname = operation["nickname"]
-        nickname = "#{@name}_#{nickname}" if ["upload_file", "query_by_course", "preview_processed_html", "create_peer_review_courses", "create_peer_review_sections", "set_extensions_for_student_quiz_submissions"].include?(nickname)
+        nickname = "#{@name}_#{nickname}" if [
+          "upload_file",
+          "query_by_course",
+          "preview_processed_html",
+          "create_peer_review_courses",
+          "create_peer_review_sections",
+          "set_extensions_for_student_quiz_submissions"
+        ].include?(nickname)
 
         @method    = operation["method"]
         @operation = operation
         @nickname  = nickname
-        @notes     = operation['notes'].gsub("\n", "\n// ")
+        @notes     = operation["notes"].gsub("\n", "\n// ")
         @summary   = operation["summary"]
       end
       if parameters
-        @parameters = parameters.map{|p| p.delete("description"); p}
+        @parameters = parameters.map { |p| p.delete("description"); p }
       end
       @content = content
       @model = model
     end
 
     def args(api_url)
-      api_url.split('/').map do |part|
+      api_url.split("/").map do |part|
         if part[0] == "{"
           part.gsub(/[\{\}]/, "")
         end
       end.compact
     end
 
-    def render()
-      ERB.new(@template, nil, '-').result(binding).strip
+    def render
+      ERB.new(@template, nil, "-").result(binding).strip
     end
 
     def save(file)
@@ -213,6 +222,11 @@ namespace :lms do
   class LMSApiBuilder
 
     def self.build
+      current_path = File.expand_path(File.dirname(__FILE__))
+      atomic_client = File.expand_path(File.join(current_path, "../../../atomic-client"))
+      atomic_lti = File.expand_path(File.join(current_path, "../../../atomic-lti"))
+      project_root = File.expand_path(File.join(current_path, "../../"))
+
       endpoint = "https://canvas.instructure.com/doc/api"
       directory = HTTParty.get("#{endpoint}/api-docs.json")
       lms_urls_rb = []
@@ -222,9 +236,9 @@ namespace :lms do
       mutations = []
       directory["apis"].each do |api|
         puts "Generating #{api['description']}"
-        resource = HTTParty.get("#{endpoint}#{api["path"]}")
+        resource = HTTParty.get("#{endpoint}#{api['path']}")
         constants = []
-        resource['apis'].each do |resource_api|
+        resource["apis"].each do |resource_api|
           resource_api["operations"].each do |operation|
             parameters = operation["parameters"]
             constants << Render.new("./lms_api/constant.erb", api, resource, resource_api, operation, parameters, nil, nil).render
@@ -237,29 +251,29 @@ namespace :lms do
             end
           end
         end
-        resource['models'].map do |name, model|
-          if model['properties'] # Don't generate models without properties
+        resource["models"].map do |_name, model|
+          if model["properties"] # Don't generate models without properties
             models << Render.new("./lms_api/graphql_model.erb", api, resource, nil, nil, nil, nil, model).render
           end
         end
         # Generate one file of constants for every LMS API
         constants_renderer = Render.new("./lms_api/constants.erb", api, resource, nil, nil, nil, constants, nil)
-        constants_renderer.save("#{Rails.root}/../atomic-client/client/js/libs/lms/constants/#{constants_renderer.name}.js")
+        constants_renderer.save("#{atomic_client}/client/js/libs/canvas/constants/#{constants_renderer.name}.js")
       end
 
-      Render.new("./lms_api/rb_urls.erb", nil, nil, nil, nil, nil, lms_urls_rb, nil).save("#{Rails.root}/lib/lms/urls.rb")
-      Render.new("./lms_api/js_urls.erb", nil, nil, nil, nil, nil, lms_urls_js, nil).save("#{Rails.root}/../atomic-lti/apps/lib/lms/urls.js")
+      Render.new("./lms_api/rb_urls.erb", nil, nil, nil, nil, nil, lms_urls_rb, nil).save("#{project_root}/lib/lms/canvas_urls.rb")
+      Render.new("./lms_api/js_urls.erb", nil, nil, nil, nil, nil, lms_urls_js, nil).save("#{atomic_lti}/lib/canvas/urls.js")
 
-      Render.new("./lms_api/graphql_types.erb", nil, nil, nil, nil, nil, models.compact, nil).save("#{Rails.root}/../atomic-lti/apps/lib/lms/graphql_types.js")
-      Render.new("./lms_api/graphql_queries.erb", nil, nil, nil, nil, nil, queries, nil).save("#{Rails.root}/../atomic-lti/apps/lib/lms/graphql_queries.js")
-      Render.new("./lms_api/graphql_mutations.erb", nil, nil, nil, nil, nil, mutations, nil).save("#{Rails.root}/../atomic-lti/apps/lib/lms/graphql_mutations.js")
+      # GraphQL - still not complete
+      Render.new("./lms_api/graphql_types.erb", nil, nil, nil, nil, nil, models.compact, nil).save("#{atomic_lti}/lib/canvas/graphql_types.js")
+      Render.new("./lms_api/graphql_queries.erb", nil, nil, nil, nil, nil, queries, nil).save("#{atomic_lti}/lib/canvas/graphql_queries.js")
+      Render.new("./lms_api/graphql_mutations.erb", nil, nil, nil, nil, nil, mutations, nil).save("#{atomic_lti}/lib/canvas/graphql_mutations.js")
     end
 
   end
 
   desc "Scrape the LMS api"
-  task :api => [:environment] do
+  task :api do
     LMSApiBuilder.build
   end
-
 end
