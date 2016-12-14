@@ -43,6 +43,9 @@ url of the LMS instance you want to communicate with, as well as the
 current authentication object, and (optionally) a hash of options to use
 when refreshing the API token.
 
+Require the gem:
+`require "lms/api"`
+
 ```ruby
 auth = Authentication.first # or however you are storing global auth state
 api = LMS::API.new("http://your.canvas.instance", auth, 
