@@ -1,7 +1,7 @@
 require 'support/http_party'
 require 'support/webmocks'
 
-require 'lms'
+require 'lms_api'
 require 'ostruct'
 require 'thread'
 

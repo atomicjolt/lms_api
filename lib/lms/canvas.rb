@@ -199,6 +199,7 @@ module LMS
 
       method = LMS::CANVAS_URLs[type][:method]
       url = LMS::API.lms_url(type, params, payload)
+      payload_json = payload.to_json
 
       case method
       when "GET"
@@ -212,9 +213,9 @@ module LMS
           api_get_request(url, additional_headers)
         end
       when "POST"
-        api_post_request(url, payload, additional_headers)
+        api_post_request(url, payload_json, additional_headers)
       when "PUT"
-        api_put_request(url, payload, additional_headers)
+        api_put_request(url, payload_json, additional_headers)
       when "DELETE"
         api_delete_request(url, additional_headers)
       else

@@ -44,7 +44,7 @@ current authentication object, and (optionally) a hash of options to use
 when refreshing the API token.
 
 Require the gem:
-`require "lms/api"`
+`require "lms_api"`
 
 ```ruby
 auth = Authentication.first # or however you are storing global auth state
