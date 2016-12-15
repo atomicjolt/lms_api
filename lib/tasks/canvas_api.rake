@@ -108,7 +108,7 @@ namespace :canvas do
 
     def js_args(args)
       if args.present?
-        "[\"#{args.join('","')}\"]"
+        "['#{args.join("','")}'']"
       else
         "[]"
       end
