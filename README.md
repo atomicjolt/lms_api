@@ -1,4 +1,4 @@
-# LMS::API
+# LMS API
 
 This project provides a wrapper around the Instructure Canvas API.
 
@@ -28,7 +28,7 @@ end
 Then, you tell the gem about this model:
 
 ```ruby
-LMS::API.auth_state_model = Authentication
+LMS::Canvas.auth_state_model = Authentication
 ```
 
 This allows the gem to transparently refresh the token when the token
@@ -38,7 +38,7 @@ to do so in parallel.
 
 ## Usage
 
-To use the API wrapper, instantiate a `LMS::API` instance with the
+To use the API wrapper, instantiate a `LMS::Canvas` instance with the
 url of the LMS instance you want to communicate with, as well as the
 current authentication object, and (optionally) a hash of options to use
 when refreshing the API token.
@@ -48,7 +48,7 @@ Require the gem:
 
 ```ruby
 auth = Authentication.first # or however you are storing global auth state
-api = LMS::API.new("http://your.canvas.instance", auth, 
+api = LMS::Canvas.new("http://your.canvas.instance", auth,
         client_id: "...",
         client_secret: "..."
         redirect_uri: "..."
@@ -67,7 +67,7 @@ params = {
   all_dates: true,
   other_param: "foobar"}
 
-url = LMS::API.lms_url("GET_SINGLE_ASSIGNMENT", params)
+url = LMS::Canvas.lms_url("GET_SINGLE_ASSIGNMENT", params)
 ```
 
 Once you have the URL, you can send the request by using `api_*_request`

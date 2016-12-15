@@ -65,13 +65,13 @@ class TestAuthStateModel
   end
 end
 
-describe LMS::API do
+describe LMS::Canvas do
   before do
     @course_id = 11
     @token = 'test'
     @base_uri = 'http://www.example.com'
     @authentication = OpenStruct.new(id: 1, provider: 'canvas', token: @token, provider_url: @base_uri)
-    @api = LMS::API.new(@authentication.provider_url, @authentication)
+    @api = LMS::Canvas.new(@authentication.provider_url, @authentication)
     @external_tool_id = 1
     lti_options = {
       launch_url: 'http://www.example.com/launch'
@@ -95,8 +95,8 @@ describe LMS::API do
         invalid_option: "bad value"
       }
       expect {
-        LMS::API.new(@authentication.provider_url, @authentication, too_many_options)
-      }.to raise_exception(LMS::API::InvalidRefreshOptionsException)
+        LMS::Canvas.new(@authentication.provider_url, @authentication, too_many_options)
+      }.to raise_exception(LMS::Canvas::InvalidRefreshOptionsException)
     end
     it "raises an error if the user doesn't pass all required options" do
       too_few_options = {
@@ -105,8 +105,8 @@ describe LMS::API do
         refresh_token: "a refresh token"
       }
       expect {
-        LMS::API.new(@authentication.provider_url, @authentication, too_few_options)
-      }.to raise_exception(LMS::API::InvalidRefreshOptionsException)
+        LMS::Canvas.new(@authentication.provider_url, @authentication, too_few_options)
+      }.to raise_exception(LMS::Canvas::InvalidRefreshOptionsException)
     end
   end
 
@@ -176,7 +176,7 @@ describe LMS::API do
       it "raises an exception" do
         result = http_party_get_response(401, 'OK', "")
         expect(HTTParty).to receive(:get).with("#{@base_uri}/api/v1/courses", :headers => @api.headers).and_return(result)
-        expect { @api.api_get_request("courses") }.to raise_exception(LMS::API::InvalidAPIRequestException)
+        expect { @api.api_get_request("courses") }.to raise_exception(LMS::Canvas::InvalidAPIRequestException)
       end
     end
 
@@ -195,28 +195,28 @@ describe LMS::API do
       end
 
       it "refreshes the token" do
-        api = LMS::API.new(@authentication.provider_url, @authentication, REFRESH_OPTIONS)
+        api = LMS::Canvas.new(@authentication.provider_url, @authentication, REFRESH_OPTIONS)
         expect(HTTParty).to receive(:post).with("#{@base_uri}/login/oauth2/token", headers: @api.headers, body: { grant_type: "refresh_token" }.merge(REFRESH_OPTIONS)).and_return(@refresh_result).ordered
         expect(api.refresh_token).to eq("anewtoken")
       end
 
       it "raises LMS::RefreshTokenRequired if options are not provided" do
-        api = LMS::API.new(@authentication.provider_url, @authentication)
+        api = LMS::Canvas.new(@authentication.provider_url, @authentication)
         expect(HTTParty).to receive(:get).with("#{@base_uri}/api/v1/courses", headers: @api.headers).and_return(@initial_result)
-        expect { api.api_get_request("courses") }.to raise_exception(LMS::API::RefreshTokenRequired)
+        expect { api.api_get_request("courses") }.to raise_exception(LMS::Canvas::RefreshTokenRequired)
       end
 
       describe "default reauthentication model with multiple processes" do
         before(:each) do
           @auth_state_model = TestAuthStateModel.new(@token, @base_uri)
-          LMS::API.auth_state_model = @auth_state_model
+          LMS::Canvas.auth_state_model = @auth_state_model
         end
 
         it "should only call the refresh token LMS API once" do
           thread1 = Thread.new do
             thread_log "thread #1"
 
-            api = LMS::API.new(@authentication.provider_url, @authentication, @options)
+            api = LMS::Canvas.new(@authentication.provider_url, @authentication, @options)
             expect(HTTParty).to receive(:get).with("#{@base_uri}/api/v1/courses", headers: api.headers).and_return(@initial_result)
             expect(HTTParty).to receive(:post).with("#{@base_uri}/login/oauth2/token", headers: api.headers, body: { grant_type: "refresh_token" }.merge(@options)).and_return(@refresh_result)
             expect(HTTParty).to receive(:get).with("#{@base_uri}/api/v1/courses", headers: api.headers.merge({"Authorization"=>"Bearer anewtoken"})).and_return(@final_result)
@@ -229,7 +229,7 @@ describe LMS::API do
             @auth_state_model.wait_turn
             thread_log "green light!"
 
-            api = LMS::API.new(@authentication.provider_url, @authentication, @options)
+            api = LMS::Canvas.new(@authentication.provider_url, @authentication, @options)
             expect(HTTParty).to receive(:get).with("#{@base_uri}/api/v1/courses", headers: api.headers).and_return(@initial_result)
             expect(HTTParty).not_to receive(:post)
             expect(HTTParty).to receive(:get).with("#{@base_uri}/api/v1/courses", headers: api.headers.merge({"Authorization"=>"Bearer anewtoken"})).and_return(@final_result)
@@ -313,15 +313,15 @@ describe LMS::API do
     end
     it "should raise an InvalidAPIRequestException if 401 not authorized" do
       result = http_party_get_response(401, 'Unauthorized')
-      expect { @api.check_result(result) }.to raise_exception(LMS::API::InvalidAPIRequestException)
+      expect { @api.check_result(result) }.to raise_exception(LMS::Canvas::InvalidAPIRequestException)
     end
     it "should raise an InvalidAPIRequestException if 404 not found" do
       result = http_party_get_response(404, 'Not Found')
-      expect { @api.check_result(result) }.to raise_exception(LMS::API::InvalidAPIRequestException)
+      expect { @api.check_result(result) }.to raise_exception(LMS::Canvas::InvalidAPIRequestException)
     end
     it "should raise an InvalidAPIRequestException if lms call fails" do
       result = http_party_get_response(500, 'Internal Server Error', '{"errors":"Something terrible"}')
-      expect { @api.check_result(result) }.to raise_exception(LMS::API::InvalidAPIRequestException)
+      expect { @api.check_result(result) }.to raise_exception(LMS::Canvas::InvalidAPIRequestException)
     end
     it "should return the result for a 200" do
       result = http_party_get_response
@@ -337,14 +337,14 @@ describe LMS::API do
     id = 5
     course_id = 6
     params = {id: id, course_id: course_id, controller: "foo", account_id: 1, all_dates: true, other_param: "foobar"}
-    url = LMS::API.lms_url("GET_SINGLE_ASSIGNMENT", params)
+    url = LMS::Canvas.lms_url("GET_SINGLE_ASSIGNMENT", params)
     expect(url).to eq("courses/#{course_id}/assignments/#{id}?all_dates=true")
   end
 
   it "Doesn't include post parameters in the query" do
     course_id = 6
     params = {course_id: course_id, assignment: { name: "The name", position: 2, submission_types: "online_quiz"}}
-    url = LMS::API.lms_url("CREATE_ASSIGNMENT", params)
+    url = LMS::Canvas.lms_url("CREATE_ASSIGNMENT", params)
     expect(url).to eq("courses/#{course_id}/assignments")
   end
 
@@ -368,7 +368,7 @@ describe LMS::API do
             :status => 401,
             :body => "",
             :headers => lms_headers)
-        expect { @api.proxy("GET_SINGLE_ACCOUNT", {id: "self"}, nil, true) }.to raise_error(LMS::API::InvalidAPIRequestFailedException)
+        expect { @api.proxy("GET_SINGLE_ACCOUNT", {id: "self"}, nil, true) }.to raise_error(LMS::Canvas::InvalidAPIRequestFailedException)
       end
     end
 
@@ -437,7 +437,7 @@ describe LMS::API do
 
     describe "lms_url" do
       it "generates a lms url to get accounts" do
-        url = LMS::API.lms_url("LIST_ACCOUNTS", {})
+        url = LMS::Canvas.lms_url("LIST_ACCOUNTS", {})
         expect(url).to eq("accounts")
       end
       it "generates a lms url with params to get accounts" do
@@ -447,24 +447,24 @@ describe LMS::API do
           per_page: 100,
           "include": ["lti_guid", "registration_settings"]
         }
-        url = LMS::API.lms_url("LIST_ACCOUNTS", params)
+        url = LMS::Canvas.lms_url("LIST_ACCOUNTS", params)
         expect(url).to eq("accounts?include%5B%5D=lti_guid&include%5B%5D=registration_settings&per_page=100")
       end
       it "generates a lms url to get courses" do
         params = {account_id: 1}
-        url = LMS::API.lms_url("LIST_ACTIVE_COURSES_IN_ACCOUNT", params)
+        url = LMS::Canvas.lms_url("LIST_ACTIVE_COURSES_IN_ACCOUNT", params)
         expect(url).to eq("accounts/1/courses")
       end
       it "generates a lms url to get courses with extra values in params" do
         params = {with_enrollments: true, controller: "foo", account_id: 1}
-        url = LMS::API.lms_url("LIST_ACTIVE_COURSES_IN_ACCOUNT", params)
+        url = LMS::Canvas.lms_url("LIST_ACTIVE_COURSES_IN_ACCOUNT", params)
         expect(url).to eq("accounts/1/courses?with_enrollments=true")
       end
       it "ensures required parameters are present" do
         params = {}
         expect {
-          LMS::API.lms_url("LIST_ACTIVE_COURSES_IN_ACCOUNT", params)
-        }.to raise_exception(LMS::API::MissingRequiredParameterException)
+          LMS::Canvas.lms_url("LIST_ACTIVE_COURSES_IN_ACCOUNT", params)
+        }.to raise_exception(LMS::Canvas::MissingRequiredParameterException)
       end
 
       context "with valid payload" do
@@ -488,7 +488,7 @@ describe LMS::API do
             }
           }
           payload = "{\"assignment\":{\"name\":\"Atomic Jolt the course\",\"submission_types\":[\"external_tool\"],\"integration_id\":\"1\",\"integration_data\":{\"provider\":\"atomic-test\"},\"external_tool_tag_attributes\":{\"url\":\"https://test.atomicjolt.xyz/course?course_id=1\"}}}"
-          url = LMS::API.lms_url("CREATE_ASSIGNMENT", params, payload)
+          url = LMS::Canvas.lms_url("CREATE_ASSIGNMENT", params, payload)
           expect(url).to eq("courses/1/assignments")
         end
 
@@ -512,8 +512,8 @@ describe LMS::API do
           }
           payload = "{\"assignment\":{\"name\":\"Atomic Jolt the course\",\"submission_types\":[\"external_tool\"],\"integration_id\":\"1\",\"integration_data\":{\"provider\":\"atomic-test\"},\"external_tool_tag_attributes\":{\"url\":\"https://test.atomicjolt.xyz/course?course_id=1\"}}}"
           expect {
-            LMS::API.lms_url("CREATE_ASSIGNMENT", params, payload)
-          }.to raise_exception(LMS::API::MissingRequiredParameterException)
+            LMS::Canvas.lms_url("CREATE_ASSIGNMENT", params, payload)
+          }.to raise_exception(LMS::Canvas::MissingRequiredParameterException)
         end
       end
 

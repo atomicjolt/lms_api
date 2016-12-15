@@ -7,7 +7,7 @@ require "active_support/core_ext/hash/keys"
 require "lms/canvas_urls"
 
 module LMS
-  class API
+  class Canvas
 
     # a model that encapsulates authentication state. By default, it
     # is nil, but it may be set to any object that responds to:
@@ -151,7 +151,7 @@ module LMS
     def refreshably
       result = yield
       check_result(result)
-    rescue LMS::API::RefreshTokenRequired => ex
+    rescue LMS::Canvas::RefreshTokenRequired => ex
       raise ex if @refresh_token_options.blank?
       @authentication = @@on_auth.call(self)
       retry
@@ -163,7 +163,7 @@ module LMS
       }.merge(@refresh_token_options)
       url = full_url("login/oauth2/token", false)
       result = HTTParty.post(url, headers: headers, body: payload)
-      raise LMS::API::RefreshTokenFailedException, api_error(result) unless [200, 201].include?(result.response.code.to_i)
+      raise LMS::Canvas::RefreshTokenFailedException, api_error(result) unless [200, 201].include?(result.response.code.to_i)
       result["access_token"]
     end
 
@@ -173,10 +173,10 @@ module LMS
       return result if [200, 201].include?(code)
 
       if code == 401 && result.headers["www-authenticate"] == 'Bearer realm="canvas-lms"'
-        raise LMS::API::RefreshTokenRequired
+        raise LMS::Canvas::RefreshTokenRequired
       end
 
-      raise LMS::API::InvalidAPIRequestException, api_error(result)
+      raise LMS::Canvas::InvalidAPIRequestException, api_error(result)
     end
 
     def api_error(result)
@@ -198,7 +198,7 @@ module LMS
       }
 
       method = LMS::CANVAS_URLs[type][:method]
-      url = LMS::API.lms_url(type, params, payload)
+      url = LMS::Canvas.lms_url(type, params, payload)
       payload_json = payload.to_json
 
       case method
@@ -219,15 +219,15 @@ module LMS
       when "DELETE"
         api_delete_request(url, additional_headers)
       else
-        raise LMS::API::InvalidAPIMethodRequestException "Invalid method type: #{method}"
+        raise LMS::Canvas::InvalidAPIMethodRequestException "Invalid method type: #{method}"
       end
 
-    rescue LMS::API::InvalidAPIRequestException => ex
+    rescue LMS::Canvas::InvalidAPIRequestException => ex
       error = ex.to_s
       error << "API Request Url: #{url} \n"
       error << "API Request Params: #{params} \n"
       error << "API Request Payload: #{payload} \n"
-      new_ex = LMS::API::InvalidAPIRequestFailedException.new(error)
+      new_ex = LMS::Canvas::InvalidAPIRequestFailedException.new(error)
       new_ex.set_backtrace(ex.backtrace)
       raise new_ex
     end
@@ -263,7 +263,7 @@ module LMS
       end
 
       if missing.length > 0
-        raise LMS::API::MissingRequiredParameterException, "Missing required parameter(s): #{missing.join(', ')}"
+        raise LMS::Canvas::MissingRequiredParameterException, "Missing required parameter(s): #{missing.join(', ')}"
       end
 
       # Generate the uri. Only allow path parameters
