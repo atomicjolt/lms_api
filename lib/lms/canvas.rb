@@ -199,7 +199,7 @@ module LMS
 
       method = LMS::CANVAS_URLs[type][:method]
       url = LMS::Canvas.lms_url(type, params, payload)
-      payload_json = payload.to_json
+      payload_json = payload.is_a?(String) ? payload : payload.to_json
 
       case method
       when "GET"
