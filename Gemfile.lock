@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lms-api (1.2.2)
+    lms-api (1.2.3)
       activesupport (>= 3.0)
       httparty
 
