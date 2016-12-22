@@ -293,6 +293,25 @@ describe LMS::Canvas do
       results = @api.proxy("LIST_YOUR_COURSES", {}, nil, true)
       expect(results.count).to eq(16)
     end
+
+    it "makes api with body as hash" do
+      payload = {id: 1}
+      expect(payload).to receive(:to_json)
+      results = @api.proxy("LIST_YOUR_COURSES", {}, payload, true)
+    end
+
+    it "makes api with body as string" do
+      payload = "{}"
+      expect(payload).not_to receive(:to_json)
+      results = @api.proxy("LIST_YOUR_COURSES", {}, payload, true)
+    end
+
+    it "doesnt crash with an empty string" do
+      payload = ""
+      expect(payload).not_to receive(:to_json)
+      results = @api.proxy("LIST_YOUR_COURSES", {}, payload, true)
+    end
+
     it "calls the provided block for each page of data returned" do
       block_calls = 0
       @api.proxy("LIST_YOUR_COURSES", {}) do |results|
