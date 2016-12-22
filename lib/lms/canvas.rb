@@ -196,10 +196,12 @@ module LMS
       additional_headers = {
         "Content-Type" => "application/json"
       }
+      payload = {} if payload.blank?
+      payload_json = payload.is_a?(String) ? payload : payload.to_json
+      parsed_payload = payload.is_a?(String) ? JSON.parse(payload) : payload
 
       method = LMS::CANVAS_URLs[type][:method]
       url = LMS::Canvas.lms_url(type, params, payload)
-      payload_json = payload.is_a?(String) ? payload : payload.to_json
 
       case method
       when "GET"
