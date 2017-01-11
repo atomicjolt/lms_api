@@ -16,11 +16,11 @@ namespace :canvas do
           graphql_primitive(type, property["format"])
         when "array"
           begin
-            if property["items"]["$ref"]
-              type = property["items"]["$ref"]
-            else
-              type = graphql_primitive(property["items"]["type"], property["items"]["format"])
-            end
+            type = if property["items"]["$ref"]
+                     property["items"]["$ref"]
+                   else
+                     graphql_primitive(property["items"]["type"], property["items"]["format"])
+                   end
           rescue
             type = "GraphQLString"
           end

@@ -3,6 +3,7 @@ require "active_support"
 require "active_support/core_ext/object/blank"
 require "active_support/core_ext/object/to_query"
 require "active_support/core_ext/hash/keys"
+require "active_support/core_ext/hash/indifferent_access"
 
 require "lms/canvas_urls"
 
@@ -33,7 +34,7 @@ module LMS
     # set up a default auth callback. It assumes that #auth_state_model
     # is set. If #auth_state_model will not be set, the client app must
     # define a custom on_auth callback.
-    self.on_auth do |api|
+    on_auth do |api|
       api.lock do |record|
         if record.token == api.authentication.token
           record.update token: api.refresh_token
@@ -52,18 +53,24 @@ module LMS
       @per_page = 100
       @lms_uri = lms_uri
       @refresh_token_options = refresh_token_options
-      if authentication.is_a?(String)
-        @authentication = OpenStruct.new(token: authentication)
-      else
-        @authentication = authentication
-      end
+      @authentication = if authentication.is_a?(String)
+                          OpenStruct.new(token: authentication)
+                        else
+                          authentication
+                        end
 
       if refresh_token_options.present?
         required_options = [:client_id, :client_secret, :redirect_uri, :refresh_token]
         extra_options = @refresh_token_options.keys - required_options
-        raise InvalidRefreshOptionsException, "Invalid option(s) provided: #{extra_options.join(', ')}" unless extra_options.length == 0
+        unless extra_options.empty?
+          raise InvalidRefreshOptionsException,
+                "Invalid option(s) provided: #{extra_options.join(', ')}"
+        end
         missing_options = required_options - @refresh_token_options.keys
-        raise InvalidRefreshOptionsException, "Missing required option(s): #{missing_options.join(', ')}" unless missing_options.length == 0
+        unless missing_options.empty?
+          raise InvalidRefreshOptionsException,
+                "Missing required option(s): #{missing_options.join(', ')}"
+        end
       end
     end
 
@@ -93,12 +100,10 @@ module LMS
     def full_url(api_url, use_api_prefix = true)
       if api_url[0...4] == "http"
         api_url
+      elsif use_api_prefix
+        "#{@lms_uri}/api/v1/#{api_url}"
       else
-        if use_api_prefix
-          "#{@lms_uri}/api/v1/#{api_url}"
-        else
-          "#{@lms_uri}/#{api_url}"
-        end
+        "#{@lms_uri}/#{api_url}"
       end
     end
 
@@ -141,7 +146,7 @@ module LMS
     def api_get_blocks_request(api_url, additional_headers = {})
       connector = api_url.include?("?") ? "&" : "?"
       next_url = "#{api_url}#{connector}per_page=#{@per_page}"
-      while next_url do
+      while next_url
         result = api_get_request(next_url, additional_headers)
         yield result
         next_url = get_next_url(result.headers["link"])
@@ -163,7 +168,9 @@ module LMS
       }.merge(@refresh_token_options)
       url = full_url("login/oauth2/token", false)
       result = HTTParty.post(url, headers: headers, body: payload)
-      raise LMS::Canvas::RefreshTokenFailedException, api_error(result) unless [200, 201].include?(result.response.code.to_i)
+      unless [200, 201].include?(result.response.code.to_i)
+        raise LMS::Canvas::RefreshTokenFailedException, api_error(result)
+      end
       result["access_token"]
     end
 
@@ -187,7 +194,7 @@ module LMS
 
     def get_next_url(link)
       return nil if link.blank?
-      if url = link.split(",").find{ |l| l.split(";")[1].strip == 'rel="next"' }
+      if url = link.split(",").detect { |l| l.split(";")[1].strip == 'rel="next"' }
         url.split(";")[0].gsub(/[\<\>\s]/, "")
       end
     end
@@ -199,9 +206,10 @@ module LMS
       payload = {} if payload.blank?
       payload_json = payload.is_a?(String) ? payload : payload.to_json
       parsed_payload = payload.is_a?(String) ? JSON.parse(payload) : payload
+      parsed_payload = parsed_payload.with_indifferent_access
 
       method = LMS::CANVAS_URLs[type][:method]
-      url = LMS::Canvas.lms_url(type, params, payload)
+      url = LMS::Canvas.lms_url(type, params, parsed_payload)
 
       case method
       when "GET"
@@ -250,32 +258,36 @@ module LMS
 
       # Make sure all required parameters are present
       missing = []
-      if !self.ignore_required(type)
-        parameters.find_all{|p| p["required"]}.map{|p| p["name"]}.each do |p|
+      if !ignore_required(type)
+        parameters.select { |p| p["required"] }.map { |p| p["name"] }.each do |p|
           if p.include?("[") && p.include?("]")
-            parts = p.split('[')
+            parts = p.split("[")
             parent = parts[0].to_sym
             child = parts[1].gsub("]", "").to_sym
             missing << p unless (params[parent].present? && params[parent][child].present?) ||
-                                (payload.present? && payload[parent].present? && payload[parent][child].present?)
+                (payload.present? && payload[parent].present? && payload[parent][child].present?)
           else
-            missing << p unless params[p.to_sym].present? || (payload.present? && !payload.is_a?(String) && payload[p.to_sym].present?)
+            missing << p unless params[p.to_sym].present? ||
+                (payload.present? && !payload.is_a?(String) && payload[p.to_sym].present?)
           end
         end
       end
 
-      if missing.length > 0
-        raise LMS::Canvas::MissingRequiredParameterException, "Missing required parameter(s): #{missing.join(', ')}"
+      if !missing.empty?
+        raise LMS::Canvas::MissingRequiredParameterException,
+              "Missing required parameter(s): #{missing.join(', ')}"
       end
 
       # Generate the uri. Only allow path parameters
       uri_proc = endpoint[:uri]
-      path_parameters = parameters.find_all{|p| p["paramType"] == "path"}.map{|p| p["name"].to_sym}
+      path_parameters = parameters.select { |p| p["paramType"] == "path" }.
+        map { |p| p["name"].to_sym }
       args = params.slice(*path_parameters).symbolize_keys
       uri = args.blank? ? uri_proc.call : uri_proc.call(**args)
 
       # Generate the query string
-      query_parameters = parameters.find_all{ |p| p["paramType"] == "query" }.map{ |p| p["name"].to_sym }
+      query_parameters = parameters.select { |p| p["paramType"] == "query" }.
+        map { |p| p["name"].to_sym }
 
       # always allow paging parameters
       query_parameters << :per_page
@@ -297,9 +309,12 @@ module LMS
     # Get all accounts including sub accounts
     def all_accounts
       all = []
-      self.proxy("LIST_ACCOUNTS", {}, nil, true).each do |account|
+      proxy("LIST_ACCOUNTS", {}, nil, true).each do |account|
         all << account
-        sub_accounts = self.proxy("GET_SUB_ACCOUNTS_OF_ACCOUNT", {account_id: account['id']}, nil, true)
+        sub_accounts = proxy("GET_SUB_ACCOUNTS_OF_ACCOUNT",
+                             { account_id: account["id"] },
+                             nil,
+                             true)
         all = all.concat(sub_accounts)
       end
       all
@@ -309,28 +324,28 @@ module LMS
     # Exceptions
     #
 
-    class Exception < RuntimeError
+    class CanvasException < RuntimeError
     end
 
-    class RefreshTokenRequired < Exception
+    class RefreshTokenRequired < CanvasException
     end
 
-    class InvalidRefreshOptionsException < Exception
+    class InvalidRefreshOptionsException < CanvasException
     end
 
-    class RefreshTokenFailedException < Exception
+    class RefreshTokenFailedException < CanvasException
     end
 
-    class InvalidAPIRequestException < Exception
+    class InvalidAPIRequestException < CanvasException
     end
 
-    class InvalidAPIRequestFailedException < Exception
+    class InvalidAPIRequestFailedException < CanvasException
     end
 
-    class InvalidAPIMethodRequestException < Exception
+    class InvalidAPIMethodRequestException < CanvasException
     end
 
-    class MissingRequiredParameterException < Exception
+    class MissingRequiredParameterException < CanvasException
     end
 
   end
