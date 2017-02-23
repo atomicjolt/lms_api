@@ -329,7 +329,10 @@ module LMS
       proxy("LIST_ACCOUNTS", {}, nil, true).each do |account|
         all << account
         sub_accounts = proxy("GET_SUB_ACCOUNTS_OF_ACCOUNT",
-                             { account_id: account["id"] },
+                             {
+                                account_id: account["id"],
+                                recursive: true,
+                             },
                              nil,
                              true)
         all = all.concat(sub_accounts)
