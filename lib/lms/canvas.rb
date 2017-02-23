@@ -8,6 +8,11 @@ require "active_support/core_ext/hash/indifferent_access"
 require "lms/canvas_urls"
 
 module LMS
+
+  CANVAS_HELPER_URLs = {
+    "HELPER_ALL_ACCOUNTS" => :all_accounts
+  }
+
   class Canvas
 
     # a model that encapsulates authentication state. By default, it
@@ -200,6 +205,12 @@ module LMS
     end
 
     def proxy(type, params, payload = nil, get_all = false)
+
+      # Helper methods call several Canvas methods to return a block of data to the client
+      if helper = CANVAS_HELPER_URLs[type]
+        return self.send(helper)
+      end
+
       additional_headers = {
         "Content-Type" => "application/json"
       }
