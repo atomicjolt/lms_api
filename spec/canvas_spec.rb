@@ -380,7 +380,8 @@ describe LMS::Canvas do
     end
 
     it "calls the helper method all_accounts" do
-      accounts = @api.proxy("HELPER_ALL_ACCOUNTS", {})
+      result = @api.proxy("HELPER_ALL_ACCOUNTS", {})
+      accounts = JSON.parse(result.body)
       expect(accounts[0]["id"]).to eq(43460000000000001)
       expect(accounts[0]["name"]).to eq("Atomic Jolt")
       expect(accounts.length).to eq(3)

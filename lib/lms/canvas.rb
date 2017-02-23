@@ -4,6 +4,7 @@ require "active_support/core_ext/object/blank"
 require "active_support/core_ext/object/to_query"
 require "active_support/core_ext/hash/keys"
 require "active_support/core_ext/hash/indifferent_access"
+require "ostruct"
 
 require "lms/canvas_urls"
 
@@ -208,7 +209,12 @@ module LMS
 
       # Helper methods call several Canvas methods to return a block of data to the client
       if helper = CANVAS_HELPER_URLs[type]
-        return self.send(helper)
+        result = self.send(helper)
+        return OpenStruct.new(
+          code: 200,
+          headers: {},
+          body: result.to_json
+        )
       end
 
       additional_headers = {
