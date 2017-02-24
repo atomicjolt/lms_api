@@ -7,12 +7,9 @@ require "active_support/core_ext/hash/indifferent_access"
 require "ostruct"
 
 require "lms/canvas_urls"
+require "lms/helper_urls"
 
 module LMS
-
-  CANVAS_HELPER_URLs = {
-    "HELPER_ALL_ACCOUNTS" => :all_accounts
-  }
 
   class Canvas
 
@@ -205,8 +202,7 @@ module LMS
       end
     end
 
-    def proxy(type, params, payload = nil, get_all = false)
-
+    def multi_proxy(type, params, payload = nil, get_all = false)
       # Helper methods call several Canvas methods to return a block of data to the client
       if helper = CANVAS_HELPER_URLs[type]
         result = self.send(helper)
@@ -216,7 +212,9 @@ module LMS
           body: result.to_json
         )
       end
+    end
 
+    def single_proxy(type, params, payload = nil, get_all = false)
       additional_headers = {
         "Content-Type" => "application/json"
       }
@@ -257,6 +255,11 @@ module LMS
       new_ex = LMS::Canvas::InvalidAPIRequestFailedException.new(error)
       new_ex.set_backtrace(ex.backtrace)
       raise new_ex
+    end
+
+    def proxy(type, params, payload = nil, get_all = false, &block)
+      multi_proxy(type, params, payload, get_all) ||
+        single_proxy(type, params, payload, get_all, &block)
     end
 
     # Ignore required params for specific calls. For example, the external tool calls
@@ -326,9 +329,9 @@ module LMS
     # Get all accounts including sub accounts
     def all_accounts
       all = []
-      proxy("LIST_ACCOUNTS", {}, nil, true).each do |account|
+      single_proxy("LIST_ACCOUNTS", {}, nil, true).each do |account|
         all << account
-        sub_accounts = proxy("GET_SUB_ACCOUNTS_OF_ACCOUNT",
+        sub_accounts = single_proxy("GET_SUB_ACCOUNTS_OF_ACCOUNT",
                              {
                                 account_id: account["id"],
                                 recursive: true,
