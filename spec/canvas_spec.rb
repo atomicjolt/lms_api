@@ -565,6 +565,39 @@ describe LMS::Canvas do
         end.to raise_exception(LMS::Canvas::MissingRequiredParameterException)
       end
 
+      it "allows for a scope param to generate custom urls" do
+        user_id = 5
+        params = {
+          scope: "/favorite/color",
+          user_id: user_id,
+          ns: "com.atomicjolt",
+          data: "green",
+        }
+        uri = LMS::Canvas.lms_url("STORE_CUSTOM_DATA", params)
+        expect(uri).to eq("users/#{user_id}/custom_data/favorite/color")
+      end
+
+      it "removes dots" do
+        user_id = 5
+        params = {
+          scope: "../../favorite/color",
+          user_id: user_id,
+          ns: "com.atomicjolt",
+          data: "green",
+        }
+        uri = LMS::Canvas.lms_url("STORE_CUSTOM_DATA", params)
+        expect(uri).to eq("users/#{user_id}/custom_data/favorite/color")
+      end
+
+      it "only adds scope onto allowed methods" do
+        params = {
+          account_id: 1,
+          scope: "/users"
+        }
+        url = LMS::Canvas.lms_url("LIST_ACTIVE_COURSES_IN_ACCOUNT", params)
+        expect(url).to eq("accounts/1/courses")
+      end
+
       context "with valid payload" do
         it "passes a valid payload" do
           params = {

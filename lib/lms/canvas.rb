@@ -268,7 +268,16 @@ module LMS
     def self.ignore_required(type)
       [
         "CREATE_EXTERNAL_TOOL_COURSES",
-        "CREATE_EXTERNAL_TOOL_ACCOUNTS"
+        "CREATE_EXTERNAL_TOOL_ACCOUNTS",
+      ].include?(type)
+    end
+
+    # These methods allow custom paths to be appended to the API endpoint.
+    def self.allow_scoped_path(type)
+      [
+        "STORE_CUSTOM_DATA",
+        "LOAD_CUSTOM_DATA",
+        "DELETE_CUSTOM_DATA",
       ].include?(type)
     end
 
@@ -304,6 +313,14 @@ module LMS
         map { |p| p["name"].to_sym }
       args = params.slice(*path_parameters).symbolize_keys
       uri = args.blank? ? uri_proc.call : uri_proc.call(**args)
+
+      # Handle scopes in the url. These API endpoints allow for additional path
+      # information to be added to their urls.
+      # ie "users/#{user_id}/custom_data/favorite_color/green"
+      if allow_scoped_path(type) &&
+        scope = params[:scope]&.gsub("../", "").gsub("..", "") # Don't allow moving up in the path
+        uri = File.join(uri, scope)
+      end
 
       # Generate the query string
       query_parameters = parameters.select { |p| p["paramType"] == "query" }.
