@@ -329,6 +329,7 @@ module LMS
       # always allow paging parameters
       query_parameters << :per_page
       query_parameters << :page
+      query_parameters << :as_user_id
 
       allowed_params = params.slice(*query_parameters)
 
