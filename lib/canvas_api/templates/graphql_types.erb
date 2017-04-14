@@ -56,9 +56,45 @@ var {nodeInterface, nodeField} = nodeDefinitions(
 
 <%=@content.join("\n\n")%>
 
+const Query = new GraphQLObjectType({
+  name: 'Query',
+  description: 'Root query',
+  fields: () => ({
+    node: nodeField,
+    peopleRelay: {
+      type: PersonConnection,
+      description: 'Person connection test',
+      args: connectionArgs,
+      resolve (root, args) {
+        return connectionFromPromisedArray(Db.models.person.findAll(), args);
+      }
+    },
+    person: {
+       type: personType,
+       resolve (root, args) {
+         return Db.models.person.findOne({ where: args });
+       }
+     },
+    people: {
+       type: new GraphQLList(personType),
+       args: {
+         id: {
+           type: GraphQLInt
+         },
+         email: {
+           type: GraphQLString
+         }
+       },
+       resolve (root, args) {
+         return Db.models.person.findAll({ where: args });
+       }
+     }
+  })
+});
+
 const Schema = new GraphQLSchema({
   query: Query,
-  mutation: Mutuation
+  //mutation: Mutuation
 });
 
 export default Schema;
