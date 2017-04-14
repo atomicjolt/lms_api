@@ -282,7 +282,6 @@ module LMS
     end
 
     def self.lms_url(type, params, payload = nil)
-      params = params.to_h
       endpoint = LMS::CANVAS_URLs[type]
       parameters = endpoint[:parameters]
 
@@ -312,7 +311,7 @@ module LMS
       uri_proc = endpoint[:uri]
       path_parameters = parameters.select { |p| p["paramType"] == "path" }.
         map { |p| p["name"].to_sym }
-      args = params.slice(*path_parameters)
+      args = params.slice(*path_parameters).deep_symbolize_keys
       uri = args.blank? ? uri_proc.call : uri_proc.call(**args)
 
       # Handle scopes in the url. These API endpoints allow for additional path
