@@ -1,0 +1,18 @@
+    "<%=@nickname.upcase%>" => %{ uri: fn(<%= @args.present? ? "%{" : "" %><%=@args.map{|a| "\"#{a}\" => #{a}"}.join(', ')%><%= @args.present? ? "}" : "" %>) -> "<%=ruby_api_url(@api_url)%>" end, method: :<%=@method%>, parameters: [<%= @parameters.map do |p|
+          str = []
+          p.each do |property, value|
+            fixed_val = if value.is_a?(Hash)
+              "%#{value}"
+            elsif value.is_a?(String)
+              "\"#{value}\""
+            elsif value.nil?
+              "nil"
+            else
+              value
+            end
+
+            str << "\"#{property}\" => #{fixed_val}"
+          end
+          "%{ #{str.join(", ")} }"
+        end.join(", ")
+        %>] }
