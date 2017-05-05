@@ -1,5 +1,4 @@
-defmodule Canvas.Urls
-  def actions(), do: %{
-    <%=@content.join(",\n    ")%>
-  }
+defmodule Canvas.Actions do
+  <%=@content.join("\n  ")%>
+  def action(type), do: raise InvalidCanvasActionException, message: "Invalid Canvas API Action: #{type}}"
 end

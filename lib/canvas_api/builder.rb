@@ -49,7 +49,7 @@ module CanvasApi
 
       CanvasApi::Render.new("./templates/rb_urls.erb", nil, nil, nil, nil, nil, lms_urls_rb, nil).save("#{project_root}/lib/lms/canvas_urls.rb")
       CanvasApi::Render.new("./templates/js_urls.erb", nil, nil, nil, nil, nil, lms_urls_js, nil).save("#{server_app_path}/lib/canvas/urls.js")
-      CanvasApi::Render.new("./templates/ex_urls.erb", nil, nil, nil, nil, nil, lms_urls_ex, nil).save("#{elixir_app_path}/lib/canvas/urls.ex")
+      CanvasApi::Render.new("./templates/ex_urls.erb", nil, nil, nil, nil, nil, lms_urls_ex, nil).save("#{elixir_app_path}/lib/canvas/actions.ex")
 
       # GraphQL - still not complete
       CanvasApi::Render.new("./templates/graphql_types.erb", nil, nil, nil, nil, nil, models.compact, nil).save("#{server_app_path}/lib/canvas/graphql_types.js")

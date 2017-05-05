@@ -15,7 +15,7 @@ namespace :canvas do
     current_path = File.expand_path(File.dirname(__FILE__))
     client_app_path = File.expand_path(File.join(current_path, "../../../atomic-client/client/libs/canvas/constants"))
     server_app_path = File.expand_path(File.join(current_path, "../../../atomic-lti"))
-    elixir_app_path = File.expand_path(File.join(current_path, "../../../act-search"))
+    elixir_app_path = File.expand_path(File.join(current_path, "../../../atomic-search"))
     project_root = File.expand_path(File.join(current_path, "../../"))
     CanvasApi::Builder.build(project_root, client_app_path, server_app_path, elixir_app_path)
   end
