@@ -9,12 +9,13 @@ module CanvasApi
     # client_app_path: This where all client side Javascript for accessing the Canvas API will be written.
     # server_app_path: This is where all server side Javascript for accessing the Canvas API will be written. Currently, this is generating GraphQL for Javascript
     #
-    def self.build(project_root, client_app_path, server_app_path)
+    def self.build(project_root, client_app_path, server_app_path, elixir_app_path)
       endpoint = "https://canvas.instructure.com/doc/api"
       directory = HTTParty.get("#{endpoint}/api-docs.json")
 
       lms_urls_rb = []
       lms_urls_js = []
+      lms_urls_ex = []
       models = []
       queries = []
       mutations = []
@@ -28,6 +29,7 @@ module CanvasApi
             constants << CanvasApi::Render.new("./templates/constant.erb", api, resource, resource_api, operation, parameters, nil, nil).render
             lms_urls_rb << CanvasApi::Render.new("./templates/rb_url.erb", api, resource, resource_api, operation, parameters, nil, nil).render
             lms_urls_js << CanvasApi::Render.new("./templates/js_url.erb", api, resource, resource_api, operation, parameters, nil, nil).render
+            lms_urls_ex << CanvasApi::Render.new("./templates/ex_url.erb", api, resource, resource_api, operation, parameters, nil, nil).render
             if "GET" == operation["method"].upcase
               queries << CanvasApi::Render.new("./templates/graphql_query.erb", api, resource, resource_api, operation, parameters, nil, nil).render
             else
@@ -47,6 +49,7 @@ module CanvasApi
 
       CanvasApi::Render.new("./templates/rb_urls.erb", nil, nil, nil, nil, nil, lms_urls_rb, nil).save("#{project_root}/lib/lms/canvas_urls.rb")
       CanvasApi::Render.new("./templates/js_urls.erb", nil, nil, nil, nil, nil, lms_urls_js, nil).save("#{server_app_path}/lib/canvas/urls.js")
+      CanvasApi::Render.new("./templates/ex_urls.erb", nil, nil, nil, nil, nil, lms_urls_ex, nil).save("#{elixir_app_path}/lib/canvas/actions.ex")
 
       # GraphQL - still not complete
       CanvasApi::Render.new("./templates/graphql_types.erb", nil, nil, nil, nil, nil, models.compact, nil).save("#{server_app_path}/lib/canvas/graphql_types.js")

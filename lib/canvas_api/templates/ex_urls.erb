@@ -1,0 +1,4 @@
+defmodule Canvas.Actions do
+  <%=@content.join("\n  ")%>
+  def action(type), do: raise InvalidCanvasActionException, message: "Invalid Canvas API Action: #{type}}"
+end
