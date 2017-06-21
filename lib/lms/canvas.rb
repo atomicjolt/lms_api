@@ -156,6 +156,10 @@ module LMS
       end
     end
 
+    def force_refresh
+      @authentication = @@on_auth.call(self)
+    end
+
     def refreshably
       result = yield
       check_result(result)

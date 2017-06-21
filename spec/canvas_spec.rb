@@ -178,6 +178,27 @@ describe LMS::Canvas do
     redirect_uri: "http://www.example.com"
   }.freeze
 
+  describe "force_refresh" do
+    it "immediately attempts to refresh the token" do
+      auth_state_model = TestAuthStateModel.new(@token, @base_uri)
+      LMS::Canvas.auth_state_model = auth_state_model
+      authentication = OpenStruct.new(id: 1,
+                                       provider: "canvas",
+                                       token: @token,
+                                       provider_url: @base_uri)
+      api = LMS::Canvas.new(authentication.provider_url, authentication, REFRESH_OPTIONS)
+      refresh_result = http_party_post_response(200, "OK", '{"access_token":"anewtoken"}')
+
+      expect(HTTParty).to receive(:post).
+      with("#{@base_uri}/login/oauth2/token",
+           headers: api.headers,
+           body: { grant_type: "refresh_token" }.merge(REFRESH_OPTIONS)).
+      and_return(refresh_result).ordered
+      authentication = api.force_refresh
+      expect(authentication.token).to eq("anewtoken")
+    end
+  end
+
   describe "401 unauthorized" do
     context "standard 401" do
       it "raises an exception" do
