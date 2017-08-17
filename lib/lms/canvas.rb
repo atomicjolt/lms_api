@@ -190,7 +190,7 @@ module LMS
         raise LMS::Canvas::RefreshTokenRequired
       end
 
-      raise LMS::Canvas::InvalidAPIRequestException, api_error(result)
+      raise LMS::Canvas::InvalidAPIRequestException.new(api_error(result), code)
     end
 
     def api_error(result)
@@ -370,6 +370,11 @@ module LMS
     #
 
     class CanvasException < RuntimeError
+      attr_reader :status
+
+      def initialize(msg="", status=nil)
+        @status = status
+      end
     end
 
     class RefreshTokenRequired < CanvasException
