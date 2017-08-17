@@ -277,6 +277,7 @@ describe LMS::Canvas do
               and_return(@final_result)
 
             api.api_get_request("courses")
+            @auth_state_model.signal_turn
           end
 
           thread2 = Thread.new do
