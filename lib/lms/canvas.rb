@@ -256,7 +256,7 @@ module LMS
       error << "API Request Url: #{url} \n"
       error << "API Request Params: #{params} \n"
       error << "API Request Payload: #{payload} \n"
-      new_ex = LMS::Canvas::InvalidAPIRequestFailedException.new(error)
+      new_ex = LMS::Canvas::InvalidAPIRequestFailedException.new(error, ex.status)
       new_ex.set_backtrace(ex.backtrace)
       raise new_ex
     end
