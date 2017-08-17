@@ -175,8 +175,9 @@ module LMS
       }.merge(@refresh_token_options)
       url = full_url("login/oauth2/token", false)
       result = HTTParty.post(url, headers: headers, body: payload)
-      unless [200, 201].include?(result.response.code.to_i)
-        raise LMS::Canvas::RefreshTokenFailedException, api_error(result)
+      code = result.response.code.to_i
+      unless [200, 201].include?(code)
+        raise LMS::Canvas::RefreshTokenFailedException.new(api_error(result), code)
       end
       result["access_token"]
     end
