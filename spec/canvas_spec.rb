@@ -207,7 +207,10 @@ describe LMS::Canvas do
           with("#{@base_uri}/api/v1/courses", headers: @api.headers).
           and_return(result)
         expect { @api.api_get_request("courses") }.
-          to raise_exception(LMS::Canvas::InvalidAPIRequestException)
+          to raise_exception do | err|
+            expect(err.class).to be(LMS::Canvas::InvalidAPIRequestException)
+            expect(err.status).to eq(401)
+          end
       end
     end
 
@@ -274,6 +277,7 @@ describe LMS::Canvas do
               and_return(@final_result)
 
             api.api_get_request("courses")
+            @auth_state_model.signal_turn
           end
 
           thread2 = Thread.new do

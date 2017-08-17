@@ -175,8 +175,9 @@ module LMS
       }.merge(@refresh_token_options)
       url = full_url("login/oauth2/token", false)
       result = HTTParty.post(url, headers: headers, body: payload)
-      unless [200, 201].include?(result.response.code.to_i)
-        raise LMS::Canvas::RefreshTokenFailedException, api_error(result)
+      code = result.response.code.to_i
+      unless [200, 201].include?(code)
+        raise LMS::Canvas::RefreshTokenFailedException.new(api_error(result), code)
       end
       result["access_token"]
     end
@@ -190,7 +191,7 @@ module LMS
         raise LMS::Canvas::RefreshTokenRequired
       end
 
-      raise LMS::Canvas::InvalidAPIRequestException, api_error(result)
+      raise LMS::Canvas::InvalidAPIRequestException.new(api_error(result), code)
     end
 
     def api_error(result)
@@ -256,7 +257,7 @@ module LMS
       error << "API Request Url: #{url} \n"
       error << "API Request Params: #{params} \n"
       error << "API Request Payload: #{payload} \n"
-      new_ex = LMS::Canvas::InvalidAPIRequestFailedException.new(error)
+      new_ex = LMS::Canvas::InvalidAPIRequestFailedException.new(error, ex.status)
       new_ex.set_backtrace(ex.backtrace)
       raise new_ex
     end
@@ -370,6 +371,11 @@ module LMS
     #
 
     class CanvasException < RuntimeError
+      attr_reader :status
+
+      def initialize(msg="", status=nil)
+        @status = status
+      end
     end
 
     class RefreshTokenRequired < CanvasException
