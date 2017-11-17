@@ -188,7 +188,7 @@ module LMS
       return result if [200, 201].include?(code)
 
       if code == 401 && result.headers["www-authenticate"] == 'Bearer realm="canvas-lms"'
-        raise LMS::Canvas::RefreshTokenRequired
+        raise LMS::Canvas::RefreshTokenRequired.new("", nil, @authentication)
       end
 
       raise LMS::Canvas::InvalidAPIRequestException.new(api_error(result), code)
@@ -197,7 +197,7 @@ module LMS
     def api_error(result)
       error = "Status: #{result.headers['status']} \n"
       error << "Http Response: #{result.response.code} \n"
-      error << "Error: #{result['errors'] || result.response.message} \n"
+      error << "Error: #{result.response.message} \n #{result.body} \n"
     end
 
     def get_next_url(link)
@@ -373,12 +373,18 @@ module LMS
     class CanvasException < RuntimeError
       attr_reader :status
 
-      def initialize(msg="", status=nil)
+      def initialize(msg = "", status = nil)
         @status = status
       end
     end
 
     class RefreshTokenRequired < CanvasException
+      attr_reader :auth
+
+      def initialize(msg = "", status = nil, auth = nil)
+        super(msg, status)
+        @auth = auth
+      end
     end
 
     class InvalidRefreshOptionsException < CanvasException
