@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lms-api (1.3.8)
+    lms-api (1.3.9)
       activesupport (>= 3.0)
       httparty
 
@@ -22,7 +22,8 @@ GEM
     hashdiff (0.3.0)
     httparty (0.15.6)
       multi_xml (>= 0.5.2)
-    i18n (0.8.6)
+    i18n (0.9.1)
+      concurrent-ruby (~> 1.0)
     minitest (5.10.3)
     multi_xml (0.6.0)
     rake (12.0.0)
@@ -41,7 +42,7 @@ GEM
     rspec-support (3.5.0)
     safe_yaml (1.0.4)
     thread_safe (0.3.6)
-    tzinfo (1.2.3)
+    tzinfo (1.2.4)
       thread_safe (~> 0.1)
     webmock (2.1.0)
       addressable (>= 2.3.6)
@@ -59,4 +60,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.15.3
+   1.16.0
