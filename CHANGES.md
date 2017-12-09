@@ -1,3 +1,6 @@
+#1.3.10
+Adds addition success status codes
+
 # 1.3.6
 Updates API calls to Canvas to match as of 8/8/2017
 

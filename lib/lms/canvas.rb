@@ -185,7 +185,7 @@ module LMS
     def check_result(result)
       code = result.response.code.to_i
 
-      return result if [200, 201].include?(code)
+      return result if [200, 201, 202, 203, 204, 205, 206].include?(code)
 
       if code == 401 && result.headers["www-authenticate"] == 'Bearer realm="canvas-lms"'
         raise LMS::Canvas::RefreshTokenRequired.new("", nil, @authentication)
