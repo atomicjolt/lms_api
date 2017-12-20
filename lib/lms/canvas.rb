@@ -177,7 +177,7 @@ module LMS
       result = HTTParty.post(url, headers: headers, body: payload)
       code = result.response.code.to_i
       unless [200, 201].include?(code)
-        raise LMS::Canvas::RefreshTokenFailedException.new(api_error(result), code)
+        raise LMS::Canvas::RefreshTokenFailedException.new(api_error(result), code, result)
       end
       result["access_token"]
     end
@@ -191,13 +191,13 @@ module LMS
         raise LMS::Canvas::RefreshTokenRequired.new("", nil, @authentication)
       end
 
-      raise LMS::Canvas::InvalidAPIRequestException.new(api_error(result), code)
+      raise LMS::Canvas::InvalidAPIRequestException.new(api_error(result), code, result)
     end
 
     def api_error(result)
       error = "Status: #{result.headers['status']} \n"
       error << "Http Response: #{result.response.code} \n"
-      error << "Error: #{result.response.message} \n #{result.body} \n"
+      error << "Error: #{result.response.message} \n"
     end
 
     def get_next_url(link)
@@ -373,10 +373,12 @@ module LMS
     class CanvasException < RuntimeError
       attr_reader :status
       attr_reader :message
+      attr_reader :result
 
-      def initialize(message = "", status = nil)
+      def initialize(message = "", status = nil, result)
         @message = message
         @status = status
+        @result = result
       end
     end
 
