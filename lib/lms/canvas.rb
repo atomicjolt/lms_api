@@ -374,7 +374,6 @@ module LMS
       attr_reader :status
       attr_reader :message
 
-      def initialize(msg = "", status = nil)
       def initialize(message = "", status = nil)
         @message = message
         @status = status
