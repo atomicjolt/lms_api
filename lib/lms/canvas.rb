@@ -253,11 +253,12 @@ module LMS
       end
 
     rescue LMS::Canvas::InvalidAPIRequestException => ex
-      error = ex.to_s
+      error = "#{ex.message} \n"
       error << "API Request Url: #{url} \n"
       error << "API Request Params: #{params} \n"
       error << "API Request Payload: #{payload} \n"
-      new_ex = LMS::Canvas::InvalidAPIRequestFailedException.new(error, ex.status)
+      error << "API Request Result: #{ex.result.body} \n"
+      new_ex = LMS::Canvas::InvalidAPIRequestFailedException.new(error, ex.status, ex.result)
       new_ex.set_backtrace(ex.backtrace)
       raise new_ex
     end
@@ -375,7 +376,7 @@ module LMS
       attr_reader :message
       attr_reader :result
 
-      def initialize(message = "", status = nil, result)
+      def initialize(message = "", status = nil, result = nil)
         @message = message
         @status = status
         @result = result
