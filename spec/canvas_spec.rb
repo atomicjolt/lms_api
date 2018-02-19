@@ -5,7 +5,6 @@ require "lms_api"
 require "ostruct"
 require "thread"
 require "byebug"
-
 def thread_log(msg)
   print "[#{Thread.current.object_id}] #{msg}\n" if ENV["THREAD_LOG"]
 end
@@ -675,6 +674,14 @@ describe LMS::Canvas do
 
     end
 
+  end
+
+  describe "Exceptions" do
+    it "Should maintain information about failure in exception.to_s" do
+      message = "Nuclear Meltdown"
+      exception = LMS::Canvas::CanvasException.new(message)
+      expect(exception.to_s).to eq message
+    end
   end
 
 end

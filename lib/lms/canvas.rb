@@ -377,6 +377,8 @@ module LMS
       attr_reader :result
 
       def initialize(message = "", status = nil, result = nil)
+        super(message)
+
         @message = message
         @status = status
         @result = result
