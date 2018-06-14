@@ -1,7 +1,8 @@
-require "canvas_api/graphql_helpers"
+require "canvas_api/js_graphql_helpers"
 require "canvas_api/js_helpers"
 require "canvas_api/ruby_helpers"
-
+require "canvas_api/rb_graphql_helpers"
+require "byebug"
 module CanvasApi
 
   class Render

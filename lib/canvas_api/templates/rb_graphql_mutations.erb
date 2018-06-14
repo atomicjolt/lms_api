@@ -1,0 +1,17 @@
+require "lms/utils"
+require "lms/graphql/mutations/canvas_base_mutation"
+require_all(File.absolute_path(__FILE__), "../../mutations/canvas/")
+
+module LMS
+  module GraphQL
+    module Mutations
+      module Canvas
+        class MutationType < CanvasBaseMutation
+          description "Canvas API mutations"
+
+          <%= @content.join("\n          ") %>
+        end
+      end
+    end
+  end
+end

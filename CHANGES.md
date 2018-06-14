@@ -1,3 +1,7 @@
+#1.4.0
+Adds GraphQL support for querying Canvas API. This is still WIP and not all resolvers return the propery type.
+Basic mutations are also available, but not all mutations are working properly. Use at your own risk.
+
 #1.3.10
 Adds addition success status codes
 

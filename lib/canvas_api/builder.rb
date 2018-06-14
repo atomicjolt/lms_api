@@ -1,5 +1,5 @@
 require "canvas_api/render"
-
+require "byebug"
 module CanvasApi
 
   class Builder
@@ -20,8 +20,12 @@ module CanvasApi
       lms_urls_ex = []
       course_ids_required_rb = []
       models = []
-      queries = []
-      mutations = []
+      js_graphql_queries = []
+      js_graphql_mutations = []
+
+      rb_graphql_fields = []
+      rb_graphql_mutations = []
+
       directory["apis"].each do |api|
         puts "Generating #{api['description']}"
         resource = HTTParty.get("#{endpoint}#{api['path']}")
@@ -38,18 +42,33 @@ module CanvasApi
               course_ids_required_rb << CanvasApi::Render.new("./templates/course_id_required.erb", api, resource, resource_api, operation, parameters, nil, nil).render
             end
 
-            if operation["method"].casecmp("GET")
-              queries << CanvasApi::Render.new("./templates/graphql_query.erb", api, resource, resource_api, operation, parameters, nil, nil).render
+            if operation["method"].casecmp("GET") == 0
+              js_graphql_queries << CanvasApi::Render.new("./templates/js_graphql_query.erb", api, resource, resource_api, operation, parameters, nil, nil).render
+
+              # One file per Canvas graphql resolver
+              canvas_graphql_resolver_renderer = CanvasApi::Render.new("./templates/rb_graphql_resolver.erb", api, resource, resource_api, operation, parameters, nil, nil)
+              canvas_graphql_resolver_renderer.save("#{project_root}/lib/lms/graphql/resolvers/canvas/#{canvas_graphql_resolver_renderer.nickname}.rb")
+              rb_graphql_fields << CanvasApi::Render.new("./templates/rb_graphql_field.erb", api, resource, resource_api, operation, parameters, nil, nil).render
             else
-              mutations << CanvasApi::Render.new("./templates/graphql_mutation.erb", api, resource, resource_api, operation, parameters, nil, nil).render
+              js_graphql_mutations << CanvasApi::Render.new("./templates/js_graphql_mutation.erb", api, resource, resource_api, operation, parameters, nil, nil).render
+
+              rb_graphql_mutation_renderer = CanvasApi::Render.new("./templates/rb_graphql_mutation.erb", api, resource, resource_api, operation, parameters, nil, nil)
+              rb_graphql_mutation_renderer.save("#{project_root}/lib/lms/graphql/mutations/canvas/#{rb_graphql_mutation_renderer.nickname}.rb")
+              rb_graphql_mutations << CanvasApi::Render.new("./templates/rb_graphql_mutation_include.erb", api, resource, resource_api, operation, parameters, nil, nil).render
             end
+
           end
         end
         resource["models"].map do |_name, model|
           if model["properties"] # Don't generate models without properties
-            models << CanvasApi::Render.new("./templates/graphql_model.erb", api, resource, nil, nil, nil, nil, model).render
+            models << CanvasApi::Render.new("./templates/js_graphql_model.erb", api, resource, nil, nil, nil, nil, model).render
           end
+
+          # Generate one file for each Canvas graphql type
+          canvas_graphql_renderer = CanvasApi::Render.new("./templates/rb_graphql_model.erb", api, resource, nil, nil, nil, nil, model)
+          canvas_graphql_renderer.save("#{project_root}/lib/lms/graphql/types/canvas/#{model['id'].underscore.singularize}.rb")
         end
+
         # Generate one file of constants for every LMS API
         constants_renderer = CanvasApi::Render.new("./templates/constants.erb", api, resource, nil, nil, nil, constants, nil)
         constants_renderer.save("#{client_app_path}/#{constants_renderer.name}.js")
@@ -60,10 +79,14 @@ module CanvasApi
       CanvasApi::Render.new("./templates/ex_urls.erb", nil, nil, nil, nil, nil, lms_urls_ex, nil).save("#{elixir_app_path}/lib/canvas/actions.ex")
       CanvasApi::Render.new("./templates/course_ids_required.erb", nil, nil, nil, nil, nil, course_ids_required_rb, nil).save("#{project_root}/lib/lms/course_ids_required.rb")
 
-      # GraphQL - still not complete
-      CanvasApi::Render.new("./templates/graphql_types.erb", nil, nil, nil, nil, nil, models.compact, nil).save("#{server_app_path}/lib/canvas/graphql_types.js")
-      CanvasApi::Render.new("./templates/graphql_queries.erb", nil, nil, nil, nil, nil, queries, nil).save("#{server_app_path}/lib/canvas/graphql_queries.js")
-      CanvasApi::Render.new("./templates/graphql_mutations.erb", nil, nil, nil, nil, nil, mutations, nil).save("#{server_app_path}/lib/canvas/graphql_mutations.js")
+      # GraphQL Javascript - still not complete
+      CanvasApi::Render.new("./templates/js_graphql_types.erb", nil, nil, nil, nil, nil, models.compact, nil).save("#{server_app_path}/lib/canvas/graphql_types.js")
+      CanvasApi::Render.new("./templates/js_graphql_queries.erb", nil, nil, nil, nil, nil, js_graphql_queries, nil).save("#{server_app_path}/lib/canvas/graphql_queries.js")
+      CanvasApi::Render.new("./templates/js_graphql_mutations.erb", nil, nil, nil, nil, nil, js_graphql_mutations, nil).save("#{server_app_path}/lib/canvas/graphql_mutations.js")
+
+      # GraphQL Ruby
+      CanvasApi::Render.new("./templates/rb_graphql_root_query.erb", nil, nil, nil, nil, nil, rb_graphql_fields, nil).save("#{project_root}/lib/lms/graphql/types/canvas/query_type.rb")
+      CanvasApi::Render.new("./templates/rb_graphql_mutations.erb", nil, nil, nil, nil, nil, rb_graphql_mutations, nil).save("#{project_root}/lib/lms/graphql/mutations/canvas/mutations.rb")
     end
 
   end

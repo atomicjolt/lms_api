@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency "activesupport", ">=3.0"
   s.add_dependency "httparty"
 
+  s.add_development_dependency "graphql"
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec"
   s.add_development_dependency "webmock"

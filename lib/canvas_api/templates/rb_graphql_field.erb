@@ -1,0 +1,3 @@
+          field :<%= @nickname %>,
+            resolver: LMS::GraphQL::Resolvers::Canvas::<%= @nickname.classify %>,
+            description: "<%= @summary %>. <%= @notes.gsub(/\n+/, " ").gsub("//", " ").gsub('"', "'") %>"

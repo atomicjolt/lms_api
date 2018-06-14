@@ -8,9 +8,9 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (5.1.5)
+    activesupport (5.2.0)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-      i18n (~> 0.7)
+      i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     addressable (2.4.0)
@@ -19,10 +19,11 @@ GEM
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     diff-lcs (1.2.5)
+    graphql (1.8.2)
     hashdiff (0.3.0)
-    httparty (0.16.0)
+    httparty (0.16.2)
       multi_xml (>= 0.5.2)
-    i18n (0.9.5)
+    i18n (1.0.1)
       concurrent-ruby (~> 1.0)
     minitest (5.11.3)
     multi_xml (0.6.0)
@@ -54,10 +55,11 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
+  graphql
   lms-api!
   rake
   rspec
   webmock
 
 BUNDLED WITH
-   1.16.0
+   1.16.1
