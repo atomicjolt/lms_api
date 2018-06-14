@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class RedirectToRootOutcomeGroupForContextCourse < CanvasBaseResolver
           type Boolean, null: false
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           def resolve(course_id:)
             context[:canvas_api].proxy(
               "REDIRECT_TO_ROOT_OUTCOME_GROUP_FOR_CONTEXT_COURSES",

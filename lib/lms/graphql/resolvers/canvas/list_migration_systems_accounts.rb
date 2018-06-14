@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListMigrationSystemsAccount < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::Migrator], null: false
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           def resolve(account_id:)
             context[:canvas_api].proxy(
               "LIST_MIGRATION_SYSTEMS_ACCOUNTS",

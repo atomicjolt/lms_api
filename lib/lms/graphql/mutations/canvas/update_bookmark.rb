@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class UpdateBookmark < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :name, String, required: false
           argument :url, String, required: false
           argument :position, Int, required: false

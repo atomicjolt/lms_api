@@ -7,7 +7,7 @@ module LMS
       module Canvas
         class Answer < BaseType
           description "Quiz Questions. API Docs: https://canvas.instructure.com/doc/api/quiz_questions.html"
-          field :id, Int, "The unique identifier for the answer.  Do not supply if this answer is part of a new question.Example: 6656", null: true
+          field :id, ID, "The unique identifier for the answer.  Do not supply if this answer is part of a new question.Example: 6656", null: true
           field :answer_text, String, "The text of the answer..Example: Constantinople", null: true
           field :answer_weight, Int, "An integer to determine correctness of the answer. Incorrect answers should be 0, correct answers should be non-negative..Example: 100", null: true
           field :answer_comments, String, "Specific contextual comments for a particular answer..Example: Remember to check your spelling prior to submitting this answer.", null: true
@@ -23,7 +23,7 @@ module LMS
           field :precision, Int, "Used in numerical questions of type 'precision_answer'. The numerical precision that will be used when comparing the student's answer..Example: 4", null: true
           field :start, Int, "Used in numerical questions of type 'range_answer'. The start of the allowed range (inclusive)..Example: 1", null: true
           field :end, Int, "Used in numerical questions of type 'range_answer'. The end of the allowed range (inclusive)..Example: 10", null: true
-          field :blank_id, Int, "Used in fill in multiple blank and multiple dropdowns questions..Example: 1170", null: true
+          field :blank_id, ID, "Used in fill in multiple blank and multiple dropdowns questions..Example: 1170", null: true
 
         end
       end

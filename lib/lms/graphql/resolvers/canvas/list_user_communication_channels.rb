@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListUserCommunicationChannel < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::CommunicationChannel], null: false
-          argument :user_id, String, required: true
+          argument :user_id, ID, required: true
           def resolve(user_id:)
             context[:canvas_api].proxy(
               "LIST_USER_COMMUNICATION_CHANNELS",

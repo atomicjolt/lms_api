@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListGroupMembership < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::GroupMembership], null: false
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           argument :filter_states, String, required: false
           def resolve(group_id:, filter_states: nil)
             context[:canvas_api].proxy(

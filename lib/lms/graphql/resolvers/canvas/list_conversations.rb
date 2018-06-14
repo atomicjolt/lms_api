@@ -10,7 +10,7 @@ module LMS
           argument :filter, String, required: false
           argument :filter_mode, String, required: false
           argument :interleave_submissions, Boolean, required: false
-          argument :include_all_conversation_ids, Boolean, required: false
+          argument :include_all_conversation_ids, [ID], required: false
           argument :include, String, required: false
           def resolve(scope: nil, filter: nil, filter_mode: nil, interleave_submissions: nil, include_all_conversation_ids: nil, include: nil)
             context[:canvas_api].proxy(

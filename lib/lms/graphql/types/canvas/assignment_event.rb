@@ -12,7 +12,7 @@ module LMS
         end
         class AssignmentEvent < BaseType
           description "Calendar Events. API Docs: https://canvas.instructure.com/doc/api/calendar_events.html"
-          field :id, String, "A synthetic ID for the assignment.Example: assignment_987", null: true
+          field :id, ID, "A synthetic ID for the assignment.Example: assignment_987", null: true
           field :title, String, "The title of the assignment.Example: Essay", null: true
           field :start_at, LMS::GraphQL::Types::DateTimeType, "The due_at timestamp of the assignment.Example: 2012-07-19T23:59:00-06:00", null: true
           field :end_at, LMS::GraphQL::Types::DateTimeType, "The due_at timestamp of the assignment.Example: 2012-07-19T23:59:00-06:00", null: true

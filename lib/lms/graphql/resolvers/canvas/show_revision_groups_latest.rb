@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ShowRevisionGroupsLatest < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::PageRevision, null: false
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           argument :url, String, required: true
           argument :summary, Boolean, required: false
           def resolve(group_id:, url:, summary: nil)

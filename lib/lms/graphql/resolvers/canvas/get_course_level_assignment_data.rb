@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class GetCourseLevelAssignmentDatum < CanvasBaseResolver
           type Boolean, null: false
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :async, Boolean, required: false
           def resolve(course_id:, async: nil)
             context[:canvas_api].proxy(

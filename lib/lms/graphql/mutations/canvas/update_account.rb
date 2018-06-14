@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class UpdateAccount < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :account_name, String, required: false
           argument :account_sis_account_id, String, required: false
           argument :account_default_time_zone, String, required: false

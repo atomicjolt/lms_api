@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class UpdateEnrollmentTerm < CanvasBaseMutation
-          argument :account_id, String, required: true
-          argument :id, String, required: true
+          argument :account_id, ID, required: true
+          argument :id, ID, required: true
           argument :enrollment_term_name, String, required: false
           argument :enrollment_term_start_at, LMS::GraphQL::Types::DateTimeType, required: false
           argument :enrollment_term_end_at, LMS::GraphQL::Types::DateTimeType, required: false

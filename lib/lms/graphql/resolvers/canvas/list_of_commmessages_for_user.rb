@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListOfCommmessagesForUser < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::CommMessage], null: false
-          argument :user_id, String, required: true
+          argument :user_id, ID, required: true
           argument :start_time, LMS::GraphQL::Types::DateTimeType, required: false
           argument :end_time, LMS::GraphQL::Types::DateTimeType, required: false
           def resolve(user_id:, start_time: nil, end_time: nil)

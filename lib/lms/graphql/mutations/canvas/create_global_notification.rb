@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class CreateGlobalNotification < CanvasBaseMutation
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :account_notification_subject, String, required: true
           argument :account_notification_message, String, required: true
           argument :account_notification_start_at, LMS::GraphQL::Types::DateTimeType, required: true

@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListLinkedOutcomesGlobal < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::OutcomeLink], null: false
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :outcome_style, String, required: false
           def resolve(id:, outcome_style: nil)
             context[:canvas_api].proxy(

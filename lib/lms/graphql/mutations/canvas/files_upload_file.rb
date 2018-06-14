@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class FilesUploadFile < CanvasBaseMutation
-          argument :folder_id, String, required: true
+          argument :folder_id, ID, required: true
           field :return_value, Boolean, null: false
           def resolve(folder_id:)
             ctx[:canvas_api].proxy(

@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class DeletePageGroup < CanvasBaseMutation
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           argument :url, String, required: true
           field :page, LMS::GraphQL::Types::Canvas::Page, null: false
           def resolve(group_id:, url:)

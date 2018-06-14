@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class GetQuotaInformationUser < CanvasBaseResolver
           type Boolean, null: false
-          argument :user_id, String, required: true
+          argument :user_id, ID, required: true
           def resolve(user_id:)
             context[:canvas_api].proxy(
               "GET_QUOTA_INFORMATION_USERS",

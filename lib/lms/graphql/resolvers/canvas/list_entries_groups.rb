@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class ListEntriesGroup < CanvasBaseResolver
           type Boolean, null: false
-          argument :group_id, String, required: true
-          argument :topic_id, String, required: true
+          argument :group_id, ID, required: true
+          argument :topic_id, ID, required: true
           argument :ids, String, required: false
           def resolve(group_id:, topic_id:, ids: nil)
             context[:canvas_api].proxy(

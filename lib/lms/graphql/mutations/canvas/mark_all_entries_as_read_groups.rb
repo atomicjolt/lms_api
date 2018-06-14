@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class MarkAllEntriesAsReadGroup < CanvasBaseMutation
-          argument :group_id, String, required: true
-          argument :topic_id, String, required: true
+          argument :group_id, ID, required: true
+          argument :topic_id, ID, required: true
           argument :forced_read_state, Boolean, required: false
           field :return_value, Boolean, null: false
           def resolve(group_id:, topic_id:, forced_read_state: nil)

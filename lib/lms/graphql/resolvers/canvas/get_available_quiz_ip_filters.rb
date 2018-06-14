@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class GetAvailableQuizIpFilter < CanvasBaseResolver
           type Boolean, null: false
-          argument :course_id, String, required: true
-          argument :quiz_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :quiz_id, ID, required: true
           def resolve(course_id:, quiz_id:)
             context[:canvas_api].proxy(
               "GET_AVAILABLE_QUIZ_IP_FILTERS",

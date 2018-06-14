@@ -5,12 +5,12 @@ module LMS
     module Mutations
       module Canvas
         class UpdateGroupCategory < CanvasBaseMutation
-          argument :group_category_id, String, required: true
+          argument :group_category_id, ID, required: true
           argument :name, String, required: false
           argument :self_signup, String, required: false
           argument :auto_leader, String, required: false
           argument :group_limit, Int, required: false
-          argument :sis_group_category_id, String, required: false
+          argument :sis_group_category_id, ID, required: false
           argument :create_group_count, Int, required: false
           argument :split_group_count, String, required: false
           field :group_category, LMS::GraphQL::Types::Canvas::GroupCategory, null: false

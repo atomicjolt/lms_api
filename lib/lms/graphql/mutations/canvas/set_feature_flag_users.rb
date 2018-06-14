@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class SetFeatureFlagUser < CanvasBaseMutation
-          argument :user_id, String, required: true
+          argument :user_id, ID, required: true
           argument :feature, String, required: true
           argument :state, String, required: false
           field :feature_flag, LMS::GraphQL::Types::Canvas::FeatureFlag, null: false

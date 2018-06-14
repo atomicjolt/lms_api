@@ -5,10 +5,10 @@ module LMS
     module Mutations
       module Canvas
         class AddMessage < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :body, String, required: true
-          argument :attachment_ids, String, required: false
-          argument :media_comment_id, String, required: false
+          argument :attachment_ids, [ID], required: false
+          argument :media_comment_id, ID, required: false
           argument :media_comment_type, String, required: false
           argument :recipients, String, required: false
           argument :included_messages, String, required: false

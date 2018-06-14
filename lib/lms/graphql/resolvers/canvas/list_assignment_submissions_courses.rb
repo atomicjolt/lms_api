@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class ListAssignmentSubmissionsCourse < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::Submission], null: false
-          argument :course_id, String, required: true
-          argument :assignment_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :assignment_id, ID, required: true
           argument :include, String, required: false
           argument :grouped, Boolean, required: false
           def resolve(course_id:, assignment_id:, include: nil, grouped: nil)

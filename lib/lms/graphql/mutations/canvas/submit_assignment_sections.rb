@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class SubmitAssignmentSection < CanvasBaseMutation
-          argument :section_id, String, required: true
-          argument :assignment_id, String, required: true
+          argument :section_id, ID, required: true
+          argument :assignment_id, ID, required: true
           argument :comment_text_comment, String, required: false
           argument :submission_submission_type, String, required: true
           argument :submission_body, String, required: false

@@ -6,9 +6,9 @@ module LMS
       module Canvas
         class GetSingleQuizGroup < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::QuizGroup, null: false
-          argument :course_id, String, required: true
-          argument :quiz_id, String, required: true
-          argument :id, String, required: true
+          argument :course_id, ID, required: true
+          argument :quiz_id, ID, required: true
+          argument :id, ID, required: true
           def resolve(course_id:, quiz_id:, id:)
             context[:canvas_api].proxy(
               "GET_SINGLE_QUIZ_GROUP",

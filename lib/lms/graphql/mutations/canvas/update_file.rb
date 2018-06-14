@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class UpdateFile < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :name, String, required: false
-          argument :parent_folder_id, String, required: false
+          argument :parent_folder_id, ID, required: false
           argument :on_duplicate, String, required: false
           argument :lock_at, LMS::GraphQL::Types::DateTimeType, required: false
           argument :unlock_at, LMS::GraphQL::Types::DateTimeType, required: false

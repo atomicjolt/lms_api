@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class SelfRegisterUser < CanvasBaseMutation
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :user_name, String, required: true
           argument :user_short_name, String, required: false
           argument :user_sortable_name, String, required: false

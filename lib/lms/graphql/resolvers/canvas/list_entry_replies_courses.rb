@@ -6,9 +6,9 @@ module LMS
       module Canvas
         class ListEntryRepliesCourse < CanvasBaseResolver
           type Boolean, null: false
-          argument :course_id, String, required: true
-          argument :topic_id, String, required: true
-          argument :entry_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :topic_id, ID, required: true
+          argument :entry_id, ID, required: true
           def resolve(course_id:, topic_id:, entry_id:)
             context[:canvas_api].proxy(
               "LIST_ENTRY_REPLIES_COURSES",

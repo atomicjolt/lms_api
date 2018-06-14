@@ -9,8 +9,8 @@ module LMS
           argument :subject, String, required: false
           argument :body, String, required: true
           argument :group_conversation, Boolean, required: false
-          argument :attachment_ids, String, required: false
-          argument :media_comment_id, String, required: false
+          argument :attachment_ids, [ID], required: false
+          argument :media_comment_id, ID, required: false
           argument :media_comment_type, String, required: false
           argument :user_note, Boolean, required: false
           argument :mode, String, required: false

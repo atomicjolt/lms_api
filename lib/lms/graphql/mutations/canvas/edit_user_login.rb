@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class EditUserLogin < CanvasBaseMutation
-          argument :account_id, String, required: true
-          argument :id, String, required: true
+          argument :account_id, ID, required: true
+          argument :id, ID, required: true
           argument :login_unique_id, String, required: false
           argument :login_password, String, required: false
           argument :login_sis_user_id, String, required: false

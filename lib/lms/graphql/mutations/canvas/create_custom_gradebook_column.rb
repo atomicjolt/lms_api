@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class CreateCustomGradebookColumn < CanvasBaseMutation
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :column_title, String, required: true
           argument :column_position, Int, required: false
           argument :column_hidden, Boolean, required: false

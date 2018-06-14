@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class CreateOrUpdateEventsDirectlyForCourseTimetable < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :course_section_id, String, required: false
+          argument :course_id, ID, required: true
+          argument :course_section_id, ID, required: false
           argument :events, [String], required: false
           argument :events_start_at, [LMS::GraphQL::Types::DateTimeType], required: false
           argument :events_end_at, [LMS::GraphQL::Types::DateTimeType], required: false

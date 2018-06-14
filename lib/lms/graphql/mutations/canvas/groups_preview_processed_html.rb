@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class GroupsPreviewProcessedHtml < CanvasBaseMutation
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           argument :html, String, required: false
           field :return_value, Boolean, null: false
           def resolve(group_id:, html: nil)

@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class GetSingleGroup < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::Group, null: false
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           argument :include, String, required: false
           def resolve(group_id:, include: nil)
             context[:canvas_api].proxy(

@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class QueryByStudent < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::GradeChangeEvent], null: false
-          argument :student_id, String, required: true
+          argument :student_id, ID, required: true
           argument :start_time, LMS::GraphQL::Types::DateTimeType, required: false
           argument :end_time, LMS::GraphQL::Types::DateTimeType, required: false
           def resolve(student_id:, start_time: nil, end_time: nil)

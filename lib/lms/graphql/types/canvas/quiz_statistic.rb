@@ -9,8 +9,8 @@ module LMS
       module Canvas
         class QuizStatistic < BaseType
           description "Quiz Statistics. API Docs: https://canvas.instructure.com/doc/api/quiz_statistics.html"
-          field :id, Int, "The ID of the quiz statistics report..Example: 1", null: true
-          field :quiz_id, Int, "The ID of the Quiz the statistics report is for. 
+          field :id, ID, "The ID of the quiz statistics report..Example: 1", null: true
+          field :quiz_id, ID, "The ID of the Quiz the statistics report is for. 
 NOTE: AVAILABLE ONLY IN NON-JSON-API REQUESTS..Example: 2", null: true
           field :multiple_attempts_exist, Boolean, "Whether there are any students that have made mutliple submissions for this quiz..Example: true", null: true
           field :includes_all_versions, Boolean, "In the presence of multiple attempts, this field describes whether the statistics describe all the submission attempts and not only the latest ones..Example: true", null: true

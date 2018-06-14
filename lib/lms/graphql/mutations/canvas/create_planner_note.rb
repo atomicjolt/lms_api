@@ -8,9 +8,9 @@ module LMS
           argument :title, String, required: false
           argument :details, String, required: false
           argument :todo_date, LMS::GraphQL::Types::DateTimeType, required: false
-          argument :course_id, Int, required: false
+          argument :course_id, ID, required: false
           argument :linked_object_type, String, required: false
-          argument :linked_object_id, Int, required: false
+          argument :linked_object_id, ID, required: false
           field :planner_note, LMS::GraphQL::Types::Canvas::PlannerNote, null: false
           def resolve(title: nil, details: nil, todo_date: nil, course_id: nil, linked_object_type: nil, linked_object_id: nil)
             ctx[:canvas_api].proxy(

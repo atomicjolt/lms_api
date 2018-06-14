@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class DisableAssignmentsCurrentlyEnabledForGradeExportToSi < CanvasBaseMutation
-          argument :course_id, Int, required: true
-          argument :grading_period_id, Int, required: false
+          argument :course_id, ID, required: true
+          argument :grading_period_id, ID, required: false
           field :return_value, Boolean, null: false
           def resolve(course_id:, grading_period_id: nil)
             ctx[:canvas_api].proxy(

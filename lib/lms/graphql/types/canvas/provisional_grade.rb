@@ -7,7 +7,7 @@ module LMS
       module Canvas
         class ProvisionalGrade < BaseType
           description "Moderated Grading. API Docs: https://canvas.instructure.com/doc/api/moderated_grading.html"
-          field :provisional_grade_id, Int, "The identifier for the provisional grade.Example: 23", null: true
+          field :provisional_grade_id, ID, "The identifier for the provisional grade.Example: 23", null: true
           field :score, Int, "The numeric score.Example: 90", null: true
           field :grade, String, "The grade.Example: A-", null: true
           field :grade_matches_current_submission, Boolean, "Whether the grade was applied to the most current submission (false if the student resubmitted after grading).Example: true", null: true

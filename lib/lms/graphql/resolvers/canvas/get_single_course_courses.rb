@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class GetSingleCourseCourse < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::Course, null: false
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :include, String, required: false
           def resolve(id:, include: nil)
             context[:canvas_api].proxy(

@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class GetFeatureFlagCourse < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::FeatureFlag, null: false
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :feature, String, required: true
           def resolve(course_id:, feature:)
             context[:canvas_api].proxy(

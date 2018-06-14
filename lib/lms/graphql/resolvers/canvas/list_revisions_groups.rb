@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListRevisionsGroup < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::PageRevision], null: false
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           argument :url, String, required: true
           def resolve(group_id:, url:)
             context[:canvas_api].proxy(

@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListQuizzesInCourse < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::Quiz], null: false
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :search_term, String, required: false
           def resolve(course_id:, search_term: nil)
             context[:canvas_api].proxy(

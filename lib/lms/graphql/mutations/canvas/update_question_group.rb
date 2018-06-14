@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class UpdateQuestionGroup < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :quiz_id, String, required: true
-          argument :id, String, required: true
+          argument :course_id, ID, required: true
+          argument :quiz_id, ID, required: true
+          argument :id, ID, required: true
           argument :quiz_groups_name, String, required: false
           argument :quiz_groups_pick_count, Int, required: false
           argument :quiz_groups_question_points, Int, required: false

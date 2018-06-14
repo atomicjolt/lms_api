@@ -5,10 +5,10 @@ module LMS
     module Mutations
       module Canvas
         class PeerReviewsCreatePeerReviewCourse < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :assignment_id, String, required: true
-          argument :submission_id, String, required: true
-          argument :user_id, Int, required: true
+          argument :course_id, ID, required: true
+          argument :assignment_id, ID, required: true
+          argument :submission_id, ID, required: true
+          argument :user_id, ID, required: true
           field :peer_review, LMS::GraphQL::Types::Canvas::PeerReview, null: false
           def resolve(course_id:, assignment_id:, submission_id:, user_id:)
             ctx[:canvas_api].proxy(

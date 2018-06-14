@@ -10,13 +10,13 @@ module LMS
           argument :role, String, required: false
           argument :state, String, required: false
           argument :include, String, required: false
-          argument :user_id, String, required: true
-          argument :grading_period_id, Int, required: false
-          argument :enrollment_term_id, Int, required: false
-          argument :sis_account_id, String, required: false
-          argument :sis_course_id, String, required: false
-          argument :sis_section_id, String, required: false
-          argument :sis_user_id, String, required: false
+          argument :user_id, ID, required: true
+          argument :grading_period_id, ID, required: false
+          argument :enrollment_term_id, ID, required: false
+          argument :sis_account_id, ID, required: false
+          argument :sis_course_id, ID, required: false
+          argument :sis_section_id, ID, required: false
+          argument :sis_user_id, ID, required: false
           def resolve(type: nil, role: nil, state: nil, include: nil, user_id:, grading_period_id: nil, enrollment_term_id: nil, sis_account_id: nil, sis_course_id: nil, sis_section_id: nil, sis_user_id: nil)
             context[:canvas_api].proxy(
               "LIST_ENROLLMENTS_USERS",

@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class UnlinkOutcomeGlobal < CanvasBaseMutation
-          argument :id, String, required: true
-          argument :outcome_id, String, required: true
+          argument :id, ID, required: true
+          argument :outcome_id, ID, required: true
           field :outcome_link, LMS::GraphQL::Types::Canvas::OutcomeLink, null: false
           def resolve(id:, outcome_id:)
             ctx[:canvas_api].proxy(

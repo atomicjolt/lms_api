@@ -10,7 +10,7 @@ module CanvasApi
         type = property["type"].downcase
         case type
         when "integer", "string", "boolean", "datetime", "number", "date"
-          graphql_primitive(type, property["format"])
+          graphql_primitive(name, type, property["format"])
         when "void"
           "Boolean"
         when "array"
@@ -26,7 +26,7 @@ module CanvasApi
                    elsif property["items"]["$ref"]
                      "[#{canvas_name(property["items"]["$ref"])}]"
                    else
-                     graphql_primitive(property["items"]["type"].downcase, property["items"]["format"])
+                     graphql_primitive(name, property["items"]["type"].downcase, property["items"]["format"])
                    end
           rescue
             puts "Unable to discover list type for '#{name}' ('#{property}'). Defaulting to String"
@@ -55,7 +55,9 @@ module CanvasApi
       "LMS::GraphQL::Types::Canvas::#{name}"
     end
 
-    def graphql_primitive(type, format)
+    def graphql_primitive(name, type, format)
+      return "[ID]" if name.end_with?("_ids")
+      return "ID" if name == "id" || name.end_with?("_id")
       case type
       when "integer"
         "Int"
@@ -139,7 +141,7 @@ module CanvasApi
     end
 
     def is_basic_type(type)
-      ["Int", "String", "Boolean", "LMS::GraphQL::Types::DateTimeType", "Float"].include?(type)
+      ["Int", "String", "Boolean", "LMS::GraphQL::Types::DateTimeType", "Float", "ID"].include?(type)
     end
 
     def no_brackets(str)

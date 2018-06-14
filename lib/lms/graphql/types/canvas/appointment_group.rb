@@ -24,7 +24,7 @@ module LMS
         end
         class AppointmentGroup < BaseType
           description "Appointment Groups. API Docs: https://canvas.instructure.com/doc/api/appointment_groups.html"
-          field :id, Int, "The ID of the appointment group.Example: 543", null: true
+          field :id, ID, "The ID of the appointment group.Example: 543", null: true
           field :title, String, "The title of the appointment group.Example: Final Presentation", null: true
           field :start_at, LMS::GraphQL::Types::DateTimeType, "The start of the first time slot in the appointment group.Example: 2012-07-20T15:00:00-06:00", null: true
           field :end_at, LMS::GraphQL::Types::DateTimeType, "The end of the last time slot in the appointment group.Example: 2012-07-20T17:00:00-06:00", null: true

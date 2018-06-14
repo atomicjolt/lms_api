@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class DeleteUserFromRootAccount < CanvasBaseMutation
-          argument :account_id, String, required: true
-          argument :user_id, String, required: true
+          argument :account_id, ID, required: true
+          argument :user_id, ID, required: true
           field :user, LMS::GraphQL::Types::Canvas::User, null: false
           def resolve(account_id:, user_id:)
             ctx[:canvas_api].proxy(

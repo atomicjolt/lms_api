@@ -1,3 +1,6 @@
+#1.4.1
+Use ID instead of String where appropriate in GraphQL objects.
+
 #1.4.0
 Adds GraphQL support for querying Canvas API. This is still WIP and not all resolvers return the propery type.
 Basic mutations are also available, but not all mutations are working properly. Use at your own risk.

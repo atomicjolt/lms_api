@@ -8,7 +8,7 @@ module LMS
         class Tab < BaseType
           description "Tabs. API Docs: https://canvas.instructure.com/doc/api/tabs.html"
           field :html_url, String, "Example: /courses/1/external_tools/4", null: true
-          field :id, String, "Example: context_external_tool_4", null: true
+          field :id, ID, "Example: context_external_tool_4", null: true
           field :label, String, "Example: WordPress", null: true
           field :type, String, "Example: external", null: true
           field :hidden, Boolean, "only included if true.Example: true", null: true

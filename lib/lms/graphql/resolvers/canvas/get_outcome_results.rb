@@ -6,9 +6,9 @@ module LMS
       module Canvas
         class GetOutcomeResult < CanvasBaseResolver
           type Boolean, null: false
-          argument :course_id, String, required: true
-          argument :user_ids, Int, required: false
-          argument :outcome_ids, Int, required: false
+          argument :course_id, ID, required: true
+          argument :user_ids, [ID], required: false
+          argument :outcome_ids, [ID], required: false
           argument :include, String, required: false
           def resolve(course_id:, user_ids: nil, outcome_ids: nil, include: nil)
             context[:canvas_api].proxy(

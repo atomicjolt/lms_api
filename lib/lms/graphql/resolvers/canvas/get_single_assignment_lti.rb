@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class GetSingleAssignmentLti < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::LtiAssignment, null: false
-          argument :assignment_id, String, required: true
-          argument :user_id, String, required: false
+          argument :assignment_id, ID, required: true
+          argument :user_id, ID, required: false
           def resolve(assignment_id:, user_id: nil)
             context[:canvas_api].proxy(
               "GET_SINGLE_ASSIGNMENT_LTI",

@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class UpdateAssignmentOverride < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :assignment_id, String, required: true
-          argument :id, String, required: true
+          argument :course_id, ID, required: true
+          argument :assignment_id, ID, required: true
+          argument :id, ID, required: true
           argument :assignment_override_student_ids, Int, required: false
           argument :assignment_override_title, String, required: false
           argument :assignment_override_due_at, LMS::GraphQL::Types::DateTimeType, required: false

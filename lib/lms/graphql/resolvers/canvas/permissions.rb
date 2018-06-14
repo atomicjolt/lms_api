@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class Permission < CanvasBaseResolver
           type Boolean, null: false
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :permissions, String, required: false
           def resolve(course_id:, permissions: nil)
             context[:canvas_api].proxy(

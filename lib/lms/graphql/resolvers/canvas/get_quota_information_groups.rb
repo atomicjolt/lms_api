@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class GetQuotaInformationGroup < CanvasBaseResolver
           type Boolean, null: false
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           def resolve(group_id:)
             context[:canvas_api].proxy(
               "GET_QUOTA_INFORMATION_GROUPS",

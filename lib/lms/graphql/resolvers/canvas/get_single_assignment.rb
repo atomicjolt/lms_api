@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class GetSingleAssignment < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::Assignment, null: false
-          argument :course_id, String, required: true
-          argument :id, String, required: true
+          argument :course_id, ID, required: true
+          argument :id, ID, required: true
           argument :include, String, required: false
           argument :override_assignment_dates, Boolean, required: false
           argument :needs_grading_count_by_section, Boolean, required: false

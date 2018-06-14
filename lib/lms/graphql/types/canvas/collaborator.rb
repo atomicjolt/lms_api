@@ -11,7 +11,7 @@ module LMS
         end
         class Collaborator < BaseType
           description "Collaborations. API Docs: https://canvas.instructure.com/doc/api/collaborations.html"
-          field :id, Int, "The unique user or group identifier for the collaborator..Example: 12345", null: true
+          field :id, ID, "The unique user or group identifier for the collaborator..Example: 12345", null: true
           field :type, CollaboratorTypeEnum, "The type of collaborator (e.g. 'user' or 'group')..Example: user", null: true
           field :name, String, "The name of the collaborator..Example: Don Draper", null: true
 

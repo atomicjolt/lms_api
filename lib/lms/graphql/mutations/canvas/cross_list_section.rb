@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class CrossListSection < CanvasBaseMutation
-          argument :id, String, required: true
-          argument :new_course_id, String, required: true
+          argument :id, ID, required: true
+          argument :new_course_id, ID, required: true
           field :section, LMS::GraphQL::Types::Canvas::Section, null: false
           def resolve(id:, new_course_id:)
             ctx[:canvas_api].proxy(

@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class CreateNewGradingStandardAccount < CanvasBaseMutation
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :title, String, required: true
           argument :grading_scheme_entry_name, String, required: true
           argument :grading_scheme_entry_value, Int, required: true

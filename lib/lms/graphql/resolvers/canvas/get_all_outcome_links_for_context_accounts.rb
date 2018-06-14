@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class GetAllOutcomeLinksForContextAccount < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::OutcomeLink], null: false
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :outcome_style, String, required: false
           argument :outcome_group_style, String, required: false
           def resolve(account_id:, outcome_style: nil, outcome_group_style: nil)

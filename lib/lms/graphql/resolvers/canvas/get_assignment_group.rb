@@ -6,11 +6,11 @@ module LMS
       module Canvas
         class GetAssignmentGroup < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::AssignmentGroup, null: false
-          argument :course_id, String, required: true
-          argument :assignment_group_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :assignment_group_id, ID, required: true
           argument :include, String, required: false
           argument :override_assignment_dates, Boolean, required: false
-          argument :grading_period_id, Int, required: false
+          argument :grading_period_id, ID, required: false
           def resolve(course_id:, assignment_group_id:, include: nil, override_assignment_dates: nil, grading_period_id: nil)
             context[:canvas_api].proxy(
               "GET_ASSIGNMENT_GROUP",

@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class CreatePlannerOverride < CanvasBaseMutation
           argument :plannable_type, String, required: false
-          argument :plannable_id, Int, required: false
+          argument :plannable_id, ID, required: false
           argument :marked_complete, Boolean, required: false
           argument :dismissed, Boolean, required: false
           field :planner_override, LMS::GraphQL::Types::Canvas::PlannerOverride, null: false

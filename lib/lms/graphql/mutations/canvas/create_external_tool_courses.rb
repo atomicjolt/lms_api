@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class CreateExternalToolCourse < CanvasBaseMutation
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :name, String, required: true
           argument :privacy_level, String, required: true
           argument :consumer_key, String, required: true

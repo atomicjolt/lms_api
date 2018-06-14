@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class ShowOriginalityReportFile < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::OriginalityReport, null: false
-          argument :assignment_id, String, required: true
-          argument :file_id, String, required: true
+          argument :assignment_id, ID, required: true
+          argument :file_id, ID, required: true
           def resolve(assignment_id:, file_id:)
             context[:canvas_api].proxy(
               "SHOW_ORIGINALITY_REPORT_FILES",

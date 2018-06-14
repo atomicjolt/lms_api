@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class CreateFolderGroup < CanvasBaseMutation
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           argument :name, String, required: true
-          argument :parent_folder_id, String, required: false
+          argument :parent_folder_id, ID, required: false
           argument :parent_folder_path, String, required: false
           argument :lock_at, LMS::GraphQL::Types::DateTimeType, required: false
           argument :unlock_at, LMS::GraphQL::Types::DateTimeType, required: false

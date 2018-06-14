@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class UpdateCourse < CanvasBaseMutation
-          argument :account_id, String, required: true
-          argument :course_ids, String, required: true
+          argument :account_id, ID, required: true
+          argument :course_ids, [ID], required: true
           argument :event, String, required: true
           field :progress, LMS::GraphQL::Types::Canvas::Progress, null: false
           def resolve(account_id:, course_ids:, event:)

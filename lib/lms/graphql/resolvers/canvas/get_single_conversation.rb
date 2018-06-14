@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class GetSingleConversation < CanvasBaseResolver
           type Boolean, null: false
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :interleave_submissions, Boolean, required: false
           argument :scope, String, required: false
           argument :filter, String, required: false

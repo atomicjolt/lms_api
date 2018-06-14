@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class UpdateMigrationIssueCourse < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :content_migration_id, String, required: true
-          argument :id, String, required: true
+          argument :course_id, ID, required: true
+          argument :content_migration_id, ID, required: true
+          argument :id, ID, required: true
           argument :workflow_state, String, required: true
           field :migration_issue, LMS::GraphQL::Types::Canvas::MigrationIssue, null: false
           def resolve(course_id:, content_migration_id:, id:, workflow_state:)

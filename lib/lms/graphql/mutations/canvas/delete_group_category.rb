@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class DeleteGroupCategory < CanvasBaseMutation
-          argument :group_category_id, String, required: true
+          argument :group_category_id, ID, required: true
           field :return_value, Boolean, null: false
           def resolve(group_category_id:)
             ctx[:canvas_api].proxy(

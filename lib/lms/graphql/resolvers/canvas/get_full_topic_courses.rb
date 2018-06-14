@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class GetFullTopicCourse < CanvasBaseResolver
           type Boolean, null: false
-          argument :course_id, String, required: true
-          argument :topic_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :topic_id, ID, required: true
           def resolve(course_id:, topic_id:)
             context[:canvas_api].proxy(
               "GET_FULL_TOPIC_COURSES",

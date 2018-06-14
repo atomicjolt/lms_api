@@ -7,10 +7,10 @@ module LMS
       module Canvas
         class QuizSubmission < BaseType
           description "Quiz Submissions. API Docs: https://canvas.instructure.com/doc/api/quiz_submissions.html"
-          field :id, Int, "The ID of the quiz submission..Example: 1", null: true
-          field :quiz_id, Int, "The ID of the Quiz the quiz submission belongs to..Example: 2", null: true
-          field :user_id, Int, "The ID of the Student that made the quiz submission..Example: 3", null: true
-          field :submission_id, Int, "The ID of the Submission the quiz submission represents..Example: 1", null: true
+          field :id, ID, "The ID of the quiz submission..Example: 1", null: true
+          field :quiz_id, ID, "The ID of the Quiz the quiz submission belongs to..Example: 2", null: true
+          field :user_id, ID, "The ID of the Student that made the quiz submission..Example: 3", null: true
+          field :submission_id, ID, "The ID of the Submission the quiz submission represents..Example: 1", null: true
           field :started_at, String, "The time at which the student started the quiz submission..Example: 2013-11-07T13:16:18Z", null: true
           field :finished_at, String, "The time at which the student submitted the quiz submission..Example: 2013-11-07T13:16:18Z", null: true
           field :end_at, String, "The time at which the quiz submission will be overdue, and be flagged as a late submission..Example: 2013-11-07T13:16:18Z", null: true

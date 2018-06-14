@@ -6,9 +6,9 @@ module LMS
       module Canvas
         class ListLiveAssessmentResult < CanvasBaseResolver
           type Boolean, null: false
-          argument :course_id, String, required: true
-          argument :assessment_id, String, required: true
-          argument :user_id, Int, required: false
+          argument :course_id, ID, required: true
+          argument :assessment_id, ID, required: true
+          argument :user_id, ID, required: false
           def resolve(course_id:, assessment_id:, user_id: nil)
             context[:canvas_api].proxy(
               "LIST_LIVE_ASSESSMENT_RESULTS",

@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class ImportOutcomesCourse < CanvasBaseMutation
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :import_type, String, required: false
           argument :attachment, String, required: false
           argument :extension, String, required: false

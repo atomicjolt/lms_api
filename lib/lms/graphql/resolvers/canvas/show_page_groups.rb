@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ShowPageGroup < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::Page, null: false
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           argument :url, String, required: true
           def resolve(group_id:, url:)
             context[:canvas_api].proxy(

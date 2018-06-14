@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListStudentGroupParticipant < CanvasBaseResolver
           type Boolean, null: false
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :registration_status, String, required: false
           def resolve(id:, registration_status: nil)
             context[:canvas_api].proxy(

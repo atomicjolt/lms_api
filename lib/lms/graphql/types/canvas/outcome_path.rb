@@ -7,7 +7,7 @@ module LMS
       module Canvas
         class OutcomePath < BaseType
           description "Outcome Results. API Docs: https://canvas.instructure.com/doc/api/outcome_results.html"
-          field :id, Int, "A unique identifier for this outcome.Example: 42", null: true
+          field :id, ID, "A unique identifier for this outcome.Example: 42", null: true
           field :parts, LMS::GraphQL::Types::Canvas::OutcomePathPart, "an array of OutcomePathPart objects.", null: true
 
         end

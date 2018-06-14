@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class FetchingLatestQuizStatistic < CanvasBaseResolver
           type Boolean, null: false
-          argument :course_id, String, required: true
-          argument :quiz_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :quiz_id, ID, required: true
           argument :all_versions, Boolean, required: false
           def resolve(course_id:, quiz_id:, all_versions: nil)
             context[:canvas_api].proxy(

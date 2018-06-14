@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class PublishProvisionalGradesForAssignment < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :assignment_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :assignment_id, ID, required: true
           field :return_value, Boolean, null: false
           def resolve(course_id:, assignment_id:)
             ctx[:canvas_api].proxy(

@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class DeleteFile < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :replace, Boolean, required: false
           field :file, LMS::GraphQL::Types::Canvas::File, null: false
           def resolve(id:, replace: nil)

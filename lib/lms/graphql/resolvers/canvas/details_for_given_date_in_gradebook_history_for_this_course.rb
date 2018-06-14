@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class DetailsForGivenDateInGradebookHistoryForThisCourse < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::Grader], null: false
-          argument :course_id, Int, required: true
+          argument :course_id, ID, required: true
           argument :date, String, required: true
           def resolve(course_id:, date:)
             context[:canvas_api].proxy(

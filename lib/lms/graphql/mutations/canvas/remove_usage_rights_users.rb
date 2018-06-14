@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class RemoveUsageRightsUser < CanvasBaseMutation
-          argument :user_id, String, required: true
-          argument :file_ids, String, required: true
-          argument :folder_ids, String, required: false
+          argument :user_id, ID, required: true
+          argument :file_ids, [ID], required: true
+          argument :folder_ids, [ID], required: false
           field :return_value, Boolean, null: false
           def resolve(user_id:, file_ids:, folder_ids: nil)
             ctx[:canvas_api].proxy(

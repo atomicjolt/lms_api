@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class ListSubgroupsCourse < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::OutcomeGroup], null: false
-          argument :course_id, String, required: true
-          argument :id, String, required: true
+          argument :course_id, ID, required: true
+          argument :id, ID, required: true
           def resolve(course_id:, id:)
             context[:canvas_api].proxy(
               "LIST_SUBGROUPS_COURSES",

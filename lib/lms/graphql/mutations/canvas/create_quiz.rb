@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class CreateQuiz < CanvasBaseMutation
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :quiz_title, String, required: true
           argument :quiz_description, String, required: false
           argument :quiz_quiz_type, String, required: false

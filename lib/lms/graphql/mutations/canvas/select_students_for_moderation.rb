@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class SelectStudentsForModeration < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :assignment_id, String, required: true
-          argument :student_ids, Float, required: false
+          argument :course_id, ID, required: true
+          argument :assignment_id, ID, required: true
+          argument :student_ids, [ID], required: false
           field :user, [LMS::GraphQL::Types::Canvas::User], null: false
           def resolve(course_id:, assignment_id:, student_ids: nil)
             ctx[:canvas_api].proxy(

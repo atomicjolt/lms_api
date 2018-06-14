@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListPotentialMembersCourse < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::User], null: false
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           def resolve(course_id:)
             context[:canvas_api].proxy(
               "LIST_POTENTIAL_MEMBERS_COURSES",

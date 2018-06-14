@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListGradingStandardsAvailableInContextAccount < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::GradingStandard], null: false
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           def resolve(account_id:)
             context[:canvas_api].proxy(
               "LIST_GRADING_STANDARDS_AVAILABLE_IN_CONTEXT_ACCOUNTS",

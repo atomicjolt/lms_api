@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class AddObservee < CanvasBaseMutation
-          argument :user_id, String, required: true
-          argument :observee_id, String, required: true
-          argument :root_account_id, Int, required: false
+          argument :user_id, ID, required: true
+          argument :observee_id, ID, required: true
+          argument :root_account_id, ID, required: false
           field :user, LMS::GraphQL::Types::Canvas::User, null: false
           def resolve(user_id:, observee_id:, root_account_id: nil)
             ctx[:canvas_api].proxy(

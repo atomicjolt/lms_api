@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class PostReplyGroup < CanvasBaseMutation
-          argument :group_id, String, required: true
-          argument :topic_id, String, required: true
-          argument :entry_id, String, required: true
+          argument :group_id, ID, required: true
+          argument :topic_id, ID, required: true
+          argument :entry_id, ID, required: true
           argument :message, String, required: false
           argument :attachment, String, required: false
           field :return_value, Boolean, null: false

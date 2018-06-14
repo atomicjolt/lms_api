@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class QuizSubmissionFilesUploadFile < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :quiz_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :quiz_id, ID, required: true
           argument :name, String, required: false
           argument :on_duplicate, String, required: false
           field :return_value, Boolean, null: false

@@ -5,10 +5,10 @@ module LMS
     module Mutations
       module Canvas
         class MakeAccountAdmin < CanvasBaseMutation
-          argument :account_id, String, required: true
-          argument :user_id, Int, required: true
+          argument :account_id, ID, required: true
+          argument :user_id, ID, required: true
           argument :role, String, required: false
-          argument :role_id, Int, required: false
+          argument :role_id, ID, required: false
           argument :send_confirmation, Boolean, required: false
           field :admin, LMS::GraphQL::Types::Canvas::Admin, null: false
           def resolve(account_id:, user_id:, role: nil, role_id: nil, send_confirmation: nil)

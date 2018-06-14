@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class GetLatePolicy < CanvasBaseResolver
           type Boolean, null: false
-          argument :id, String, required: true
+          argument :id, ID, required: true
           def resolve(id:)
             context[:canvas_api].proxy(
               "GET_LATE_POLICY",

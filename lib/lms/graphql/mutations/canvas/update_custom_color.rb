@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class UpdateCustomColor < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :asset_string, String, required: true
           argument :hexcode, String, required: false
           field :return_value, Boolean, null: false

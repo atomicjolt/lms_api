@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class GetSingleTopicGroup < CanvasBaseResolver
           type Boolean, null: false
-          argument :group_id, String, required: true
-          argument :topic_id, String, required: true
+          argument :group_id, ID, required: true
+          argument :topic_id, ID, required: true
           argument :include, String, required: false
           def resolve(group_id:, topic_id:, include: nil)
             context[:canvas_api].proxy(

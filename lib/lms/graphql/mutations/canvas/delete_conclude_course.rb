@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class DeleteConcludeCourse < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :event, String, required: true
           field :return_value, Boolean, null: false
           def resolve(id:, event:)

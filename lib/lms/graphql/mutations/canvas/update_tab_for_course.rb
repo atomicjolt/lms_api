@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class UpdateTabForCourse < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :tab_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :tab_id, ID, required: true
           argument :position, Int, required: false
           argument :hidden, Boolean, required: false
           field :tab, LMS::GraphQL::Types::Canvas::Tab, null: false

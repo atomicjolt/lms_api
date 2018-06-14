@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class AddAuthenticationProvider < CanvasBaseMutation
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           field :authentication_provider, LMS::GraphQL::Types::Canvas::AuthenticationProvider, null: false
           def resolve(account_id:)
             ctx[:canvas_api].proxy(

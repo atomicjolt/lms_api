@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class GetAllQuizSubmission < CanvasBaseResolver
           type Boolean, null: false
-          argument :course_id, String, required: true
-          argument :quiz_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :quiz_id, ID, required: true
           argument :include, String, required: false
           def resolve(course_id:, quiz_id:, include: nil)
             context[:canvas_api].proxy(

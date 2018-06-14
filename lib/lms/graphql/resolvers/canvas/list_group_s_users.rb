@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListGroupSUser < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::User], null: false
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           argument :search_term, String, required: false
           argument :include, String, required: false
           def resolve(group_id:, search_term: nil, include: nil)

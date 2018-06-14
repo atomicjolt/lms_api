@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class CreateSingleQuizQuestion < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :quiz_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :quiz_id, ID, required: true
           argument :question_question_name, String, required: false
           argument :question_question_text, String, required: false
           argument :question_quiz_group_id, Int, required: false

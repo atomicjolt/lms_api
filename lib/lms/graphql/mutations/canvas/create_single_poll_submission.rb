@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class CreateSinglePollSubmission < CanvasBaseMutation
-          argument :poll_id, String, required: true
-          argument :poll_session_id, String, required: true
+          argument :poll_id, ID, required: true
+          argument :poll_session_id, ID, required: true
           argument :poll_submissions_poll_choice_id, Int, required: true
           field :return_value, Boolean, null: false
           def resolve(poll_id:, poll_session_id:, poll_submissions_poll_choice_id:)

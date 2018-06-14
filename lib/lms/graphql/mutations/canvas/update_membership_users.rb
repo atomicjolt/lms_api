@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class UpdateMembershipUser < CanvasBaseMutation
-          argument :group_id, String, required: true
-          argument :user_id, String, required: true
+          argument :group_id, ID, required: true
+          argument :user_id, ID, required: true
           argument :workflow_state, String, required: false
           argument :moderator, String, required: false
           field :group_membership, LMS::GraphQL::Types::Canvas::GroupMembership, null: false

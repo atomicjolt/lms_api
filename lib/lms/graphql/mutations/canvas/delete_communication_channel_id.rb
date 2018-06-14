@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class DeleteCommunicationChannelId < CanvasBaseMutation
-          argument :user_id, String, required: true
-          argument :id, String, required: true
+          argument :user_id, ID, required: true
+          argument :id, ID, required: true
           field :communication_channel, LMS::GraphQL::Types::Canvas::CommunicationChannel, null: false
           def resolve(user_id:, id:)
             ctx[:canvas_api].proxy(

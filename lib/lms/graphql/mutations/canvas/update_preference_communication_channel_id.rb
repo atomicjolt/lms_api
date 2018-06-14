@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class UpdatePreferenceCommunicationChannelId < CanvasBaseMutation
-          argument :communication_channel_id, String, required: true
+          argument :communication_channel_id, ID, required: true
           argument :notification, String, required: true
           argument :notification_preferences_frequency, String, required: true
           field :return_value, Boolean, null: false

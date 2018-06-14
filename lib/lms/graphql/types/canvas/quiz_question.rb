@@ -7,8 +7,8 @@ module LMS
       module Canvas
         class QuizQuestion < BaseType
           description "Quiz Questions. API Docs: https://canvas.instructure.com/doc/api/quiz_questions.html"
-          field :id, Int, "The ID of the quiz question..Example: 1", null: true
-          field :quiz_id, Int, "The ID of the Quiz the question belongs to..Example: 2", null: true
+          field :id, ID, "The ID of the quiz question..Example: 1", null: true
+          field :quiz_id, ID, "The ID of the Quiz the question belongs to..Example: 2", null: true
           field :position, Int, "The order in which the question will be retrieved and displayed..Example: 1", null: true
           field :question_name, String, "The name of the question..Example: Prime Number Identification", null: true
           field :question_type, String, "The type of the question..Example: multiple_choice_question", null: true

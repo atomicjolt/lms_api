@@ -20,7 +20,7 @@ module LMS
           field :end_at, LMS::GraphQL::Types::DateTimeType, "When to expire the notification..Example: 2013-08-29T23:59:00-06:00", null: true
           field :icon, AccountNotificationIconEnum, "The icon to display with the message.  Defaults to warning..Example: information", null: true
           field :roles, String, "(Deprecated) The roles to send the notification to.  If roles is not passed it defaults to all roles.Example: StudentEnrollment", null: true
-          field :role_ids, Int, "The roles to send the notification to.  If roles is not passed it defaults to all roles.Example: 1", null: true
+          field :role_ids, [ID], "The roles to send the notification to.  If roles is not passed it defaults to all roles.Example: 1", null: true
 
         end
       end

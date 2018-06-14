@@ -24,18 +24,18 @@ module LMS
         end
         class Course < BaseType
           description "Courses. API Docs: https://canvas.instructure.com/doc/api/courses.html"
-          field :id, Int, "the unique identifier for the course.Example: 370663", null: true
-          field :sis_course_id, String, "the SIS identifier for the course, if defined. This field is only included if the user has permission to view SIS information..", null: true
+          field :id, ID, "the unique identifier for the course.Example: 370663", null: true
+          field :sis_course_id, ID, "the SIS identifier for the course, if defined. This field is only included if the user has permission to view SIS information..", null: true
           field :uuid, String, "the UUID of the course.Example: WvAHhY5FINzq5IyRIJybGeiXyFkG3SqHUPb7jZY5", null: true
-          field :integration_id, String, "the integration identifier for the course, if defined. This field is only included if the user has permission to view SIS information..", null: true
-          field :sis_import_id, Int, "the unique identifier for the SIS import. This field is only included if the user has permission to manage SIS information..Example: 34", null: true
+          field :integration_id, ID, "the integration identifier for the course, if defined. This field is only included if the user has permission to view SIS information..", null: true
+          field :sis_import_id, ID, "the unique identifier for the SIS import. This field is only included if the user has permission to manage SIS information..Example: 34", null: true
           field :name, String, "the full name of the course.Example: InstructureCon 2012", null: true
           field :course_code, String, "the course code.Example: INSTCON12", null: true
           field :workflow_state, CourseWorkflowStateEnum, "the current state of the course one of 'unpublished', 'available', 'completed', or 'deleted'.Example: available", null: true
-          field :account_id, Int, "the account associated with the course.Example: 81259", null: true
-          field :root_account_id, Int, "the root account associated with the course.Example: 81259", null: true
-          field :enrollment_term_id, Int, "the enrollment term associated with the course.Example: 34", null: true
-          field :grading_standard_id, Int, "the grading standard associated with the course.Example: 25", null: true
+          field :account_id, ID, "the account associated with the course.Example: 81259", null: true
+          field :root_account_id, ID, "the root account associated with the course.Example: 81259", null: true
+          field :enrollment_term_id, ID, "the enrollment term associated with the course.Example: 34", null: true
+          field :grading_standard_id, ID, "the grading standard associated with the course.Example: 25", null: true
           field :start_at, LMS::GraphQL::Types::DateTimeType, "the start date for the course, if applicable.Example: 2012-06-01T00:00:00-06:00", null: true
           field :end_at, LMS::GraphQL::Types::DateTimeType, "the end date for the course, if applicable.Example: 2012-09-01T00:00:00-06:00", null: true
           field :locale, String, "the course-set locale, if applicable.Example: en", null: true

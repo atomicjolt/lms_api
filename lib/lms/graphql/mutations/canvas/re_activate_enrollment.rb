@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class ReActivateEnrollment < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :id, String, required: true
+          argument :course_id, ID, required: true
+          argument :id, ID, required: true
           field :enrollment, LMS::GraphQL::Types::Canvas::Enrollment, null: false
           def resolve(course_id:, id:)
             ctx[:canvas_api].proxy(

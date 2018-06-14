@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class RetrieveAllQuizReport < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::QuizReport], null: false
-          argument :course_id, String, required: true
-          argument :quiz_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :quiz_id, ID, required: true
           argument :includes_all_versions, Boolean, required: false
           def resolve(course_id:, quiz_id:, includes_all_versions: nil)
             context[:canvas_api].proxy(

@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListAccountAdmin < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::Admin], null: false
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :user_id, [Int], required: false
           def resolve(account_id:, user_id: nil)
             context[:canvas_api].proxy(

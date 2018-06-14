@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class GetAllPeerReviewsSectionsPeerReview < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::PeerReview], null: false
-          argument :section_id, String, required: true
-          argument :assignment_id, String, required: true
+          argument :section_id, ID, required: true
+          argument :assignment_id, ID, required: true
           argument :include, String, required: false
           def resolve(section_id:, assignment_id:, include: nil)
             context[:canvas_api].proxy(

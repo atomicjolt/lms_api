@@ -14,7 +14,7 @@ module LMS
         end
         class OutcomeImport < BaseType
           description "Outcome Imports. API Docs: https://canvas.instructure.com/doc/api/outcome_imports.html"
-          field :id, Int, "The unique identifier for the outcome import..Example: 1", null: true
+          field :id, ID, "The unique identifier for the outcome import..Example: 1", null: true
           field :created_at, LMS::GraphQL::Types::DateTimeType, "The date the outcome import was created..Example: 2013-12-01T23:59:00-06:00", null: true
           field :ended_at, LMS::GraphQL::Types::DateTimeType, "The date the outcome import finished. Returns null if not finished..Example: 2013-12-02T00:03:21-06:00", null: true
           field :updated_at, LMS::GraphQL::Types::DateTimeType, "The date the outcome import was last updated..Example: 2013-12-02T00:03:21-06:00", null: true

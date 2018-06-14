@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class CreateNewSubAccount < CanvasBaseMutation
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :account_name, String, required: true
           argument :account_sis_account_id, String, required: false
           argument :account_default_storage_quota_mb, Int, required: false

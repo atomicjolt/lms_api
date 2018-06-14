@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class DeleteUserLogin < CanvasBaseMutation
-          argument :user_id, String, required: true
-          argument :id, String, required: true
+          argument :user_id, ID, required: true
+          argument :id, ID, required: true
           field :return_value, Boolean, null: false
           def resolve(user_id:, id:)
             ctx[:canvas_api].proxy(

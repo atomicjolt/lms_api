@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class UpdateTopicGroup < CanvasBaseMutation
-          argument :group_id, String, required: true
-          argument :topic_id, String, required: true
+          argument :group_id, ID, required: true
+          argument :topic_id, ID, required: true
           argument :title, String, required: false
           argument :message, String, required: false
           argument :discussion_type, String, required: false
@@ -20,7 +20,7 @@ module LMS
           argument :is_announcement, Boolean, required: false
           argument :pinned, Boolean, required: false
           argument :position_after, String, required: false
-          argument :group_category_id, Int, required: false
+          argument :group_category_id, ID, required: false
           argument :allow_rating, Boolean, required: false
           argument :only_graders_can_rate, Boolean, required: false
           argument :sort_by_rating, Boolean, required: false

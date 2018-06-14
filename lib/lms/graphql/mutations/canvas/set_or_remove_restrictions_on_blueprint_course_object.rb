@@ -5,10 +5,10 @@ module LMS
     module Mutations
       module Canvas
         class SetOrRemoveRestrictionsOnBlueprintCourseObject < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :template_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :template_id, ID, required: true
           argument :content_type, String, required: false
-          argument :content_id, Int, required: false
+          argument :content_id, ID, required: false
           argument :restricted, Boolean, required: false
           argument :restrictions, String, required: false
           field :return_value, Boolean, null: false

@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class ExportContentGroup < CanvasBaseMutation
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           argument :export_type, String, required: true
           argument :skip_notifications, Boolean, required: false
           argument :select, String, required: false

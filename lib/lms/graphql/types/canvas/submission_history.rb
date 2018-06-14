@@ -7,7 +7,7 @@ module LMS
       module Canvas
         class SubmissionHistory < BaseType
           description "Gradebook History. API Docs: https://canvas.instructure.com/doc/api/gradebook_history.html"
-          field :submission_id, Int, "the id of the submission.Example: 4", null: true
+          field :submission_id, ID, "the id of the submission.Example: 4", null: true
           field :versions, [LMS::GraphQL::Types::Canvas::SubmissionVersion], "an array of all the versions of this submission.", null: true
 
         end

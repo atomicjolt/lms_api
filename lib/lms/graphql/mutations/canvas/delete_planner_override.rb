@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class DeletePlannerOverride < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           field :planner_override, LMS::GraphQL::Types::Canvas::PlannerOverride, null: false
           def resolve(id:)
             ctx[:canvas_api].proxy(

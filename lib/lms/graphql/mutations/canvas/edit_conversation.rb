@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class EditConversation < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :conversation_workflow_state, String, required: false
           argument :conversation_subscribed, Boolean, required: false
           argument :conversation_starred, Boolean, required: false

@@ -7,9 +7,9 @@ module LMS
       module Canvas
         class Rubric < BaseType
           description "Rubrics. API Docs: https://canvas.instructure.com/doc/api/rubrics.html"
-          field :id, Int, "the ID of the rubric.Example: 1", null: true
+          field :id, ID, "the ID of the rubric.Example: 1", null: true
           field :title, String, "title of the rubric.Example: some title", null: true
-          field :context_id, Int, "the context owning the rubric.Example: 1", null: true
+          field :context_id, ID, "the context owning the rubric.Example: 1", null: true
           field :context_type, String, "Example: Course", null: true
           field :points_possible, Int, "Example: 10.0", null: true
           field :reusable, Boolean, "Example: false", null: true

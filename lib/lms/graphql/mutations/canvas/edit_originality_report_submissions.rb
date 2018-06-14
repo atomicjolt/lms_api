@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class EditOriginalityReportSubmission < CanvasBaseMutation
-          argument :assignment_id, String, required: true
-          argument :submission_id, String, required: true
-          argument :id, String, required: true
+          argument :assignment_id, ID, required: true
+          argument :submission_id, ID, required: true
+          argument :id, ID, required: true
           argument :originality_report_originality_score, Float, required: false
           argument :originality_report_originality_report_url, String, required: false
           argument :originality_report_originality_report_file_id, Int, required: false

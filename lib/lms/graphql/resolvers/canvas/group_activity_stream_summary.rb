@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class GroupActivityStreamSummary < CanvasBaseResolver
           type Boolean, null: false
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           def resolve(group_id:)
             context[:canvas_api].proxy(
               "GROUP_ACTIVITY_STREAM_SUMMARY",

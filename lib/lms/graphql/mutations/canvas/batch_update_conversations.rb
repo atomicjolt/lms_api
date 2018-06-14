@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class BatchUpdateConversation < CanvasBaseMutation
-          argument :conversation_ids, String, required: true
+          argument :conversation_ids, [ID], required: true
           argument :event, String, required: true
           field :progress, LMS::GraphQL::Types::Canvas::Progress, null: false
           def resolve(conversation_ids:, event:)

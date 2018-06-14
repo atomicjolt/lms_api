@@ -10,7 +10,7 @@ module LMS
           argument :is_public, Boolean, required: false
           argument :join_level, String, required: false
           argument :storage_quota_mb, Int, required: false
-          argument :sis_group_id, String, required: false
+          argument :sis_group_id, ID, required: false
           field :group, LMS::GraphQL::Types::Canvas::Group, null: false
           def resolve(name: nil, description: nil, is_public: nil, join_level: nil, storage_quota_mb: nil, sis_group_id: nil)
             ctx[:canvas_api].proxy(

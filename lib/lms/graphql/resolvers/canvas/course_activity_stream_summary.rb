@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class CourseActivityStreamSummary < CanvasBaseResolver
           type Boolean, null: false
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           def resolve(course_id:)
             context[:canvas_api].proxy(
               "COURSE_ACTIVITY_STREAM_SUMMARY",

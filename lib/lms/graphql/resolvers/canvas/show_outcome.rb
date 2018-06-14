@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ShowOutcome < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::Outcome, null: false
-          argument :id, String, required: true
+          argument :id, ID, required: true
           def resolve(id:)
             context[:canvas_api].proxy(
               "SHOW_OUTCOME",

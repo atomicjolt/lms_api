@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListUsersInAccount < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::User], null: false
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :search_term, String, required: false
           argument :sort, String, required: false
           argument :order, String, required: false

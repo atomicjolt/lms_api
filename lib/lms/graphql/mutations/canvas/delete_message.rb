@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class DeleteMessage < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :remove, String, required: true
           field :return_value, Boolean, null: false
           def resolve(id:, remove:)

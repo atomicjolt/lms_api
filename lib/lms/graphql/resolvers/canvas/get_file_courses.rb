@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class GetFileCourse < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::File, null: false
-          argument :course_id, String, required: true
-          argument :id, String, required: true
+          argument :course_id, ID, required: true
+          argument :id, ID, required: true
           argument :include, String, required: false
           def resolve(course_id:, id:, include: nil)
             context[:canvas_api].proxy(

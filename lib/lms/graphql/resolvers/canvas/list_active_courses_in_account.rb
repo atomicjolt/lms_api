@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListActiveCoursesInAccount < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::Course], null: false
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :with_enrollments, Boolean, required: false
           argument :enrollment_type, String, required: false
           argument :published, Boolean, required: false
@@ -17,7 +17,7 @@ module LMS
           argument :by_subaccounts, Int, required: false
           argument :hide_enrollmentless_courses, Boolean, required: false
           argument :state, String, required: false
-          argument :enrollment_term_id, Int, required: false
+          argument :enrollment_term_id, ID, required: false
           argument :search_term, String, required: false
           argument :include, String, required: false
           argument :sort, String, required: false

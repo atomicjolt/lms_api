@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class GetFolderUser < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::Folder, null: false
-          argument :user_id, String, required: true
-          argument :id, String, required: true
+          argument :user_id, ID, required: true
+          argument :id, ID, required: true
           def resolve(user_id:, id:)
             context[:canvas_api].proxy(
               "GET_FOLDER_USERS",

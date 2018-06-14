@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListAvailableTabsForCourseOrGroupGroup < CanvasBaseResolver
           type Boolean, null: false
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           argument :include, String, required: false
           def resolve(group_id:, include: nil)
             context[:canvas_api].proxy(

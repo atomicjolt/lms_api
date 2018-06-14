@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class CreateLatePolicy < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :late_policy_missing_submission_deduction_enabled, Boolean, required: false
           argument :late_policy_missing_submission_deduction, Float, required: false
           argument :late_policy_late_submission_deduction_enabled, Boolean, required: false

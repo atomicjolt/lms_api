@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class DestroyAssignmentGroup < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :assignment_group_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :assignment_group_id, ID, required: true
           argument :move_assignments_to, Int, required: false
           field :assignment_group, LMS::GraphQL::Types::Canvas::AssignmentGroup, null: false
           def resolve(course_id:, assignment_group_id:, move_assignments_to: nil)

@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class EditUser < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :user_name, String, required: false
           argument :user_short_name, String, required: false
           argument :user_sortable_name, String, required: false

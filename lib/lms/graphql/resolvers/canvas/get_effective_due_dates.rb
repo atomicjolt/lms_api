@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class GetEffectiveDueDate < CanvasBaseResolver
           type Boolean, null: false
-          argument :course_id, String, required: true
-          argument :assignment_ids, String, required: false
+          argument :course_id, ID, required: true
+          argument :assignment_ids, [ID], required: false
           def resolve(course_id:, assignment_ids: nil)
             context[:canvas_api].proxy(
               "GET_EFFECTIVE_DUE_DATES",

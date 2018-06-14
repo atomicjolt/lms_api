@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListExternalToolsAccount < CanvasBaseResolver
           type Boolean, null: false
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :search_term, String, required: false
           argument :selectable, Boolean, required: false
           argument :include_parents, Boolean, required: false

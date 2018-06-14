@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListFilesCourse < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::File], null: false
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :content_types, String, required: false
           argument :search_term, String, required: false
           argument :include, String, required: false

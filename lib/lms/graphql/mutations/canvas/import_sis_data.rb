@@ -5,12 +5,12 @@ module LMS
     module Mutations
       module Canvas
         class ImportSisDatum < CanvasBaseMutation
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :import_type, String, required: false
           argument :attachment, String, required: false
           argument :extension, String, required: false
           argument :batch_mode, Boolean, required: false
-          argument :batch_mode_term_id, String, required: false
+          argument :batch_mode_term_id, ID, required: false
           argument :multi_term_batch_mode, Boolean, required: false
           argument :skip_deletes, Boolean, required: false
           argument :override_sis_stickiness, Boolean, required: false

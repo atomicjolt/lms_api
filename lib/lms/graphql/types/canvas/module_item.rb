@@ -18,13 +18,13 @@ module LMS
         end
         class ModuleItem < BaseType
           description "Modules. API Docs: https://canvas.instructure.com/doc/api/modules.html"
-          field :id, Int, "the unique identifier for the module item.Example: 768", null: true
-          field :module_id, Int, "the id of the Module this item appears in.Example: 123", null: true
+          field :id, ID, "the unique identifier for the module item.Example: 768", null: true
+          field :module_id, ID, "the id of the Module this item appears in.Example: 123", null: true
           field :position, Int, "the position of this item in the module (1-based).Example: 1", null: true
           field :title, String, "the title of this item.Example: Square Roots: Irrational numbers or boxy vegetables?", null: true
           field :indent, Int, "0-based indent level; module items may be indented to show a hierarchy.Example: 0", null: true
           field :type, ModuleItemTypeEnum, "the type of object referred to one of 'File', 'Page', 'Discussion', 'Assignment', 'Quiz', 'SubHeader', 'ExternalUrl', 'ExternalTool'.Example: Assignment", null: true
-          field :content_id, Int, "the id of the object referred to applies to 'File', 'Discussion', 'Assignment', 'Quiz', 'ExternalTool' types.Example: 1337", null: true
+          field :content_id, ID, "the id of the object referred to applies to 'File', 'Discussion', 'Assignment', 'Quiz', 'ExternalTool' types.Example: 1337", null: true
           field :html_url, String, "link to the item in Canvas.Example: https://canvas.example.edu/courses/222/modules/items/768", null: true
           field :url, String, "(Optional) link to the Canvas API object, if applicable.Example: https://canvas.example.edu/api/v1/courses/222/assignments/987", null: true
           field :page_url, String, "(only for 'Page' type) unique locator for the linked wiki page.Example: my-page-title", null: true

@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class GetFullTopicGroup < CanvasBaseResolver
           type Boolean, null: false
-          argument :group_id, String, required: true
-          argument :topic_id, String, required: true
+          argument :group_id, ID, required: true
+          argument :topic_id, ID, required: true
           def resolve(group_id:, topic_id:)
             context[:canvas_api].proxy(
               "GET_FULL_TOPIC_GROUPS",

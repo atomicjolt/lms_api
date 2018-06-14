@@ -6,10 +6,10 @@ module LMS
       module Canvas
         class ListsSubmission < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::SubmissionHistory], null: false
-          argument :course_id, Int, required: true
+          argument :course_id, ID, required: true
           argument :date, String, required: true
-          argument :grader_id, Int, required: true
-          argument :assignment_id, Int, required: true
+          argument :grader_id, ID, required: true
+          argument :assignment_id, ID, required: true
           def resolve(course_id:, date:, grader_id:, assignment_id:)
             context[:canvas_api].proxy(
               "LISTS_SUBMISSIONS",

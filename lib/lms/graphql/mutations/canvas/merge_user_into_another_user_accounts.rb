@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class MergeUserIntoAnotherUserAccount < CanvasBaseMutation
-          argument :id, String, required: true
-          argument :destination_account_id, String, required: true
-          argument :destination_user_id, String, required: true
+          argument :id, ID, required: true
+          argument :destination_account_id, ID, required: true
+          argument :destination_user_id, ID, required: true
           field :user, LMS::GraphQL::Types::Canvas::User, null: false
           def resolve(id:, destination_account_id:, destination_user_id:)
             ctx[:canvas_api].proxy(

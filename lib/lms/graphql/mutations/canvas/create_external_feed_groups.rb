@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class CreateExternalFeedGroup < CanvasBaseMutation
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           argument :url, String, required: true
           argument :header_match, Boolean, required: false
           argument :verbosity, String, required: false

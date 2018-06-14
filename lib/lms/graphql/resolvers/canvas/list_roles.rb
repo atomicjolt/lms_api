@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListRole < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::Role], null: false
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :state, String, required: false
           argument :show_inherited, Boolean, required: false
           def resolve(account_id:, state: nil, show_inherited: nil)

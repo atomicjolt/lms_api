@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class ActivateRole < CanvasBaseMutation
-          argument :account_id, String, required: true
-          argument :id, String, required: true
-          argument :role_id, Int, required: true
+          argument :account_id, ID, required: true
+          argument :id, ID, required: true
+          argument :role_id, ID, required: true
           argument :role, String, required: false
           field :role, LMS::GraphQL::Types::Canvas::Role, null: false
           def resolve(account_id:, id:, role_id:, role: nil)

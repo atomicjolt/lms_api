@@ -13,9 +13,9 @@ module LMS
         end
         class Outcome < BaseType
           description "Outcomes. API Docs: https://canvas.instructure.com/doc/api/outcomes.html"
-          field :id, Int, "the ID of the outcome.Example: 1", null: true
+          field :id, ID, "the ID of the outcome.Example: 1", null: true
           field :url, String, "the URL for fetching/updating the outcome. should be treated as opaque.Example: /api/v1/outcomes/1", null: true
-          field :context_id, Int, "the context owning the outcome. may be null for global outcomes.Example: 1", null: true
+          field :context_id, ID, "the context owning the outcome. may be null for global outcomes.Example: 1", null: true
           field :context_type, String, "Example: Account", null: true
           field :title, String, "title of the outcome.Example: Outcome title", null: true
           field :display_name, String, "Optional friendly name for reporting.Example: My Favorite Outcome", null: true

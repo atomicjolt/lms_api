@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class BeginMigrationToPushToAssociatedCourse < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :template_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :template_id, ID, required: true
           argument :comment, String, required: false
           argument :send_notification, Boolean, required: false
           argument :copy_settings, Boolean, required: false

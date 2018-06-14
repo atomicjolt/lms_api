@@ -6,9 +6,9 @@ module LMS
       module Canvas
         class GetModuleItemSequence < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::ModuleItemSequence, null: false
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :asset_type, String, required: false
-          argument :asset_id, Int, required: false
+          argument :asset_id, ID, required: false
           def resolve(course_id:, asset_type: nil, asset_id: nil)
             context[:canvas_api].proxy(
               "GET_MODULE_ITEM_SEQUENCE",

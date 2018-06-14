@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class CourseQuizExtensionsSetExtensionsForStudentQuizSubmission < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :user_id, Int, required: true
+          argument :course_id, ID, required: true
+          argument :user_id, ID, required: true
           argument :extra_attempts, Int, required: false
           argument :extra_time, Int, required: false
           argument :manually_unlocked, Boolean, required: false

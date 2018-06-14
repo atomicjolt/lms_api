@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class LoadCustomDatum < CanvasBaseResolver
           type Boolean, null: false
-          argument :user_id, String, required: true
+          argument :user_id, ID, required: true
           argument :ns, String, required: true
           def resolve(user_id:, ns:)
             context[:canvas_api].proxy(

@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class UpdateUserSetting < CanvasBaseResolver
           type Boolean, null: false
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :manual_mark_as_read, Boolean, required: false
           argument :collapse_global_nav, Boolean, required: false
           def resolve(id:, manual_mark_as_read: nil, collapse_global_nav: nil)

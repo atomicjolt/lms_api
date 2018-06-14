@@ -6,11 +6,11 @@ module LMS
       module Canvas
         class GetSessionlessLaunchUrlForExternalToolCourse < CanvasBaseResolver
           type Boolean, null: false
-          argument :course_id, String, required: true
-          argument :id, String, required: false
+          argument :course_id, ID, required: true
+          argument :id, ID, required: false
           argument :url, String, required: false
-          argument :assignment_id, String, required: false
-          argument :module_item_id, String, required: false
+          argument :assignment_id, ID, required: false
+          argument :module_item_id, ID, required: false
           argument :launch_type, String, required: false
           def resolve(course_id:, id: nil, url: nil, assignment_id: nil, module_item_id: nil, launch_type: nil)
             context[:canvas_api].proxy(

@@ -6,10 +6,10 @@ module LMS
       module Canvas
         class ListModule < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::Module], null: false
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :include, String, required: false
           argument :search_term, String, required: false
-          argument :student_id, String, required: false
+          argument :student_id, ID, required: false
           def resolve(course_id:, include: nil, search_term: nil, student_id: nil)
             context[:canvas_api].proxy(
               "LIST_MODULES",

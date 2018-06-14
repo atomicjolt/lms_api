@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class ShareBrandconfigTheme < CanvasBaseMutation
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :shared_brand_config_name, String, required: true
           argument :shared_brand_config_brand_config_md5, String, required: true
           field :shared_brand_config, LMS::GraphQL::Types::Canvas::SharedBrandConfig, null: false

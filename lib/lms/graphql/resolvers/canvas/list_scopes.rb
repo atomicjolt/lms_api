@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListScope < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::Scope], null: false
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :group_by, String, required: false
           def resolve(account_id:, group_by: nil)
             context[:canvas_api].proxy(

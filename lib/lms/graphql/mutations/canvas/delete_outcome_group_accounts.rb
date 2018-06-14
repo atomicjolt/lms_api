@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class DeleteOutcomeGroupAccount < CanvasBaseMutation
-          argument :account_id, String, required: true
-          argument :id, String, required: true
+          argument :account_id, ID, required: true
+          argument :id, ID, required: true
           field :outcome_group, LMS::GraphQL::Types::Canvas::OutcomeGroup, null: false
           def resolve(account_id:, id:)
             ctx[:canvas_api].proxy(

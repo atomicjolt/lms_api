@@ -12,8 +12,8 @@ module LMS
         end
         class QuizReport < BaseType
           description "Quiz Reports. API Docs: https://canvas.instructure.com/doc/api/quiz_reports.html"
-          field :id, Int, "the ID of the quiz report.Example: 5", null: true
-          field :quiz_id, Int, "the ID of the quiz.Example: 4", null: true
+          field :id, ID, "the ID of the quiz report.Example: 5", null: true
+          field :quiz_id, ID, "the ID of the quiz.Example: 4", null: true
           field :report_type, QuizReportReportTypeEnum, "which type of report this is possible values: 'student_analysis', 'item_analysis'.Example: student_analysis", null: true
           field :readable_type, String, "a human-readable (and localized) version of the report_type.Example: Student Analysis", null: true
           field :includes_all_versions, Boolean, "boolean indicating whether the report represents all submissions or only the most recent ones for each student.Example: true", null: true

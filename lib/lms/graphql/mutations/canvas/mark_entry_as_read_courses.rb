@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class MarkEntryAsReadCourse < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :topic_id, String, required: true
-          argument :entry_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :topic_id, ID, required: true
+          argument :entry_id, ID, required: true
           argument :forced_read_state, Boolean, required: false
           field :return_value, Boolean, null: false
           def resolve(course_id:, topic_id:, entry_id:, forced_read_state: nil)

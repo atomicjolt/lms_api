@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class PostEntryCourse < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :topic_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :topic_id, ID, required: true
           argument :message, String, required: false
           argument :attachment, String, required: false
           field :return_value, Boolean, null: false

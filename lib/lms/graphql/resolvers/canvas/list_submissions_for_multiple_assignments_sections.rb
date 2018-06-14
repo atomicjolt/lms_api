@@ -6,14 +6,14 @@ module LMS
       module Canvas
         class ListSubmissionsForMultipleAssignmentsSection < CanvasBaseResolver
           type Boolean, null: false
-          argument :section_id, String, required: true
-          argument :student_ids, String, required: false
-          argument :assignment_ids, String, required: false
+          argument :section_id, ID, required: true
+          argument :student_ids, [ID], required: false
+          argument :assignment_ids, [ID], required: false
           argument :grouped, Boolean, required: false
           argument :post_to_sis, Boolean, required: false
           argument :submitted_since, LMS::GraphQL::Types::DateTimeType, required: false
           argument :graded_since, LMS::GraphQL::Types::DateTimeType, required: false
-          argument :grading_period_id, Int, required: false
+          argument :grading_period_id, ID, required: false
           argument :workflow_state, String, required: false
           argument :enrollment_state, String, required: false
           argument :state_based_on_date, Boolean, required: false

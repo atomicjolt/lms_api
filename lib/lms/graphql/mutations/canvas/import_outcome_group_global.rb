@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class ImportOutcomeGroupGlobal < CanvasBaseMutation
-          argument :id, String, required: true
-          argument :source_outcome_group_id, Int, required: true
+          argument :id, ID, required: true
+          argument :source_outcome_group_id, ID, required: true
           field :outcome_group, LMS::GraphQL::Types::Canvas::OutcomeGroup, null: false
           def resolve(id:, source_outcome_group_id:)
             ctx[:canvas_api].proxy(

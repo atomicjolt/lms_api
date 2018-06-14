@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class UpdateColumnDatum < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :id, String, required: true
-          argument :user_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :id, ID, required: true
+          argument :user_id, ID, required: true
           argument :column_data_content, String, required: true
           field :column_datum, LMS::GraphQL::Types::Canvas::ColumnDatum, null: false
           def resolve(course_id:, id:, user_id:, column_data_content:)

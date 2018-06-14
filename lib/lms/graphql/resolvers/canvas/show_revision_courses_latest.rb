@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ShowRevisionCoursesLatest < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::PageRevision, null: false
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :url, String, required: true
           argument :summary, Boolean, required: false
           def resolve(course_id:, url:, summary: nil)

@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class CreateNewRole < CanvasBaseMutation
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :label, String, required: true
           argument :role, String, required: false
           argument :base_role_type, String, required: false

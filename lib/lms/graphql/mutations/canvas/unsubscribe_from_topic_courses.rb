@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class UnsubscribeFromTopicCourse < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :topic_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :topic_id, ID, required: true
           field :return_value, Boolean, null: false
           def resolve(course_id:, topic_id:)
             ctx[:canvas_api].proxy(

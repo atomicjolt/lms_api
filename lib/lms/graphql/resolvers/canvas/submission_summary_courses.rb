@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class SubmissionSummaryCourse < CanvasBaseResolver
           type Boolean, null: false
-          argument :course_id, String, required: true
-          argument :assignment_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :assignment_id, ID, required: true
           argument :grouped, Boolean, required: false
           def resolve(course_id:, assignment_id:, grouped: nil)
             context[:canvas_api].proxy(

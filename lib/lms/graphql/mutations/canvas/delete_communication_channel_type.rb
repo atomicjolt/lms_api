@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class DeleteCommunicationChannelType < CanvasBaseMutation
-          argument :user_id, String, required: true
+          argument :user_id, ID, required: true
           argument :type, String, required: true
           argument :address, String, required: true
           field :communication_channel, LMS::GraphQL::Types::Canvas::CommunicationChannel, null: false

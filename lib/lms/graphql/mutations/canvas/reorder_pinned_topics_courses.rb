@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class ReorderPinnedTopicsCourse < CanvasBaseMutation
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :order, Int, required: true
           field :return_value, Boolean, null: false
           def resolve(course_id:, order:)

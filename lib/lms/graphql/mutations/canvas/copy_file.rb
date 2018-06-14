@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class CopyFile < CanvasBaseMutation
-          argument :dest_folder_id, String, required: true
-          argument :source_file_id, String, required: true
+          argument :dest_folder_id, ID, required: true
+          argument :source_file_id, ID, required: true
           argument :on_duplicate, String, required: false
           field :file, LMS::GraphQL::Types::Canvas::File, null: false
           def resolve(dest_folder_id:, source_file_id:, on_duplicate: nil)

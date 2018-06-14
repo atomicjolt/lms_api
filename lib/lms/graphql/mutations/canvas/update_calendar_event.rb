@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class UpdateCalendarEvent < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :calendar_event_context_code, String, required: false
           argument :calendar_event_title, String, required: false
           argument :calendar_event_description, String, required: false

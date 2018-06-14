@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListSubgroupsGlobal < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::OutcomeGroup], null: false
-          argument :id, String, required: true
+          argument :id, ID, required: true
           def resolve(id:)
             context[:canvas_api].proxy(
               "LIST_SUBGROUPS_GLOBAL",

@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class CreateQuizReport < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :quiz_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :quiz_id, ID, required: true
           argument :quiz_report_report_type, String, required: true
           argument :quiz_report_includes_all_versions, Boolean, required: false
           argument :include, String, required: false

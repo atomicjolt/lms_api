@@ -12,9 +12,9 @@ module LMS
         end
         class ReportParameter < BaseType
           description "Account Reports. API Docs: https://canvas.instructure.com/doc/api/account_reports.html"
-          field :enrollment_term_id, Int, "The canvas id of the term to get grades from.Example: 2", null: true
+          field :enrollment_term_id, ID, "The canvas id of the term to get grades from.Example: 2", null: true
           field :include_deleted, Boolean, "If true, deleted objects will be included. If false, deleted objects will be omitted..", null: true
-          field :course_id, Int, "The id of the course to report on.Example: 2", null: true
+          field :course_id, ID, "The id of the course to report on.Example: 2", null: true
           field :order, ReportParameterOrderEnum, "The sort order for the csv, Options: 'users', 'courses', 'outcomes'..Example: users", null: true
           field :users, Boolean, "If true, user data will be included. If false, user data will be omitted..", null: true
           field :accounts, Boolean, "If true, account data will be included. If false, account data will be omitted..", null: true

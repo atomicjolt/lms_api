@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class UpdatePlannerOverride < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :marked_complete, String, required: false
           argument :dismissed, String, required: false
           field :planner_override, LMS::GraphQL::Types::Canvas::PlannerOverride, null: false

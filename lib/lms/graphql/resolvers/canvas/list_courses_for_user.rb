@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListCoursesForUser < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::Course], null: false
-          argument :user_id, String, required: true
+          argument :user_id, ID, required: true
           argument :include, String, required: false
           argument :state, String, required: false
           argument :enrollment_state, String, required: false

@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class RetrieveAssignmentsEnabledForGradeExportToSisAccount < CanvasBaseResolver
           type Boolean, null: false
-          argument :account_id, Int, required: true
-          argument :course_id, Int, required: false
+          argument :account_id, ID, required: true
+          argument :course_id, ID, required: false
           argument :starts_before, LMS::GraphQL::Types::DateTimeType, required: false
           argument :ends_after, LMS::GraphQL::Types::DateTimeType, required: false
           argument :include, String, required: false

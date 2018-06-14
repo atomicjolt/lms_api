@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class QueryByAccount < CanvasBaseResolver
           type Boolean, null: false
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :start_time, LMS::GraphQL::Types::DateTimeType, required: false
           argument :end_time, LMS::GraphQL::Types::DateTimeType, required: false
           def resolve(account_id:, start_time: nil, end_time: nil)

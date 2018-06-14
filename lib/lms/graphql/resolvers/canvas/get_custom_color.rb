@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class GetCustomColor < CanvasBaseResolver
           type Boolean, null: false
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :asset_string, String, required: true
           def resolve(id:, asset_string:)
             context[:canvas_api].proxy(

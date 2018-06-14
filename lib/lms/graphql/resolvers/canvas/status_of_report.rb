@@ -6,9 +6,9 @@ module LMS
       module Canvas
         class StatusOfReport < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::Report, null: false
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :report, String, required: true
-          argument :id, String, required: true
+          argument :id, ID, required: true
           def resolve(account_id:, report:, id:)
             context[:canvas_api].proxy(
               "STATUS_OF_REPORT",

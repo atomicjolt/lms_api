@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListFilesUser < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::File], null: false
-          argument :user_id, String, required: true
+          argument :user_id, ID, required: true
           argument :content_types, String, required: false
           argument :search_term, String, required: false
           argument :include, String, required: false

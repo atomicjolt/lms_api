@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class DeleteOutcomeGroupGlobal < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           field :outcome_group, LMS::GraphQL::Types::Canvas::OutcomeGroup, null: false
           def resolve(id:)
             ctx[:canvas_api].proxy(

@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class EnrollUserSection < CanvasBaseMutation
-          argument :section_id, String, required: true
+          argument :section_id, ID, required: true
           argument :enrollment_user_id, String, required: true
           argument :enrollment_type, String, required: true
           argument :enrollment_role, String, required: false

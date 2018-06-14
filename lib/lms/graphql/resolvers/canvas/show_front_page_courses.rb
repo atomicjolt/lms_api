@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ShowFrontPageCourse < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::Page, null: false
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           def resolve(course_id:)
             context[:canvas_api].proxy(
               "SHOW_FRONT_PAGE_COURSES",

@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class CreateModuleItem < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :module_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :module_id, ID, required: true
           argument :module_item_title, String, required: false
           argument :module_item_type, String, required: true
           argument :module_item_content_id, String, required: true

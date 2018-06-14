@@ -13,10 +13,10 @@ module LMS
         end
         class Progress < BaseType
           description "Progress. API Docs: https://canvas.instructure.com/doc/api/progress.html"
-          field :id, Int, "the ID of the Progress object.Example: 1", null: true
-          field :context_id, Int, "the context owning the job..Example: 1", null: true
+          field :id, ID, "the ID of the Progress object.Example: 1", null: true
+          field :context_id, ID, "the context owning the job..Example: 1", null: true
           field :context_type, String, "Example: Account", null: true
-          field :user_id, Int, "the id of the user who started the job.Example: 123", null: true
+          field :user_id, ID, "the id of the user who started the job.Example: 123", null: true
           field :tag, String, "the type of operation.Example: course_batch_update", null: true
           field :completion, Int, "percent completed.Example: 100", null: true
           field :workflow_state, ProgressWorkflowStateEnum, "the state of the job one of 'queued', 'running', 'completed', 'failed'.Example: completed", null: true

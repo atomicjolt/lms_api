@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class DeletePollSession < CanvasBaseMutation
-          argument :poll_id, String, required: true
-          argument :id, String, required: true
+          argument :poll_id, ID, required: true
+          argument :id, ID, required: true
           field :return_value, Boolean, null: false
           def resolve(poll_id:, id:)
             ctx[:canvas_api].proxy(

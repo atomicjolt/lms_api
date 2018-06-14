@@ -8,24 +8,24 @@ module LMS
       module Canvas
         class Enrollment < BaseType
           description "Enrollments. API Docs: https://canvas.instructure.com/doc/api/enrollments.html"
-          field :id, Int, "The ID of the enrollment..Example: 1", null: true
-          field :course_id, Int, "The unique id of the course..Example: 1", null: true
-          field :sis_course_id, String, "The SIS Course ID in which the enrollment is associated. Only displayed if present. This field is only included if the user has permission to view SIS information..Example: SHEL93921", null: true
-          field :course_integration_id, String, "The Course Integration ID in which the enrollment is associated. This field is only included if the user has permission to view SIS information..Example: SHEL93921", null: true
-          field :course_section_id, Int, "The unique id of the user's section..Example: 1", null: true
-          field :section_integration_id, String, "The Section Integration ID in which the enrollment is associated. This field is only included if the user has permission to view SIS information..Example: SHEL93921", null: true
-          field :sis_account_id, String, "The SIS Account ID in which the enrollment is associated. Only displayed if present. This field is only included if the user has permission to view SIS information..Example: SHEL93921", null: true
-          field :sis_section_id, String, "The SIS Section ID in which the enrollment is associated. Only displayed if present. This field is only included if the user has permission to view SIS information..Example: SHEL93921", null: true
-          field :sis_user_id, String, "The SIS User ID in which the enrollment is associated. Only displayed if present. This field is only included if the user has permission to view SIS information..Example: SHEL93921", null: true
+          field :id, ID, "The ID of the enrollment..Example: 1", null: true
+          field :course_id, ID, "The unique id of the course..Example: 1", null: true
+          field :sis_course_id, ID, "The SIS Course ID in which the enrollment is associated. Only displayed if present. This field is only included if the user has permission to view SIS information..Example: SHEL93921", null: true
+          field :course_integration_id, ID, "The Course Integration ID in which the enrollment is associated. This field is only included if the user has permission to view SIS information..Example: SHEL93921", null: true
+          field :course_section_id, ID, "The unique id of the user's section..Example: 1", null: true
+          field :section_integration_id, ID, "The Section Integration ID in which the enrollment is associated. This field is only included if the user has permission to view SIS information..Example: SHEL93921", null: true
+          field :sis_account_id, ID, "The SIS Account ID in which the enrollment is associated. Only displayed if present. This field is only included if the user has permission to view SIS information..Example: SHEL93921", null: true
+          field :sis_section_id, ID, "The SIS Section ID in which the enrollment is associated. Only displayed if present. This field is only included if the user has permission to view SIS information..Example: SHEL93921", null: true
+          field :sis_user_id, ID, "The SIS User ID in which the enrollment is associated. Only displayed if present. This field is only included if the user has permission to view SIS information..Example: SHEL93921", null: true
           field :enrollment_state, String, "The state of the user's enrollment in the course..Example: active", null: true
           field :limit_privileges_to_course_section, Boolean, "User can only access his or her own course section..Example: true", null: true
-          field :sis_import_id, Int, "The unique identifier for the SIS import. This field is only included if the user has permission to manage SIS information..Example: 83", null: true
-          field :root_account_id, Int, "The unique id of the user's account..Example: 1", null: true
+          field :sis_import_id, ID, "The unique identifier for the SIS import. This field is only included if the user has permission to manage SIS information..Example: 83", null: true
+          field :root_account_id, ID, "The unique id of the user's account..Example: 1", null: true
           field :type, String, "The enrollment type. One of 'StudentEnrollment', 'TeacherEnrollment', 'TaEnrollment', 'DesignerEnrollment', 'ObserverEnrollment'..Example: StudentEnrollment", null: true
-          field :user_id, Int, "The unique id of the user..Example: 1", null: true
-          field :associated_user_id, Int, "The unique id of the associated user. Will be null unless type is ObserverEnrollment..", null: true
+          field :user_id, ID, "The unique id of the user..Example: 1", null: true
+          field :associated_user_id, ID, "The unique id of the associated user. Will be null unless type is ObserverEnrollment..", null: true
           field :role, String, "The enrollment role, for course-level permissions. This field will match `type` if the enrollment role has not been customized..Example: StudentEnrollment", null: true
-          field :role_id, Int, "The id of the enrollment role..Example: 1", null: true
+          field :role_id, ID, "The id of the enrollment role..Example: 1", null: true
           field :created_at, LMS::GraphQL::Types::DateTimeType, "The created time of the enrollment, in ISO8601 format..Example: 2012-04-18T23:08:51Z", null: true
           field :updated_at, LMS::GraphQL::Types::DateTimeType, "The updated time of the enrollment, in ISO8601 format..Example: 2012-04-18T23:08:51Z", null: true
           field :start_at, LMS::GraphQL::Types::DateTimeType, "The start time of the enrollment, in ISO8601 format..Example: 2012-04-18T23:08:51Z", null: true
@@ -47,7 +47,7 @@ module LMS
           field :has_grading_periods, Boolean, "optional: Indicates whether the course the enrollment belongs to has grading periods set up. (applies only to student enrollments, and only available in course endpoints).Example: true", null: true
           field :totals_for_all_grading_periods_option, Boolean, "optional: Indicates whether the course the enrollment belongs to has the Display Totals for 'All Grading Periods' feature enabled. (applies only to student enrollments, and only available in course endpoints).Example: true", null: true
           field :current_grading_period_title, String, "optional: The name of the currently active grading period, if one exists. If the course the enrollment belongs to does not have grading periods, or if no currently active grading period exists, the value will be null. (applies only to student enrollments, and only available in course endpoints).Example: Fall Grading Period", null: true
-          field :current_grading_period_id, Int, "optional: The id of the currently active grading period, if one exists. If the course the enrollment belongs to does not have grading periods, or if no currently active grading period exists, the value will be null. (applies only to student enrollments, and only available in course endpoints).Example: 5", null: true
+          field :current_grading_period_id, ID, "optional: The id of the currently active grading period, if one exists. If the course the enrollment belongs to does not have grading periods, or if no currently active grading period exists, the value will be null. (applies only to student enrollments, and only available in course endpoints).Example: 5", null: true
           field :current_period_computed_current_score, Float, "optional: The student's score in the course for the current grading period, ignoring ungraded assignments. If the course the enrollment belongs to does not have grading periods, or if no currently active grading period exists, the value will be null. (applies only to student enrollments, and only available in course endpoints).Example: 95.8", null: true
           field :current_period_computed_final_score, Float, "optional: The student's score in the course for the current grading period, including ungraded assignments with a score of 0. If the course the enrollment belongs to does not have grading periods, or if no currently active grading period exists, the value will be null. (applies only to student enrollments, and only available in course endpoints).Example: 85.25", null: true
           field :current_period_computed_current_grade, String, "optional: The letter grade equivalent of current_period_computed_current_score, if available. If the course the enrollment belongs to does not have grading periods, or if no currently active grading period exists, the value will be null. (applies only to student enrollments, and only available in course endpoints).Example: A", null: true

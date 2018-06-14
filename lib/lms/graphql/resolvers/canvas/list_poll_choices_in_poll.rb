@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListPollChoicesInPoll < CanvasBaseResolver
           type Boolean, null: false
-          argument :poll_id, String, required: true
+          argument :poll_id, ID, required: true
           def resolve(poll_id:)
             context[:canvas_api].proxy(
               "LIST_POLL_CHOICES_IN_POLL",

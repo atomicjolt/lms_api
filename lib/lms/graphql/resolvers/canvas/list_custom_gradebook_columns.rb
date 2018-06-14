@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListCustomGradebookColumn < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::CustomColumn], null: false
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :include_hidden, Boolean, required: false
           def resolve(course_id:, include_hidden: nil)
             context[:canvas_api].proxy(

@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class ReserveTimeSlotParticipantId < CanvasBaseMutation
-          argument :id, String, required: true
-          argument :participant_id, String, required: true
+          argument :id, ID, required: true
+          argument :participant_id, ID, required: true
           argument :comments, String, required: false
           argument :cancel_existing, Boolean, required: false
           field :return_value, Boolean, null: false

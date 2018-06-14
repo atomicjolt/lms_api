@@ -8,7 +8,7 @@ module LMS
           type [LMS::GraphQL::Types::Canvas::Course], null: false
           argument :enrollment_type, String, required: false
           argument :enrollment_role, String, required: false
-          argument :enrollment_role_id, Int, required: false
+          argument :enrollment_role_id, ID, required: false
           argument :enrollment_state, String, required: false
           argument :exclude_blueprint_courses, Boolean, required: false
           argument :include, String, required: false

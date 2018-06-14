@@ -5,11 +5,11 @@ module LMS
     module Mutations
       module Canvas
         class CreateAssignmentGroup < CanvasBaseMutation
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :name, String, required: false
           argument :position, Int, required: false
           argument :group_weight, Float, required: false
-          argument :sis_source_id, String, required: false
+          argument :sis_source_id, ID, required: false
           argument :integration_data, String, required: false
           argument :rules, String, required: false
           field :assignment_group, LMS::GraphQL::Types::Canvas::AssignmentGroup, null: false

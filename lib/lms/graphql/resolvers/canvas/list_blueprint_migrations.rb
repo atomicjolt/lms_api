@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class ListBlueprintMigration < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::BlueprintMigration], null: false
-          argument :course_id, String, required: true
-          argument :template_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :template_id, ID, required: true
           def resolve(course_id:, template_id:)
             context[:canvas_api].proxy(
               "LIST_BLUEPRINT_MIGRATIONS",

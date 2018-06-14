@@ -7,7 +7,7 @@ module LMS
       module Canvas
         class GradingPeriod < BaseType
           description "Grading Periods. API Docs: https://canvas.instructure.com/doc/api/grading_periods.html"
-          field :id, Int, "The unique identifier for the grading period..Example: 1023", null: true
+          field :id, ID, "The unique identifier for the grading period..Example: 1023", null: true
           field :title, String, "The title for the grading period..Example: First Block", null: true
           field :start_date, String, "The start date of the grading period..Example: 2014-01-07T15:04:00Z", null: true
           field :end_date, String, "The end date of the grading period..Example: 2014-05-07T17:07:00Z", null: true

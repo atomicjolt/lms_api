@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class UpdateSingleGradingPeriod < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :id, String, required: true
+          argument :course_id, ID, required: true
+          argument :id, ID, required: true
           argument :grading_periods_start_date, [LMS::GraphQL::Types::DateTimeType], required: true
           argument :grading_periods_end_date, [LMS::GraphQL::Types::DateTimeType], required: true
           argument :grading_periods_weight, Float, required: false

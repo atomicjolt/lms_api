@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListExternalToolsCourse < CanvasBaseResolver
           type Boolean, null: false
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :search_term, String, required: false
           argument :selectable, Boolean, required: false
           argument :include_parents, Boolean, required: false

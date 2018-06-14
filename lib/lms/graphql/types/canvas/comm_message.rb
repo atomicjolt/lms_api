@@ -17,7 +17,7 @@ module LMS
         end
         class CommMessage < BaseType
           description "CommMessages. API Docs: https://canvas.instructure.com/doc/api/comm_messages.html"
-          field :id, Int, "The ID of the CommMessage..Example: 42", null: true
+          field :id, ID, "The ID of the CommMessage..Example: 42", null: true
           field :created_at, LMS::GraphQL::Types::DateTimeType, "The date and time this message was created.Example: 2013-03-19T21:00:00Z", null: true
           field :sent_at, LMS::GraphQL::Types::DateTimeType, "The date and time this message was sent.Example: 2013-03-20T22:42:00Z", null: true
           field :workflow_state, CommMessageWorkflowStateEnum, "The workflow state of the message. One of 'created', 'staged', 'sending', 'sent', 'bounced', 'dashboard', 'cancelled', or 'closed'.Example: sent", null: true

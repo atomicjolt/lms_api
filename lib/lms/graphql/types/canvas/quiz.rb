@@ -25,14 +25,14 @@ module LMS
         end
         class Quiz < BaseType
           description "Quizzes. API Docs: https://canvas.instructure.com/doc/api/quizzes.html"
-          field :id, Int, "the ID of the quiz.Example: 5", null: true
+          field :id, ID, "the ID of the quiz.Example: 5", null: true
           field :title, String, "the title of the quiz.Example: Hamlet Act 3 Quiz", null: true
           field :html_url, String, "the HTTP/HTTPS URL to the quiz.Example: http://canvas.example.edu/courses/1/quizzes/2", null: true
           field :mobile_url, String, "a url suitable for loading the quiz in a mobile webview.  it will persiste the headless session and, for quizzes in public courses, will force the user to login.Example: http://canvas.example.edu/courses/1/quizzes/2?persist_healdess=1&force_user=1", null: true
           field :preview_url, String, "A url that can be visited in the browser with a POST request to preview a quiz as the teacher. Only present when the user may grade.Example: http://canvas.example.edu/courses/1/quizzes/2/take?preview=1", null: true
           field :description, String, "the description of the quiz.Example: This is a quiz on Act 3 of Hamlet", null: true
           field :quiz_type, QuizQuizTypeEnum, "type of quiz possible values: 'practice_quiz', 'assignment', 'graded_survey', 'survey'.Example: assignment", null: true
-          field :assignment_group_id, Int, "the ID of the quiz's assignment group:.Example: 3", null: true
+          field :assignment_group_id, ID, "the ID of the quiz's assignment group:.Example: 3", null: true
           field :time_limit, Int, "quiz time limit in minutes.Example: 5", null: true
           field :shuffle_answers, Boolean, "shuffle answers for students?.", null: true
           field :hide_results, QuizHideResultEnum, "let students see their quiz responses? possible values: null, 'always', 'until_after_last_attempt'.Example: always", null: true

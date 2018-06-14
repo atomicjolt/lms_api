@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class SetCourseTimetable < CanvasBaseMutation
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :timetables_course_section_id, [String], required: false
           argument :timetables_course_section_id_weekdays, String, required: false
           argument :timetables_course_section_id_start_time, String, required: false

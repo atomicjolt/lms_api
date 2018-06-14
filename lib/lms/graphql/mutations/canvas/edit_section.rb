@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class EditSection < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :course_section_name, String, required: false
           argument :course_section_sis_section_id, String, required: false
           argument :course_section_integration_id, String, required: false

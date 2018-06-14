@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class GetAllOutcomeGroupsForContextAccount < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::OutcomeGroup], null: false
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           def resolve(account_id:)
             context[:canvas_api].proxy(
               "GET_ALL_OUTCOME_GROUPS_FOR_CONTEXT_ACCOUNTS",

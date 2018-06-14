@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class IndexOfReport < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::Report], null: false
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :report, String, required: true
           def resolve(account_id:, report:)
             context[:canvas_api].proxy(

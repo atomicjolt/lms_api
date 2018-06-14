@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class StoreCustomDatum < CanvasBaseMutation
-          argument :user_id, String, required: true
+          argument :user_id, ID, required: true
           argument :ns, String, required: true
           argument :data, String, required: true
           field :return_value, Boolean, null: false

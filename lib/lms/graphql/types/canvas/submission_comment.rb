@@ -7,8 +7,8 @@ module LMS
       module Canvas
         class SubmissionComment < BaseType
           description "Submissions. API Docs: https://canvas.instructure.com/doc/api/submissions.html"
-          field :id, Int, "Example: 37", null: true
-          field :author_id, Int, "Example: 134", null: true
+          field :id, ID, "Example: 37", null: true
+          field :author_id, ID, "Example: 134", null: true
           field :author_name, String, "Example: Toph Beifong", null: true
           field :author, String, "Abbreviated user object UserDisplay (see users API)..Example: {}", null: true
           field :comment, String, "Example: Well here's the thing.", null: true

@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class ImportOutcomesAccount < CanvasBaseMutation
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :import_type, String, required: false
           argument :attachment, String, required: false
           argument :extension, String, required: false

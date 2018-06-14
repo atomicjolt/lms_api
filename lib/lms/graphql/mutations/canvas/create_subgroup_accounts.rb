@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class CreateSubgroupAccount < CanvasBaseMutation
-          argument :account_id, String, required: true
-          argument :id, String, required: true
+          argument :account_id, ID, required: true
+          argument :id, ID, required: true
           argument :title, String, required: true
           argument :description, String, required: false
           argument :vendor_guid, String, required: false

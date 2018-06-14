@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class UpdateCreateFrontPageGroup < CanvasBaseMutation
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           argument :wiki_page_title, String, required: false
           argument :wiki_page_body, String, required: false
           argument :wiki_page_editing_roles, String, required: false

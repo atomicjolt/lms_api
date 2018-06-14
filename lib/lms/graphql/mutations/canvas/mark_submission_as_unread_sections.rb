@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class MarkSubmissionAsUnreadSection < CanvasBaseMutation
-          argument :section_id, String, required: true
-          argument :assignment_id, String, required: true
-          argument :user_id, String, required: true
+          argument :section_id, ID, required: true
+          argument :assignment_id, ID, required: true
+          argument :user_id, ID, required: true
           field :return_value, Boolean, null: false
           def resolve(section_id:, assignment_id:, user_id:)
             ctx[:canvas_api].proxy(

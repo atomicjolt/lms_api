@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class DeleteCustomDatum < CanvasBaseMutation
-          argument :user_id, String, required: true
+          argument :user_id, ID, required: true
           argument :ns, String, required: true
           field :return_value, Boolean, null: false
           def resolve(user_id:, ns:)

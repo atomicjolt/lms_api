@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class UpdateCourseSetting < CanvasBaseMutation
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :allow_student_discussion_topics, Boolean, required: false
           argument :allow_student_forum_attachments, Boolean, required: false
           argument :allow_student_discussion_editing, Boolean, required: false

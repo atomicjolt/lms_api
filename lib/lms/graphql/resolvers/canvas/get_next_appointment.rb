@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class GetNextAppointment < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::CalendarEvent], null: false
-          argument :appointment_group_ids, String, required: false
+          argument :appointment_group_ids, [ID], required: false
           def resolve(appointment_group_ids: nil)
             context[:canvas_api].proxy(
               "GET_NEXT_APPOINTMENT",

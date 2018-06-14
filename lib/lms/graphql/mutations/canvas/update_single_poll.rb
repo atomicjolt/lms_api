@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class UpdateSinglePoll < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :polls_question, String, required: true
           argument :polls_description, String, required: false
           field :return_value, Boolean, null: false

@@ -7,7 +7,7 @@ module LMS
       module Canvas
         class Conference < BaseType
           description "Conferences. API Docs: https://canvas.instructure.com/doc/api/conferences.html"
-          field :id, Int, "The id of the conference.Example: 170", null: true
+          field :id, ID, "The id of the conference.Example: 170", null: true
           field :conference_type, String, "The type of conference.Example: AdobeConnect", null: true
           field :conference_key, String, "The 3rd party's ID for the conference.Example: abcdjoelisgreatxyz", null: true
           field :description, String, "The description for the conference.Example: Conference Description", null: true

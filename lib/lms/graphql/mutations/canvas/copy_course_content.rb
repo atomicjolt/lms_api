@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class CopyCourseContent < CanvasBaseMutation
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :source_course, String, required: false
           argument :except, String, required: false
           argument :only, String, required: false

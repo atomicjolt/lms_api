@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class IndexOfActiveGlobalNotificationForUser < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::AccountNotification], null: false
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           def resolve(account_id:)
             context[:canvas_api].proxy(
               "INDEX_OF_ACTIVE_GLOBAL_NOTIFICATION_FOR_USER",

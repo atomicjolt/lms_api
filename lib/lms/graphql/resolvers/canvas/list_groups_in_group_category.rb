@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListGroupsInGroupCategory < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::Group], null: false
-          argument :group_category_id, String, required: true
+          argument :group_category_id, ID, required: true
           def resolve(group_category_id:)
             context[:canvas_api].proxy(
               "LIST_GROUPS_IN_GROUP_CATEGORY",

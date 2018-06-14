@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListContentMigrationsGroup < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::ContentMigration], null: false
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           def resolve(group_id:)
             context[:canvas_api].proxy(
               "LIST_CONTENT_MIGRATIONS_GROUPS",

@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class AssignUnassignedMember < CanvasBaseMutation
-          argument :group_category_id, String, required: true
+          argument :group_category_id, ID, required: true
           argument :sync, Boolean, required: false
           field :group_membership, LMS::GraphQL::Types::Canvas::GroupMembership, null: false
           def resolve(group_category_id:, sync: nil)

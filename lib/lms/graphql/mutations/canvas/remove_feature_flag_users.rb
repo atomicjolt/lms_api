@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class RemoveFeatureFlagUser < CanvasBaseMutation
-          argument :user_id, String, required: true
+          argument :user_id, ID, required: true
           argument :feature, String, required: true
           field :feature_flag, LMS::GraphQL::Types::Canvas::FeatureFlag, null: false
           def resolve(user_id:, feature:)

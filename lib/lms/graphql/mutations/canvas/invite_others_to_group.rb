@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class InviteOthersToGroup < CanvasBaseMutation
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           argument :invitees, String, required: true
           field :return_value, Boolean, null: false
           def resolve(group_id:, invitees:)

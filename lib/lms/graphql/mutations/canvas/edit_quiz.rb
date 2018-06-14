@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class EditQuiz < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :id, String, required: true
+          argument :course_id, ID, required: true
+          argument :id, ID, required: true
           argument :quiz_notify_of_update, Boolean, required: false
           field :quiz, LMS::GraphQL::Types::Canvas::Quiz, null: false
           def resolve(course_id:, id:, quiz_notify_of_update: nil)

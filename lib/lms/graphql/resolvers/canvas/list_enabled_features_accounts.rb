@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListEnabledFeaturesAccount < CanvasBaseResolver
           type Boolean, null: false
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           def resolve(account_id:)
             context[:canvas_api].proxy(
               "LIST_ENABLED_FEATURES_ACCOUNTS",

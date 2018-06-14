@@ -5,12 +5,12 @@ module LMS
     module Mutations
       module Canvas
         class UpdateOutcomeGroupAccount < CanvasBaseMutation
-          argument :account_id, String, required: true
-          argument :id, String, required: true
+          argument :account_id, ID, required: true
+          argument :id, ID, required: true
           argument :title, String, required: false
           argument :description, String, required: false
           argument :vendor_guid, String, required: false
-          argument :parent_outcome_group_id, Int, required: false
+          argument :parent_outcome_group_id, ID, required: false
           field :outcome_group, LMS::GraphQL::Types::Canvas::OutcomeGroup, null: false
           def resolve(account_id:, id:, title: nil, description: nil, vendor_guid: nil, parent_outcome_group_id: nil)
             ctx[:canvas_api].proxy(

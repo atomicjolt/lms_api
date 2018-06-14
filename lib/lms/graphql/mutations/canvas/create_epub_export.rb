@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class CreateEpubExport < CanvasBaseMutation
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           field :epub_export, LMS::GraphQL::Types::Canvas::EpubExport, null: false
           def resolve(course_id:)
             ctx[:canvas_api].proxy(

@@ -12,7 +12,7 @@ module LMS
           field :license, String, "License identifier for the file..Example: cc_by_sa", null: true
           field :license_name, String, "Readable license name.Example: CC Attribution Share-Alike", null: true
           field :message, String, "Explanation of the action performed.Example: 4 files updated", null: true
-          field :file_ids, Int, "List of ids of files that were updated.Example: 1, 2, 3", null: true
+          field :file_ids, [ID], "List of ids of files that were updated.Example: 1, 2, 3", null: true
 
         end
       end

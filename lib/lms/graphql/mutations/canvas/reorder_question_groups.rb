@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class ReorderQuestionGroup < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :quiz_id, String, required: true
-          argument :id, String, required: true
+          argument :course_id, ID, required: true
+          argument :quiz_id, ID, required: true
+          argument :id, ID, required: true
           argument :order_id, Int, required: true
           argument :order_type, String, required: false
           field :return_value, Boolean, null: false

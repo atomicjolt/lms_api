@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class SubscribeToTopicGroup < CanvasBaseMutation
-          argument :group_id, String, required: true
-          argument :topic_id, String, required: true
+          argument :group_id, ID, required: true
+          argument :topic_id, ID, required: true
           field :return_value, Boolean, null: false
           def resolve(group_id:, topic_id:)
             ctx[:canvas_api].proxy(

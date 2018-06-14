@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class AddsLastAttendedDateToStudentEnrollmentInCourse < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :user_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :user_id, ID, required: true
           field :enrollment, LMS::GraphQL::Types::Canvas::Enrollment, null: false
           def resolve(course_id:, user_id:)
             ctx[:canvas_api].proxy(

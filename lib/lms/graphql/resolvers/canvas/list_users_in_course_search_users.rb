@@ -6,14 +6,14 @@ module LMS
       module Canvas
         class ListUsersInCourseSearchUser < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::User], null: false
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :search_term, String, required: false
           argument :enrollment_type, String, required: false
           argument :enrollment_role, String, required: false
-          argument :enrollment_role_id, Int, required: false
+          argument :enrollment_role_id, ID, required: false
           argument :include, String, required: false
-          argument :user_id, String, required: false
-          argument :user_ids, Int, required: false
+          argument :user_id, ID, required: false
+          argument :user_ids, [ID], required: false
           argument :enrollment_state, String, required: false
           def resolve(course_id:, search_term: nil, enrollment_type: nil, enrollment_role: nil, enrollment_role_id: nil, include: nil, user_id: nil, user_ids: nil, enrollment_state: nil)
             context[:canvas_api].proxy(

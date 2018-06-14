@@ -6,9 +6,9 @@ module LMS
       module Canvas
         class ListEntryRepliesGroup < CanvasBaseResolver
           type Boolean, null: false
-          argument :group_id, String, required: true
-          argument :topic_id, String, required: true
-          argument :entry_id, String, required: true
+          argument :group_id, ID, required: true
+          argument :topic_id, ID, required: true
+          argument :entry_id, ID, required: true
           def resolve(group_id:, topic_id:, entry_id:)
             context[:canvas_api].proxy(
               "LIST_ENTRY_REPLIES_GROUPS",

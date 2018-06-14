@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class LeaveGroupMembership < CanvasBaseMutation
-          argument :group_id, String, required: true
-          argument :membership_id, String, required: true
+          argument :group_id, ID, required: true
+          argument :membership_id, ID, required: true
           field :return_value, Boolean, null: false
           def resolve(group_id:, membership_id:)
             ctx[:canvas_api].proxy(

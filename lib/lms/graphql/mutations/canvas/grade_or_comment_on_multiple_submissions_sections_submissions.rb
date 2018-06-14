@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class GradeOrCommentOnMultipleSubmissionsSectionsSubmission < CanvasBaseMutation
-          argument :section_id, String, required: true
+          argument :section_id, ID, required: true
           argument :grade_data_<student_id>_posted_grade, String, required: false
           argument :grade_data_<student_id>_excuse, Boolean, required: false
           argument :grade_data_<student_id>_rubric_assessment, String, required: false

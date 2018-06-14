@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ResolvePathGroupsFullPath < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::Folder], null: false
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           def resolve(group_id:)
             context[:canvas_api].proxy(
               "RESOLVE_PATH_GROUPS_FULL_PATH",

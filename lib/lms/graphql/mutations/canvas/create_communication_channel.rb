@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class CreateCommunicationChannel < CanvasBaseMutation
-          argument :user_id, String, required: true
+          argument :user_id, ID, required: true
           argument :communication_channel_address, String, required: true
           argument :communication_channel_type, String, required: true
           argument :communication_channel_token, String, required: false

@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class UnflaggingQuestion < CanvasBaseMutation
-          argument :quiz_submission_id, String, required: true
-          argument :id, String, required: true
+          argument :quiz_submission_id, ID, required: true
+          argument :id, ID, required: true
           argument :attempt, Int, required: true
           argument :validation_token, String, required: true
           argument :access_code, String, required: false

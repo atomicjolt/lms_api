@@ -17,7 +17,7 @@ describe LMS::GraphQL::Types::Canvas::Schema do
     variables = {
       "userId"=>"1234"
     }
-    query = "query listCoursesForUser($userId: String!) {\n  listCoursesForUser(userId: $userId) { id } \n}"
+    query = "query listCoursesForUser($userId: ID!) {\n  listCoursesForUser(userId: $userId) { id } \n}"
     operation_name = "listCoursesForUser"
     context = {
       canvas_api: canvas_api

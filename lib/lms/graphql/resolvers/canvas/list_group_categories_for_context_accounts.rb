@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListGroupCategoriesForContextAccount < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::GroupCategory], null: false
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           def resolve(account_id:)
             context[:canvas_api].proxy(
               "LIST_GROUP_CATEGORIES_FOR_CONTEXT_ACCOUNTS",

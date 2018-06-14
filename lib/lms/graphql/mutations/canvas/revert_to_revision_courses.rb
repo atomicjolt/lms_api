@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class RevertToRevisionCourse < CanvasBaseMutation
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :url, String, required: true
-          argument :revision_id, Int, required: true
+          argument :revision_id, ID, required: true
           field :page_revision, LMS::GraphQL::Types::Canvas::PageRevision, null: false
           def resolve(course_id:, url:, revision_id:)
             ctx[:canvas_api].proxy(

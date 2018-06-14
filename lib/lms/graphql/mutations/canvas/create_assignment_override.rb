@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class CreateAssignmentOverride < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :assignment_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :assignment_id, ID, required: true
           argument :assignment_override_student_ids, Int, required: false
           argument :assignment_override_title, String, required: false
           argument :assignment_override_group_id, Int, required: false

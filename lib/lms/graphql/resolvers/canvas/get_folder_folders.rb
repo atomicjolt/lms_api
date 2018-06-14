@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class GetFolderFolder < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::Folder, null: false
-          argument :id, String, required: true
+          argument :id, ID, required: true
           def resolve(id:)
             context[:canvas_api].proxy(
               "GET_FOLDER_FOLDERS",

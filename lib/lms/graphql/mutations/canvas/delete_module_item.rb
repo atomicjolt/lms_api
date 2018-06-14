@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class DeleteModuleItem < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :module_id, String, required: true
-          argument :id, String, required: true
+          argument :course_id, ID, required: true
+          argument :module_id, ID, required: true
+          argument :id, ID, required: true
           field :module_item, LMS::GraphQL::Types::Canvas::ModuleItem, null: false
           def resolve(course_id:, module_id:, id:)
             ctx[:canvas_api].proxy(

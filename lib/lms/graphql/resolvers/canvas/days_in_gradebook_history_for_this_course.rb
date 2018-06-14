@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class DaysInGradebookHistoryForThisCourse < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::Day], null: false
-          argument :course_id, Int, required: true
+          argument :course_id, ID, required: true
           def resolve(course_id:)
             context[:canvas_api].proxy(
               "DAYS_IN_GRADEBOOK_HISTORY_FOR_THIS_COURSE",

@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class SubmitAssignmentCourse < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :assignment_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :assignment_id, ID, required: true
           argument :comment_text_comment, String, required: false
           argument :submission_submission_type, String, required: true
           argument :submission_body, String, required: false

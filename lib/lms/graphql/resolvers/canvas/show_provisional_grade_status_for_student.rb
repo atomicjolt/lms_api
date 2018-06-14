@@ -6,9 +6,9 @@ module LMS
       module Canvas
         class ShowProvisionalGradeStatusForStudent < CanvasBaseResolver
           type Boolean, null: false
-          argument :course_id, String, required: true
-          argument :assignment_id, String, required: true
-          argument :student_id, Int, required: false
+          argument :course_id, ID, required: true
+          argument :assignment_id, ID, required: true
+          argument :student_id, ID, required: false
           def resolve(course_id:, assignment_id:, student_id: nil)
             context[:canvas_api].proxy(
               "SHOW_PROVISIONAL_GRADE_STATUS_FOR_STUDENT",

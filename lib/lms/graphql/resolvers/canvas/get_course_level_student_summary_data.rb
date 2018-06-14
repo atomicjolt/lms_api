@@ -6,9 +6,9 @@ module LMS
       module Canvas
         class GetCourseLevelStudentSummaryDatum < CanvasBaseResolver
           type Boolean, null: false
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :sort_column, String, required: false
-          argument :student_id, String, required: false
+          argument :student_id, ID, required: false
           def resolve(course_id:, sort_column: nil, student_id: nil)
             context[:canvas_api].proxy(
               "GET_COURSE_LEVEL_STUDENT_SUMMARY_DATA",

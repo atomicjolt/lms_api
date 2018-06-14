@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class CompleteQuizSubmissionTurnItIn < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :quiz_id, String, required: true
-          argument :id, String, required: true
+          argument :course_id, ID, required: true
+          argument :quiz_id, ID, required: true
+          argument :id, ID, required: true
           argument :attempt, Int, required: true
           argument :validation_token, String, required: true
           argument :access_code, String, required: false

@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class BatchRetrieveOverridesInCourse < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::AssignmentOverride], null: false
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :assignment_overrides_id, String, required: true
           argument :assignment_overrides_assignment_id, String, required: true
           def resolve(course_id:, assignment_overrides_id:, assignment_overrides_assignment_id:)

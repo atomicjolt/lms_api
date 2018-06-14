@@ -20,7 +20,7 @@ module LMS
         end
         class Submission < BaseType
           description "Submissions. API Docs: https://canvas.instructure.com/doc/api/submissions.html"
-          field :assignment_id, Int, "The submission's assignment id.Example: 23", null: true
+          field :assignment_id, ID, "The submission's assignment id.Example: 23", null: true
           field :assignment, String, "The submission's assignment (see the assignments API) (optional).Example: Assignment", null: true
           field :course, String, "The submission's course (see the course API) (optional).Example: Course", null: true
           field :attempt, Int, "This is the submission attempt number..Example: 1", null: true
@@ -34,8 +34,8 @@ module LMS
           field :submission_type, SubmissionSubmissionTypeEnum, "The types of submission ex: ('online_text_entry'|'online_url'|'online_upload'|'media_recording').Example: online_text_entry", null: true
           field :submitted_at, LMS::GraphQL::Types::DateTimeType, "The timestamp when the assignment was submitted.Example: 2012-01-01T01:00:00Z", null: true
           field :url, String, "The URL of the submission (for 'online_url' submissions)..", null: true
-          field :user_id, Int, "The id of the user who created the submission.Example: 134", null: true
-          field :grader_id, Int, "The id of the user who graded the submission. This will be null for submissions that haven't been graded yet. It will be a positive number if a real user has graded the submission and a negative number if the submission was graded by a process (e.g. Quiz autograder and autograding LTI tools).  Specifically autograded quizzes set grader_id to the negative of the quiz id.  Submissions autograded by LTI tools set grader_id to the negative of the tool id..Example: 86", null: true
+          field :user_id, ID, "The id of the user who created the submission.Example: 134", null: true
+          field :grader_id, ID, "The id of the user who graded the submission. This will be null for submissions that haven't been graded yet. It will be a positive number if a real user has graded the submission and a negative number if the submission was graded by a process (e.g. Quiz autograder and autograding LTI tools).  Specifically autograded quizzes set grader_id to the negative of the quiz id.  Submissions autograded by LTI tools set grader_id to the negative of the tool id..Example: 86", null: true
           field :graded_at, LMS::GraphQL::Types::DateTimeType, "Example: 2012-01-02T03:05:34Z", null: true
           field :user, String, "The submissions user (see user API) (optional).Example: User", null: true
           field :late, Boolean, "Whether the submission was made after the applicable due date.", null: true

@@ -12,7 +12,7 @@ module LMS
         end
         class ExternalFeed < BaseType
           description "Announcement External Feeds. API Docs: https://canvas.instructure.com/doc/api/announcement_external_feeds.html"
-          field :id, Int, "The ID of the feed.Example: 5", null: true
+          field :id, ID, "The ID of the feed.Example: 5", null: true
           field :display_name, String, "The title of the feed, pulled from the feed itself. If the feed hasn't yet been pulled, a temporary name will be synthesized based on the URL.Example: My Blog", null: true
           field :url, String, "The HTTP/HTTPS URL to the feed.Example: http://example.com/myblog.rss", null: true
           field :header_match, String, "If not null, only feed entries whose title contains this string will trigger new posts in Canvas.Example: pattern", null: true

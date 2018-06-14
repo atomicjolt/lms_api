@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class UpdateOutcome < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :title, String, required: false
           argument :display_name, String, required: false
           argument :description, String, required: false

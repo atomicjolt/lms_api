@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class CoursesPreviewProcessedHtml < CanvasBaseMutation
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :html, String, required: false
           field :return_value, Boolean, null: false
           def resolve(course_id:, html: nil)

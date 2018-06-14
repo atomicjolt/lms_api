@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class OpenPollSession < CanvasBaseResolver
           type Boolean, null: false
-          argument :poll_id, String, required: true
-          argument :id, String, required: true
+          argument :poll_id, ID, required: true
+          argument :id, ID, required: true
           def resolve(poll_id:, id:)
             context[:canvas_api].proxy(
               "OPEN_POLL_SESSION",

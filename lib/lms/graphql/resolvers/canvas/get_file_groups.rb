@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class GetFileGroup < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::File, null: false
-          argument :group_id, String, required: true
-          argument :id, String, required: true
+          argument :group_id, ID, required: true
+          argument :id, ID, required: true
           argument :include, String, required: false
           def resolve(group_id:, id:, include: nil)
             context[:canvas_api].proxy(

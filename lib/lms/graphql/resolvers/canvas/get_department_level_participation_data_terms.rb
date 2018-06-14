@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class GetDepartmentLevelParticipationDataTerm < CanvasBaseResolver
           type Boolean, null: false
-          argument :account_id, String, required: true
-          argument :term_id, String, required: true
+          argument :account_id, ID, required: true
+          argument :term_id, ID, required: true
           def resolve(account_id:, term_id:)
             context[:canvas_api].proxy(
               "GET_DEPARTMENT_LEVEL_PARTICIPATION_DATA_TERMS",

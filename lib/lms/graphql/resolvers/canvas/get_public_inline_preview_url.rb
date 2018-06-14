@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class GetPublicInlinePreviewUrl < CanvasBaseResolver
           type Boolean, null: false
-          argument :id, String, required: true
-          argument :submission_id, Int, required: false
+          argument :id, ID, required: true
+          argument :submission_id, ID, required: false
           def resolve(id:, submission_id: nil)
             context[:canvas_api].proxy(
               "GET_PUBLIC_INLINE_PREVIEW_URL",

@@ -6,9 +6,9 @@ module LMS
       module Canvas
         class ListUncollatedSubmissionVersion < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::SubmissionVersion], null: false
-          argument :course_id, Int, required: true
-          argument :assignment_id, Int, required: false
-          argument :user_id, Int, required: false
+          argument :course_id, ID, required: true
+          argument :assignment_id, ID, required: false
+          argument :user_id, ID, required: false
           argument :ascending, Boolean, required: false
           def resolve(course_id:, assignment_id: nil, user_id: nil, ascending: nil)
             context[:canvas_api].proxy(

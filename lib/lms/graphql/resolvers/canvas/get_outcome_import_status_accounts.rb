@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class GetOutcomeImportStatusAccount < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::OutcomeImport, null: false
-          argument :account_id, String, required: true
-          argument :id, String, required: true
+          argument :account_id, ID, required: true
+          argument :id, ID, required: true
           def resolve(account_id:, id:)
             context[:canvas_api].proxy(
               "GET_OUTCOME_IMPORT_STATUS_ACCOUNTS",

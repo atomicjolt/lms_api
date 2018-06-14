@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class GetSingleSubmission < CanvasBaseResolver
           type Boolean, null: false
-          argument :assignment_id, String, required: true
-          argument :submission_id, String, required: true
+          argument :assignment_id, ID, required: true
+          argument :submission_id, ID, required: true
           def resolve(assignment_id:, submission_id:)
             context[:canvas_api].proxy(
               "GET_SINGLE_SUBMISSION",

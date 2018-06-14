@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class SplitMergedUsersIntoSeparateUser < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           field :user, [LMS::GraphQL::Types::Canvas::User], null: false
           def resolve(id:)
             ctx[:canvas_api].proxy(

@@ -7,7 +7,7 @@ module LMS
       module Canvas
         class Conversation < BaseType
           description "Conversations. API Docs: https://canvas.instructure.com/doc/api/conversations.html"
-          field :id, Int, "the unique identifier for the conversation..Example: 2", null: true
+          field :id, ID, "the unique identifier for the conversation..Example: 2", null: true
           field :subject, String, "the subject of the conversation..Example: 2", null: true
           field :workflow_state, String, "The current state of the conversation (read, unread or archived)..Example: unread", null: true
           field :last_message, String, "A <=100 character preview from the most recent message..Example: sure thing, here's the file", null: true

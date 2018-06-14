@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListGroupsAvailableInContextCourse < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::Group], null: false
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :only_own_groups, Boolean, required: false
           argument :include, String, required: false
           def resolve(course_id:, only_own_groups: nil, include: nil)

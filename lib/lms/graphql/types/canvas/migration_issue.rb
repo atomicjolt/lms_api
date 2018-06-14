@@ -17,7 +17,7 @@ module LMS
         end
         class MigrationIssue < BaseType
           description "Content Migrations. API Docs: https://canvas.instructure.com/doc/api/content_migrations.html"
-          field :id, Int, "the unique identifier for the issue.Example: 370663", null: true
+          field :id, ID, "the unique identifier for the issue.Example: 370663", null: true
           field :content_migration_url, String, "API url to the content migration.Example: https://example.com/api/v1/courses/1/content_migrations/1", null: true
           field :description, String, "Description of the issue for the end-user.Example: Questions in this quiz couldn't be converted", null: true
           field :workflow_state, MigrationIssueWorkflowStateEnum, "Current state of the issue: active, resolved.Example: active", null: true

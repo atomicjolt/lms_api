@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class GetSisImportList < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::SisImport], null: false
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :created_since, LMS::GraphQL::Types::DateTimeType, required: false
           def resolve(account_id:, created_since: nil)
             context[:canvas_api].proxy(

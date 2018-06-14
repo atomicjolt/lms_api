@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class StartReport < CanvasBaseMutation
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :report, String, required: true
           argument :parameters, String, required: false
           argument :parameters_course_id, Int, required: false

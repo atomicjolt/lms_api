@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class RedirectToAssignmentOverrideForGroup < CanvasBaseResolver
           type Boolean, null: false
-          argument :group_id, String, required: true
-          argument :assignment_id, String, required: true
+          argument :group_id, ID, required: true
+          argument :assignment_id, ID, required: true
           def resolve(group_id:, assignment_id:)
             context[:canvas_api].proxy(
               "REDIRECT_TO_ASSIGNMENT_OVERRIDE_FOR_GROUP",

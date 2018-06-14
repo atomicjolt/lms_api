@@ -7,7 +7,7 @@ module LMS
       module Canvas
         class PageView < BaseType
           description "Users. API Docs: https://canvas.instructure.com/doc/api/users.html"
-          field :id, String, "A UUID representing the page view.  This is also the unique request id.Example: 3e246700-e305-0130-51de-02e33aa501ef", null: true
+          field :id, ID, "A UUID representing the page view.  This is also the unique request id.Example: 3e246700-e305-0130-51de-02e33aa501ef", null: true
           field :app_name, String, "If the request is from an API request, the app that generated the access token.Example: Canvas for iOS", null: true
           field :url, String, "The URL requested.Example: https://canvas.instructure.com/conversations", null: true
           field :context_type, String, "The type of context for the request.Example: Course", null: true

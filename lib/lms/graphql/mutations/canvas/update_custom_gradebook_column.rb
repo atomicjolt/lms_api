@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class UpdateCustomGradebookColumn < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :id, String, required: true
+          argument :course_id, ID, required: true
+          argument :id, ID, required: true
           field :custom_column, LMS::GraphQL::Types::Canvas::CustomColumn, null: false
           def resolve(course_id:, id:)
             ctx[:canvas_api].proxy(

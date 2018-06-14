@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class CreateLinkOutcomeGlobal < CanvasBaseMutation
-          argument :id, String, required: true
-          argument :outcome_id, Int, required: false
+          argument :id, ID, required: true
+          argument :outcome_id, ID, required: false
           argument :move_from, Int, required: false
           argument :title, String, required: false
           argument :display_name, String, required: false

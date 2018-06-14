@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ShowPlannernote < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::PlannerNote, null: false
-          argument :id, String, required: true
+          argument :id, ID, required: true
           def resolve(id:)
             context[:canvas_api].proxy(
               "SHOW_PLANNERNOTE",

@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class GetSingleGroupMembershipUser < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::GroupMembership, null: false
-          argument :group_id, String, required: true
-          argument :user_id, String, required: true
+          argument :group_id, ID, required: true
+          argument :user_id, ID, required: true
           def resolve(group_id:, user_id:)
             context[:canvas_api].proxy(
               "GET_SINGLE_GROUP_MEMBERSHIP_USERS",

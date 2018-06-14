@@ -6,9 +6,9 @@ module LMS
       module Canvas
         class ShowBlueprintImport < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::BlueprintMigration, null: false
-          argument :course_id, String, required: true
-          argument :subscription_id, String, required: true
-          argument :id, String, required: true
+          argument :course_id, ID, required: true
+          argument :subscription_id, ID, required: true
+          argument :id, ID, required: true
           def resolve(course_id:, subscription_id:, id:)
             context[:canvas_api].proxy(
               "SHOW_BLUEPRINT_IMPORT",

@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class UpdateContentMigrationCourse < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :id, String, required: true
+          argument :course_id, ID, required: true
+          argument :id, ID, required: true
           field :content_migration, LMS::GraphQL::Types::Canvas::ContentMigration, null: false
           def resolve(course_id:, id:)
             ctx[:canvas_api].proxy(

@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ReturnsTermsOfServiceForThatAccount < CanvasBaseResolver
           type String, null: false
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           def resolve(account_id:)
             context[:canvas_api].proxy(
               "RETURNS_TERMS_OF_SERVICE_FOR_THAT_ACCOUNT",

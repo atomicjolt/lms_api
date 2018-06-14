@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class GetSingleCalendarEventOrAssignment < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::CalendarEvent, null: false
-          argument :id, String, required: true
+          argument :id, ID, required: true
           def resolve(id:)
             context[:canvas_api].proxy(
               "GET_SINGLE_CALENDAR_EVENT_OR_ASSIGNMENT",

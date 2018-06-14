@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class SetCourseNickname < CanvasBaseMutation
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :nickname, String, required: true
           field :course_nickname, LMS::GraphQL::Types::Canvas::CourseNickname, null: false
           def resolve(course_id:, nickname:)

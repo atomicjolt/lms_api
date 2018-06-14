@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class DuplicatePage < CanvasBaseMutation
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :url, String, required: true
           field :page, LMS::GraphQL::Types::Canvas::Page, null: false
           def resolve(course_id:, url:)

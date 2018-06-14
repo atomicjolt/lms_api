@@ -7,8 +7,8 @@ module LMS
       module Canvas
         class LatePolicy < BaseType
           description "Late Policy. API Docs: https://canvas.instructure.com/doc/api/late_policy.html"
-          field :id, Int, "the unique identifier for the late policy.Example: 123", null: true
-          field :course_id, Int, "the unique identifier for the course.Example: 123", null: true
+          field :id, ID, "the unique identifier for the late policy.Example: 123", null: true
+          field :course_id, ID, "the unique identifier for the course.Example: 123", null: true
           field :missing_submission_deduction_enabled, Boolean, "whether to enable missing submission deductions.Example: true", null: true
           field :missing_submission_deduction, Float, "amount of percentage points to deduct.Example: 12.34", null: true
           field :late_submission_deduction_enabled, Boolean, "whether to enable late submission deductions.Example: true", null: true

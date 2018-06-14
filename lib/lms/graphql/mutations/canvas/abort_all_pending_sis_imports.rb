@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class AbortAllPendingSisImport < CanvasBaseMutation
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           field :return_value, Boolean, null: false
           def resolve(account_id:)
             ctx[:canvas_api].proxy(

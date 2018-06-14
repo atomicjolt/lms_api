@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ListDiscussionTopicsGroup < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::DiscussionTopic], null: false
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           argument :include, String, required: false
           argument :order_by, String, required: false
           argument :scope, String, required: false

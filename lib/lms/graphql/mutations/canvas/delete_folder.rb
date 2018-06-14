@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class DeleteFolder < CanvasBaseMutation
-          argument :id, String, required: true
+          argument :id, ID, required: true
           argument :force, Boolean, required: false
           field :return_value, Boolean, null: false
           def resolve(id:, force: nil)

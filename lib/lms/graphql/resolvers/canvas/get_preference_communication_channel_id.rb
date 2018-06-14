@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class GetPreferenceCommunicationChannelId < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::NotificationPreference, null: false
-          argument :user_id, String, required: true
-          argument :communication_channel_id, String, required: true
+          argument :user_id, ID, required: true
+          argument :communication_channel_id, ID, required: true
           argument :notification, String, required: true
           def resolve(user_id:, communication_channel_id:, notification:)
             context[:canvas_api].proxy(

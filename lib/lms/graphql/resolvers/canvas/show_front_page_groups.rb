@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class ShowFrontPageGroup < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::Page, null: false
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           def resolve(group_id:)
             context[:canvas_api].proxy(
               "SHOW_FRONT_PAGE_GROUPS",

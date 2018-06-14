@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class ListMigrationIssuesUser < CanvasBaseResolver
           type [LMS::GraphQL::Types::Canvas::MigrationIssue], null: false
-          argument :user_id, String, required: true
-          argument :content_migration_id, String, required: true
+          argument :user_id, ID, required: true
+          argument :content_migration_id, ID, required: true
           def resolve(user_id:, content_migration_id:)
             context[:canvas_api].proxy(
               "LIST_MIGRATION_ISSUES_USERS",

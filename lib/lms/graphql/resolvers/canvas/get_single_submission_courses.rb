@@ -6,9 +6,9 @@ module LMS
       module Canvas
         class GetSingleSubmissionCourse < CanvasBaseResolver
           type Boolean, null: false
-          argument :course_id, String, required: true
-          argument :assignment_id, String, required: true
-          argument :user_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :assignment_id, ID, required: true
+          argument :user_id, ID, required: true
           argument :include, String, required: false
           def resolve(course_id:, assignment_id:, user_id:, include: nil)
             context[:canvas_api].proxy(

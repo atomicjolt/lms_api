@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class UpdateSinglePollSession < CanvasBaseMutation
-          argument :poll_id, String, required: true
-          argument :id, String, required: true
+          argument :poll_id, ID, required: true
+          argument :id, ID, required: true
           argument :poll_sessions_course_id, Int, required: false
           argument :poll_sessions_course_section_id, Int, required: false
           argument :poll_sessions_has_public_results, Boolean, required: false

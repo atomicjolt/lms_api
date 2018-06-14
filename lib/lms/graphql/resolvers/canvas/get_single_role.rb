@@ -6,9 +6,9 @@ module LMS
       module Canvas
         class GetSingleRole < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::Role, null: false
-          argument :id, String, required: true
-          argument :account_id, String, required: true
-          argument :role_id, Int, required: true
+          argument :id, ID, required: true
+          argument :account_id, ID, required: true
+          argument :role_id, ID, required: true
           argument :role, String, required: false
           def resolve(id:, account_id:, role_id:, role: nil)
             context[:canvas_api].proxy(

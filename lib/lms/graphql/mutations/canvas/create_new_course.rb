@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class CreateNewCourse < CanvasBaseMutation
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           argument :course_name, String, required: false
           argument :course_course_code, String, required: false
           argument :course_start_at, LMS::GraphQL::Types::DateTimeType, required: false

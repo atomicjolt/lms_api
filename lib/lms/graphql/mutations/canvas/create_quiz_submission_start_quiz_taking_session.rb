@@ -5,8 +5,8 @@ module LMS
     module Mutations
       module Canvas
         class CreateQuizSubmissionStartQuizTakingSession < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :quiz_id, String, required: true
+          argument :course_id, ID, required: true
+          argument :quiz_id, ID, required: true
           argument :access_code, String, required: false
           argument :preview, Boolean, required: false
           field :return_value, Boolean, null: false

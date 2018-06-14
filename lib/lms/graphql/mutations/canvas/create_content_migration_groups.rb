@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class CreateContentMigrationGroup < CanvasBaseMutation
-          argument :group_id, String, required: true
+          argument :group_id, ID, required: true
           argument :migration_type, String, required: true
           argument :pre_attachment_name, String, required: false
           argument :pre_attachment_star, String, required: false

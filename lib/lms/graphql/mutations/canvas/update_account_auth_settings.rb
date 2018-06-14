@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class UpdateAccountAuthSetting < CanvasBaseMutation
-          argument :account_id, String, required: true
+          argument :account_id, ID, required: true
           field :sso_setting, LMS::GraphQL::Types::Canvas::SSOSetting, null: false
           def resolve(account_id:)
             ctx[:canvas_api].proxy(

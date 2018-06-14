@@ -5,7 +5,7 @@ module LMS
     module Mutations
       module Canvas
         class CreateModule < CanvasBaseMutation
-          argument :course_id, String, required: true
+          argument :course_id, ID, required: true
           argument :module_name, String, required: true
           argument :module_unlock_at, LMS::GraphQL::Types::DateTimeType, required: false
           argument :module_position, Int, required: false

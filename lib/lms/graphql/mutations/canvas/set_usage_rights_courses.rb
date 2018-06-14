@@ -5,9 +5,9 @@ module LMS
     module Mutations
       module Canvas
         class SetUsageRightsCourse < CanvasBaseMutation
-          argument :course_id, String, required: true
-          argument :file_ids, String, required: true
-          argument :folder_ids, String, required: false
+          argument :course_id, ID, required: true
+          argument :file_ids, [ID], required: true
+          argument :folder_ids, [ID], required: false
           argument :publish, Boolean, required: false
           argument :usage_rights_use_justification, String, required: true
           argument :usage_rights_legal_copyright, String, required: false

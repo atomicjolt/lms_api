@@ -6,8 +6,8 @@ module LMS
       module Canvas
         class ShowContentExportCourse < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::ContentExport, null: false
-          argument :course_id, String, required: true
-          argument :id, String, required: true
+          argument :course_id, ID, required: true
+          argument :id, ID, required: true
           def resolve(course_id:, id:)
             context[:canvas_api].proxy(
               "SHOW_CONTENT_EXPORT_COURSES",

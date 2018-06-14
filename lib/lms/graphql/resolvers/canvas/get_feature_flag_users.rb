@@ -6,7 +6,7 @@ module LMS
       module Canvas
         class GetFeatureFlagUser < CanvasBaseResolver
           type LMS::GraphQL::Types::Canvas::FeatureFlag, null: false
-          argument :user_id, String, required: true
+          argument :user_id, ID, required: true
           argument :feature, String, required: true
           def resolve(user_id:, feature:)
             context[:canvas_api].proxy(
