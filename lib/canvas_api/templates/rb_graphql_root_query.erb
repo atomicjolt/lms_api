@@ -1,15 +1,13 @@
-require_relative "../../../utils"
+require_relative "../../utils"
 require_relative "../canvas_base_type"
 require_all(File.absolute_path(__FILE__), "../../resolvers/canvas/")
 
-module LMS
-  module GraphQL
-    module Types
-      module Canvas
-        class QueryType < BaseType
-          description "The root query of Canvas schema"
-          <%= @content.join("\n\n          ") %>
-        end
+module LMSGraphQL
+  module Types
+    module Canvas
+      class QueryType < BaseType
+        description "The root query of Canvas schema"
+        <%= @content.join("\n\n        ") %>
       end
     end
   end

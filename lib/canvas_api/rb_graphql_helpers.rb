@@ -22,7 +22,7 @@ module CanvasApi
                    elsif property["items"]["$ref"] == "[String]"
                      "[String]"
                   elsif property["items"]["$ref"] == "DateTime" || property["items"]["$ref"] == "Date"
-                     "[LMS::GraphQL::Types::DateTimeType]"
+                     "[LMSGraphQL::Types::DateTimeType]"
                    elsif property["items"]["$ref"]
                      "[#{canvas_name(property["items"]["$ref"])}]"
                    else
@@ -52,7 +52,7 @@ module CanvasApi
 
     def canvas_name(type)
       name = type.split('|').first.strip.singularize
-      "LMS::GraphQL::Types::Canvas::#{name}"
+      "LMSGraphQL::Types::Canvas::#{name}"
     end
 
     def graphql_primitive(name, type, format)
@@ -74,9 +74,9 @@ module CanvasApi
       when "boolean"
         "Boolean"
       when "datetime"
-        "LMS::GraphQL::Types::DateTimeType"
+        "LMSGraphQL::Types::DateTimeType"
       when "date"
-        "LMS::GraphQL::Types::DateTimeType"
+        "LMSGraphQL::Types::DateTimeType"
       else
         raise "Unable to match requested primitive '#{type}' to GraphQL Type."
       end
@@ -141,7 +141,7 @@ module CanvasApi
     end
 
     def is_basic_type(type)
-      ["Int", "String", "Boolean", "LMS::GraphQL::Types::DateTimeType", "Float", "ID"].include?(type)
+      ["Int", "String", "Boolean", "LMSGraphQL::Types::DateTimeType", "Float", "ID"].include?(type)
     end
 
     def no_brackets(str)

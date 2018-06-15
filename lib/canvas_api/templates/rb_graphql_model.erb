@@ -1,15 +1,13 @@
 require_relative "../canvas_base_type"
 <%= require_from_properties(@model) %>
 
-module LMS
-  module GraphQL
-    module Types
-      module Canvas
+module LMSGraphQL
+  module Types
+    module Canvas
 <%=graphql_field_enums(@model)-%>
-        class <%=@model['id'].singularize%> < BaseType
-          description "<%=@description%>. API Docs: https://canvas.instructure.com/doc/api/<%=@name%>.html"
-        <%=graphql_fields(@model, @resource_name).join("        ")%>
-        end
+      class <%=@model['id'].singularize%> < BaseType
+        description "<%=@description%>. API Docs: https://canvas.instructure.com/doc/api/<%=@name%>.html"
+      <%=graphql_fields(@model, @resource_name).join("      ")%>
       end
     end
   end
