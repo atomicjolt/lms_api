@@ -52,7 +52,7 @@ module CanvasApi
 
     def canvas_name(type)
       name = type.split('|').first.strip.singularize
-      "LMSGraphQL::Types::Canvas::#{name}"
+      "LMSGraphQL::Types::Canvas::Canvas#{name}"
     end
 
     def graphql_primitive(name, type, format)
@@ -149,7 +149,7 @@ module CanvasApi
     end
 
     def make_file_name(str)
-      str.underscore.split("/").last.split("|").first.strip.singularize
+      str.underscore.split("/").last.split("|").first.gsub("canvas_", "").strip.singularize
     end
 
     def require_from_operation(operation)
