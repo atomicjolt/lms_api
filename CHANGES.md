@@ -1,3 +1,6 @@
+#1.5.0
+Move GraphQL into a new gem
+
 #1.4.1
 Use ID instead of String where appropriate in GraphQL objects.
 
