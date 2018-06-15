@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lms-api (1.4.1)
+    lms-api (1.5.0)
       activesupport (>= 3.0)
       httparty
 
@@ -19,7 +19,6 @@ GEM
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     diff-lcs (1.2.5)
-    graphql (1.8.2)
     hashdiff (0.3.0)
     httparty (0.16.2)
       multi_xml (>= 0.5.2)
@@ -55,7 +54,6 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
-  graphql
   lms-api!
   rake
   rspec
