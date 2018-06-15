@@ -13,7 +13,7 @@ namespace :canvas do
   desc "Scrape the LMS api"
   task :api do
     current_path = File.expand_path(File.dirname(__FILE__))
-    client_app_path = File.expand_path(File.join(current_path, "../../../atomic-client/client/libs/canvas/constants"))
+    client_app_path = File.expand_path(File.join(current_path, "../../../atomic-canvas/src/constants"))
     server_app_path = File.expand_path(File.join(current_path, "../../../atomic-lti"))
     elixir_app_path = File.expand_path(File.join(current_path, "../../../catalyst"))
     rb_graphql_app_path = File.expand_path(File.join(current_path, "../../../lms_graphql_api"))

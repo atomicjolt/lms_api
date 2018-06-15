@@ -1,0 +1,14 @@
+require_relative "../canvas_base_input_type"
+<%= require_from_properties(@model) %>
+
+module LMSGraphQL
+  module Types
+    module Canvas
+<%=graphql_field_enums(@model)-%>
+      class Canvas<%=@model['id'].singularize%>Input < BaseInputObject
+        description "<%=@description%>. API Docs: https://canvas.instructure.com/doc/api/<%=@name%>.html"
+      <%=graphql_fields(@model, @resource_name, true).join("      ")%>
+      end
+    end
+  end
+end

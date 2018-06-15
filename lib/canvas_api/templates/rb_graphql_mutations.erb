@@ -1,11 +1,11 @@
 require_relative "../../utils"
-require_relative "../canvas_base_mutation"
+require_relative "../../types/canvas_base_type"
 require_all(File.absolute_path(__FILE__), "../../mutations/canvas/")
 
 module LMSGraphQL
   module Mutations
     module Canvas
-      class MutationType < CanvasBaseMutation
+      class MutationType < LMSGraphQL::Types::Canvas::BaseType
         description "Canvas API mutations"
 
         <%= @content.join("\n        ") %>

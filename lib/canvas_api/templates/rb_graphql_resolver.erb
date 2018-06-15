@@ -8,7 +8,7 @@ module LMSGraphQL
         type <%= type_from_operation(operation) %>, null: false
 <%= @parameters.map{|p| "        argument :#{nested_arg(p["name"])}, #{graphql_type(p["name"], p)}, required: #{p["required"]}"}.join("\n") %>
         def resolve(<%= @parameters.map{|p| "#{nested_arg(p['name'])}#{p['required'] ? ':' : ': nil'}"}.join(", ") %>)
-          context[:canvas_api].proxy(
+          context[:canvas_api].call("<%= @nickname.upcase %>").proxy(
             "<%= @nickname.upcase %>",
             {
 <%= @parameters.map{|p| "              \"#{p['name']}\": #{nested_arg(p['name'])}"}.join(",\n") -%>

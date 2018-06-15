@@ -65,8 +65,11 @@ module CanvasApi
           end
 
           # Generate one file for each Canvas graphql type
-          canvas_graphql_renderer = CanvasApi::Render.new("./templates/rb_graphql_model.erb", api, resource, nil, nil, nil, nil, model)
-          canvas_graphql_renderer.save("#{rb_graphql_app_path}/lib/lms_graphql/types/canvas/#{model['id'].underscore.singularize}.rb")
+          canvas_graphql_type_render = CanvasApi::Render.new("./templates/rb_graphql_type.erb", api, resource, nil, nil, nil, nil, model)
+          canvas_graphql_type_render.save("#{rb_graphql_app_path}/lib/lms_graphql/types/canvas/#{model['id'].underscore.singularize}.rb")
+
+          canvas_graphql_input_render = CanvasApi::Render.new("./templates/rb_graphql_input_type.erb", api, resource, nil, nil, nil, nil, model)
+          canvas_graphql_input_render.save("#{rb_graphql_app_path}/lib/lms_graphql/types/canvas/#{model['id'].underscore.singularize}_input.rb")
         end
 
         # Generate one file of constants for every LMS API

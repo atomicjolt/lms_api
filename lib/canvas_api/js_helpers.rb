@@ -20,14 +20,18 @@ module CanvasApi
       end
     end
 
-    def parameters_doc(operation)
+    def parameters_doc(operation, method)
       if operation["parameters"].present?
         parameters = operation["parameters"].
           reject { |p| p["paramType"] == "path" }.
           map { |p| "#{p['name']}#{p['required'] ? ' (required)' : ''}" }.
           compact
         if parameters.present?
-          "\n// const query = {\n//   #{parameters.join("\n//   ")}\n// }"
+          if method == "get"
+            "\n// const query = {\n//   #{parameters.join("\n//   ")}\n// }"
+          else
+            "\n// const body = {\n//   #{parameters.join("\n//   ")}\n// }"
+          end
         else
           ""
         end

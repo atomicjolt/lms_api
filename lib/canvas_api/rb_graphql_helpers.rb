@@ -1,14 +1,17 @@
 module CanvasApi
   module GraphQLHelpers
 
-    def graphql_type(name, property, return_type = false, model = nil)
+    def graphql_type(name, property, return_type = false, model = nil, input_type = false)
       if property["$ref"]
-        canvas_name(property['$ref'])
+        canvas_name(property['$ref'], input_type)
       elsif property["allowableValues"]
         enum_class_name(model, name)
       else
         type = property["type"].downcase
+
         case type
+        when "{success: true}"
+          "String"
         when "integer", "string", "boolean", "datetime", "number", "date"
           graphql_primitive(name, type, property["format"])
         when "void"
@@ -24,7 +27,7 @@ module CanvasApi
                   elsif property["items"]["$ref"] == "DateTime" || property["items"]["$ref"] == "Date"
                      "[LMSGraphQL::Types::DateTimeType]"
                    elsif property["items"]["$ref"]
-                     "[#{canvas_name(property["items"]["$ref"])}]"
+                     "[#{canvas_name(property["items"]["$ref"], input_type)}]"
                    else
                      graphql_primitive(name, property["items"]["type"].downcase, property["items"]["format"])
                    end
@@ -41,7 +44,7 @@ module CanvasApi
             # HACK There's no TermsOfService object so we return a string
             "String"
           elsif return_type
-            canvas_name(property["type"])
+            canvas_name(property["type"], input_type)
           else
             puts "Unable to match '#{name}' requested property '#{property}' to GraphQL Type."
             "String"
@@ -50,9 +53,9 @@ module CanvasApi
       end
     end
 
-    def canvas_name(type)
+    def canvas_name(type, input_type = false)
       name = type.split('|').first.strip.singularize
-      "LMSGraphQL::Types::Canvas::Canvas#{name}"
+      "LMSGraphQL::Types::Canvas::Canvas#{name}#{input_type ? 'Input' : ''}"
     end
 
     def graphql_primitive(name, type, format)
@@ -107,7 +110,7 @@ module CanvasApi
       end
     end
 
-    def graphql_fields(model, resource_name)
+    def graphql_fields(model, resource_name, argument = false)
       if !model["properties"]
         puts "NO properties for #{resource_name} !!!!!!!!!!!!!!!!!!!!!"
         return []
@@ -118,9 +121,15 @@ module CanvasApi
         description << "Example: #{safe_rb(property['example'])}".gsub("..", "").gsub("\n", " ") if property["example"].present?
 
         if type = graphql_type(name, property, false, model)
-          <<-CODE
+          if argument
+            <<-CODE
+  argument :#{name.underscore}, #{type}, "#{description}", required: false
+            CODE
+          else
+            <<-CODE
   field :#{name.underscore}, #{type}, "#{description}", null: true
-          CODE
+            CODE
+          end
         else
           puts "Unable to determine type for #{name}"
         end
@@ -128,7 +137,7 @@ module CanvasApi
     end
 
     def type_from_operation(operation)
-      graphql_type("operation", operation, true)
+      type = graphql_type("operation", operation, true)
     end
 
     def name_from_operation(operation)
@@ -182,7 +191,10 @@ module CanvasApi
     end
 
     def nested_arg(str)
-      str.gsub("[", "_").gsub("]", "").gsub("*", "star").gsub("<X>", "_x_")
+      # TODO/HACK we are replacing values from the string here to get things to work for now.
+      # However, removing these symbols means that the methods that use the arguments
+      # generated herein will have bugs and be unusable.
+      str.gsub("[", "_").gsub("]", "").gsub("*", "star").gsub("<", "_").gsub(">", "_")
     end
 
   end
