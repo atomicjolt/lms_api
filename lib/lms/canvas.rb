@@ -337,7 +337,9 @@ module LMS
       query_parameters << :page
       query_parameters << :as_user_id
 
-      allowed_params = params.slice(*query_parameters)
+      allowed_params = params.
+        slice(*query_parameters).
+        reject { |key, value| value.nil? }
 
       if allowed_params.present?
         "#{uri}?#{allowed_params.to_query}"
