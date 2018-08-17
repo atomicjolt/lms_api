@@ -1,3 +1,6 @@
+#1.6.0
+Updated Canvas API definitions
+
 #1.5.0
 Move GraphQL into a new gem
 
