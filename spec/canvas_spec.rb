@@ -241,6 +241,19 @@ describe LMS::Canvas do
         expect(api.refresh_token).to eq("anewtoken")
       end
 
+      it "raises an exception when refreshing the token" do
+        bad_result = http_party_post_response(401, "BAD", '')
+        api = LMS::Canvas.new(@authentication.provider_url, @authentication, REFRESH_OPTIONS)
+        expect(HTTParty).to receive(:post).
+          with("#{@base_uri}/login/oauth2/token",
+               headers: @api.headers,
+               body: { grant_type: "refresh_token" }.merge(REFRESH_OPTIONS)).
+          and_return(bad_result).ordered
+          expect do
+            api.refresh_token
+          end.to raise_exception(LMS::Canvas::RefreshTokenFailedException)
+      end
+
       it "raises LMS::RefreshTokenRequired if options are not provided" do
         api = LMS::Canvas.new(@authentication.provider_url, @authentication)
         expect(HTTParty).to receive(:get).

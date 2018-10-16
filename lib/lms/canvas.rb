@@ -177,7 +177,7 @@ module LMS
       result = HTTParty.post(url, headers: headers, body: payload)
       code = result.response.code.to_i
       unless [200, 201].include?(code)
-        raise LMS::Canvas::RefreshTokenFailedException.new(api_error(result), code, result)
+        raise LMS::Canvas::RefreshTokenFailedException.new(api_error(result), code, result, @authentication)
       end
       result["access_token"]
     end
@@ -188,7 +188,7 @@ module LMS
       return result if [200, 201, 202, 203, 204, 205, 206].include?(code)
 
       if code == 401 && result.headers["www-authenticate"] == 'Bearer realm="canvas-lms"'
-        raise LMS::Canvas::RefreshTokenRequired.new("", nil, @authentication)
+        raise LMS::Canvas::RefreshTokenRequired.new("", nil, result, @authentication)
       end
 
       raise LMS::Canvas::InvalidAPIRequestException.new(api_error(result), code, result)
@@ -387,19 +387,22 @@ module LMS
       end
     end
 
-    class RefreshTokenRequired < CanvasException
+    class TokenException < CanvasException
       attr_reader :auth
 
-      def initialize(msg = "", status = nil, auth = nil)
-        super(msg, status)
+      def initialize(message = "", status = nil, result = nil, auth = nil)
+        super(message, status, result)
         @auth = auth
       end
     end
 
-    class InvalidRefreshOptionsException < CanvasException
+    class RefreshTokenRequired < TokenException
     end
 
-    class RefreshTokenFailedException < CanvasException
+    class RefreshTokenFailedException < TokenException
+    end
+
+    class InvalidRefreshOptionsException < CanvasException
     end
 
     class InvalidAPIRequestException < CanvasException
