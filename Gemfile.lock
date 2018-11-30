@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lms-api (1.7.0)
+    lms-api (1.8.0)
       activesupport (>= 3.0)
       httparty
 
@@ -60,4 +60,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.16.3
+   1.16.6
