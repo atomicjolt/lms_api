@@ -37,7 +37,7 @@ module CanvasApi
             # Prevent duplicates
             nickname = operation["nickname"]
             if nicknames.include?(nickname)
-              nickname = "#{api["description"].gsub(" ", "_")}_#{nickname}"
+              nickname = "#{api["description"].gsub(" ", "_").downcase}_#{nickname}"
             end
             nicknames << nickname
             operation["nickname"] = nickname
