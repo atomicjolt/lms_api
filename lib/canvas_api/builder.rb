@@ -26,12 +26,22 @@ module CanvasApi
       rb_graphql_fields = []
       rb_graphql_mutations = []
 
+      nicknames = []
       directory["apis"].each do |api|
         puts "Generating #{api['description']}"
         resource = HTTParty.get("#{endpoint}#{api['path']}")
         constants = []
         resource["apis"].each do |resource_api|
           resource_api["operations"].each do |operation|
+
+            # Prevent duplicates
+            nickname = operation["nickname"]
+            if nicknames.include?(nickname)
+              nickname = "#{api["description"].gsub(" ", "_")}_#{nickname}"
+            end
+            nicknames << nickname
+            operation["nickname"] = nickname
+
             parameters = operation["parameters"]
             constants << CanvasApi::Render.new("./templates/constant.erb", api, resource, resource_api, operation, parameters, nil, nil).render
             lms_urls_rb << CanvasApi::Render.new("./templates/rb_url.erb", api, resource, resource_api, operation, parameters, nil, nil).render
