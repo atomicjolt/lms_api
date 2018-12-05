@@ -110,7 +110,7 @@ module CanvasApi
       end
     end
 
-    def graphql_fields(model, resource_name, argument = false)
+    def graphql_fields(model, resource_name, argument = false, input_type = false)
       if !model["properties"]
         puts "NO properties for #{resource_name} !!!!!!!!!!!!!!!!!!!!!"
         return []
@@ -120,7 +120,7 @@ module CanvasApi
         description << "#{safe_rb(property['description'])}." if property["description"].present?
         description << "Example: #{safe_rb(property['example'])}".gsub("..", "").gsub("\n", " ") if property["example"].present?
 
-        if type = graphql_type(name, property, false, model)
+        if type = graphql_type(name, property, false, model, input_type)
           if argument
             <<-CODE
   argument :#{name.underscore}, #{type}, "#{description}", required: false

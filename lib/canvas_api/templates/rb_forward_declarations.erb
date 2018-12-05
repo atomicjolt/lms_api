@@ -1,0 +1,14 @@
+require_relative "canvas_base_type"
+require_relative "canvas_base_input_type"
+
+# The various types and input types generated for Canvas end up with circular dependencies
+# We use a forward declaration here to overcome the problem.
+# For example, the generate User class depends on Enrollment and Enrollment depends on User
+# so we have a circular dependency.
+module LMSGraphQL
+  module Types
+    module Canvas
+      <%= @content.join("\n      ") %>
+    end
+  end
+end
