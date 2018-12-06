@@ -25,6 +25,7 @@ module CanvasApi
 
       rb_graphql_fields = []
       rb_graphql_mutations = []
+      rb_forward_declarations = []
 
       nicknames = []
       directory["apis"].each do |api|
@@ -69,6 +70,7 @@ module CanvasApi
 
           end
         end
+
         resource["models"].map do |_name, model|
           if model["properties"] # Don't generate models without properties
             models << CanvasApi::Render.new("./templates/js_graphql_model.erb", api, resource, nil, nil, nil, nil, model).render
@@ -80,6 +82,9 @@ module CanvasApi
 
           canvas_graphql_input_render = CanvasApi::Render.new("./templates/rb_graphql_input_type.erb", api, resource, nil, nil, nil, nil, model)
           canvas_graphql_input_render.save("#{rb_graphql_app_path}/lib/lms_graphql/types/canvas/#{model['id'].underscore.singularize}_input.rb")
+
+          rb_forward_declarations << "class Canvas#{model['id'].singularize}Input < BaseInputObject;end"
+          rb_forward_declarations << "class Canvas#{model['id'].singularize} < BaseType;end"
         end
 
         # Generate one file of constants for every LMS API
@@ -98,6 +103,7 @@ module CanvasApi
       CanvasApi::Render.new("./templates/js_graphql_mutations.erb", nil, nil, nil, nil, nil, js_graphql_mutations, nil).save("#{server_app_path}/lib/canvas/graphql_mutations.js")
 
       # GraphQL Ruby
+      CanvasApi::Render.new("./templates/rb_forward_declarations.erb", nil, nil, nil, nil, nil, rb_forward_declarations, nil).save("#{rb_graphql_app_path}/lib/lms_graphql/types/canvas_forward_declarations.rb")
       CanvasApi::Render.new("./templates/rb_graphql_root_query.erb", nil, nil, nil, nil, nil, rb_graphql_fields, nil).save("#{rb_graphql_app_path}/lib/lms_graphql/types/canvas/query_type.rb")
       CanvasApi::Render.new("./templates/rb_graphql_mutations.erb", nil, nil, nil, nil, nil, rb_graphql_mutations, nil).save("#{rb_graphql_app_path}/lib/lms_graphql/mutations/canvas/mutations.rb")
     end
