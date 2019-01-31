@@ -31,7 +31,7 @@ module CanvasApi
                      # the ref value is set to a full sentence rather than a
                      # simple type, so we look for that specific value
                      if property["items"]["$ref"].include?("UserDisplay if anonymous grading is not enabled")
-                       "[UserDisplay]"
+                       "[LMSGraphQL::Types::Canvas::CanvasUserDisplay]"
                      else
                        "[#{canvas_name(property["items"]["$ref"], input_type)}]"
                      end
