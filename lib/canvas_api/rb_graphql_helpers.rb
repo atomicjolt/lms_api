@@ -27,7 +27,14 @@ module CanvasApi
                   elsif property["items"]["$ref"] == "DateTime" || property["items"]["$ref"] == "Date"
                      "[LMSGraphQL::Types::DateTimeType]"
                    elsif property["items"]["$ref"]
-                     "[#{canvas_name(property["items"]["$ref"], input_type)}]"
+                     # HACK on https://canvas.instructure.com/doc/api/submissions.json
+                     # the ref value is set to a full sentence rather than a
+                     # simple type, so we look for that specific value
+                     if property["items"]["$ref"].include?("UserDisplay if anonymous grading is not enabled")
+                       "[LMSGraphQL::Types::Canvas::CanvasUserDisplay]"
+                     else
+                       "[#{canvas_name(property["items"]["$ref"], input_type)}]"
+                     end
                    else
                      graphql_primitive(name, property["items"]["type"].downcase, property["items"]["format"])
                    end

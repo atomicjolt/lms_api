@@ -6,15 +6,20 @@ module LMSGraphQL
     module Canvas
       class <%= @nickname.classify %> < CanvasBaseResolver
         type <%= type_from_operation(operation) %>, null: false
-<%= @parameters.map{|p| "        argument :#{nested_arg(p["name"])}, #{graphql_type(p["name"], p)}, required: #{p["required"]}"}.join("\n") %>
-        def resolve(<%= @parameters.map{|p| "#{nested_arg(p['name'])}#{p['required'] ? ':' : ': nil'}"}.join(", ") %>)
-          context[:canvas_api].call("<%= @nickname.upcase %>").proxy(
+<% if operation["type"] == "array"
+%>        argument :get_all, Boolean, required: false
+<% end
+%><%= @parameters.map{|p| "        argument :#{nested_arg(p["name"])}, #{graphql_type(p["name"], p)}, required: #{p["required"]}"}.join("\n") %>
+        def resolve(<%= @parameters.map{|p| "#{nested_arg(p['name'])}#{p['required'] ? ':' : ': nil'}"}.push("get_all: false").join(", ") %>)
+          result = context[:canvas_api].call("<%= @nickname.upcase %>").proxy(
             "<%= @nickname.upcase %>",
             {
 <%= @parameters.map{|p| "              \"#{p['name']}\": #{nested_arg(p['name'])}"}.join(",\n") -%>
             },
             nil,
-          ).parsed_response
+            get_all,
+          )
+          get_all ? result : result.parsed_response
         end
       end
     end
