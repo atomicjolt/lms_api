@@ -10,10 +10,8 @@ module LMSGraphQL
         def resolve(<%= @parameters.map{|p| "#{nested_arg(p['name'])}#{p['required'] ? ':' : ': nil'}"}.join(", ") %>)
           context[:canvas_api].call("<%= @nickname.upcase %>").proxy(
             "<%= @nickname.upcase %>",
-            {
-<%= @parameters.map{|p| "              \"#{p['name']}\": #{nested_arg(p['name'])}"}.join(",\n") -%>
-            },
-            nil,
+<%=  params_as_string(@parameters, ["query", "path"])-%>,
+<%=  params_as_string(@parameters, ["form"])-%>,
           ).parsed_response
         end
       end

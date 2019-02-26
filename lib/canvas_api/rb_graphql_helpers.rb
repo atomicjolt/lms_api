@@ -204,6 +204,18 @@ module CanvasApi
       str.gsub("[", "_").gsub("]", "").gsub("*", "star").gsub("<", "_").gsub(">", "_")
     end
 
+    def params_as_string(parameters, paramTypes)
+      filtered = parameters.select{ |p| paramTypes.include?(p["paramType"]) }
+      if filtered && !filtered.empty?
+        s = filtered.
+          map{ |p| "              \"#{p['name']}\": #{nested_arg(p['name'])}" }.
+          join(",\n")
+        "            {\n#{s}\n            }"
+      else
+        "            {}"
+      end
+    end
+
   end
 
 end
