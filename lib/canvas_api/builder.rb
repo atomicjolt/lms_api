@@ -28,6 +28,10 @@ module CanvasApi
       rb_forward_declarations = []
 
       nicknames = []
+
+      # Elixir has a default action that raises
+      lms_urls_ex << CanvasApi::Render.new("./templates/ex_default_action.erb", nil, nil, nil, nil, nil, nil, nil).render
+
       directory["apis"].each do |api|
         puts "Generating #{api['description']}"
         resource = HTTParty.get("#{endpoint}#{api['path']}")
@@ -48,6 +52,7 @@ module CanvasApi
             lms_urls_rb << CanvasApi::Render.new("./templates/rb_url.erb", api, resource, resource_api, operation, parameters, nil, nil).render
             lms_urls_js << CanvasApi::Render.new("./templates/js_url.erb", api, resource, resource_api, operation, parameters, nil, nil).render
             lms_urls_ex << CanvasApi::Render.new("./templates/ex_url.erb", api, resource, resource_api, operation, parameters, nil, nil).render
+            lms_urls_ex << CanvasApi::Render.new("./templates/ex_action.erb", api, resource, resource_api, operation, parameters, nil, nil).render
 
             if parameters.detect{ |param| param["name"] == "course_id" && param["paramType"] == "path" }
               course_ids_required_rb << CanvasApi::Render.new("./templates/course_id_required.erb", api, resource, resource_api, operation, parameters, nil, nil).render
@@ -94,7 +99,10 @@ module CanvasApi
 
       CanvasApi::Render.new("./templates/rb_urls.erb", nil, nil, nil, nil, nil, lms_urls_rb, nil).save("#{project_root}/lib/lms/canvas_urls.rb")
       CanvasApi::Render.new("./templates/js_urls.erb", nil, nil, nil, nil, nil, lms_urls_js, nil).save("#{server_app_path}/lib/canvas/urls.js")
-      CanvasApi::Render.new("./templates/ex_urls.erb", nil, nil, nil, nil, nil, lms_urls_ex, nil).save("#{elixir_app_path}/lib/canvas/actions.ex")
+
+      # The elixir urls are sorted, to prevent linter errors
+      CanvasApi::Render.new("./templates/ex_urls.erb", nil, nil, nil, nil, nil, lms_urls_ex.sort, nil).save("#{elixir_app_path}/lib/canvas/actions.ex")
+
       CanvasApi::Render.new("./templates/course_ids_required.erb", nil, nil, nil, nil, nil, course_ids_required_rb, nil).save("#{project_root}/lib/lms/course_ids_required.rb")
 
       # GraphQL Javascript - still not complete
