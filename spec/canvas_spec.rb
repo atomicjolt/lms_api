@@ -196,6 +196,46 @@ describe LMS::Canvas do
       authentication = api.force_refresh
       expect(authentication.token).to eq("anewtoken")
     end
+
+    it "raises a 500 exception if Canvas returns a 500" do
+      auth_state_model = TestAuthStateModel.new(@token, @base_uri)
+      LMS::Canvas.auth_state_model = auth_state_model
+      authentication = OpenStruct.new(id: 1,
+                                       provider: "canvas",
+                                       token: @token,
+                                       provider_url: @base_uri)
+      api = LMS::Canvas.new(authentication.provider_url, authentication, REFRESH_OPTIONS)
+      refresh_result = http_party_post_response(503, "OK", "Service Unavailable")
+
+      expect(HTTParty).to receive(:post).
+      with("#{@base_uri}/login/oauth2/token",
+           headers: api.headers,
+           body: { grant_type: "refresh_token" }.merge(REFRESH_OPTIONS)).
+      and_return(refresh_result).ordered
+      expect do
+        api.force_refresh
+      end.to raise_error(LMS::Canvas::RefreshToken500Exception)
+    end
+
+    it "raises a failed refresh exception if Canvas returns a non 2xx status code" do
+      auth_state_model = TestAuthStateModel.new(@token, @base_uri)
+      LMS::Canvas.auth_state_model = auth_state_model
+      authentication = OpenStruct.new(id: 1,
+                                       provider: "canvas",
+                                       token: @token,
+                                       provider_url: @base_uri)
+      api = LMS::Canvas.new(authentication.provider_url, authentication, REFRESH_OPTIONS)
+      refresh_result = http_party_post_response(401, "OK", "Unauthorized")
+
+      expect(HTTParty).to receive(:post).
+      with("#{@base_uri}/login/oauth2/token",
+           headers: api.headers,
+           body: { grant_type: "refresh_token" }.merge(REFRESH_OPTIONS)).
+      and_return(refresh_result).ordered
+      expect do
+        api.force_refresh
+      end.to raise_error(LMS::Canvas::RefreshTokenFailedException)
+    end
   end
 
   describe "401 unauthorized" do
