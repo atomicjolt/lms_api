@@ -176,7 +176,11 @@ module LMS
       url = full_url("login/oauth2/token", false)
       result = HTTParty.post(url, headers: headers, body: payload)
       code = result.response.code.to_i
-      unless [200, 201].include?(code)
+      if code >= 500
+        raise LMS::Canvas::RefreshToken500Exception.new(api_error(result), code, result, @authentication)
+      end
+
+      if code > 201
         raise LMS::Canvas::RefreshTokenFailedException.new(api_error(result), code, result, @authentication)
       end
       result["access_token"]
@@ -400,6 +404,9 @@ module LMS
     end
 
     class RefreshTokenFailedException < TokenException
+    end
+
+    class RefreshToken500Exception < RefreshTokenFailedException
     end
 
     class InvalidRefreshOptionsException < CanvasException
