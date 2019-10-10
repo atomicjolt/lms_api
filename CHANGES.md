@@ -1,3 +1,6 @@
+#1.13.0
+Updated Canvas API definitions
+
 #1.12.1
 Changes error that is thrown when a token refresh fails to make it easier to tell whether it was Canvas saying
 the token was invalidated or if Canvas was unavailable.
