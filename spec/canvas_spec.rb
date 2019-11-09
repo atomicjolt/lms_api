@@ -5,6 +5,7 @@ require "lms_api"
 require "ostruct"
 require "thread"
 require "byebug"
+require "pry-byebug"
 def thread_log(msg)
   print "[#{Thread.current.object_id}] #{msg}\n" if ENV["THREAD_LOG"]
 end
@@ -302,6 +303,39 @@ describe LMS::Canvas do
         expect do
           api.api_get_request("courses")
         end.to raise_exception(LMS::Canvas::RefreshTokenRequired)
+      end
+
+      it "raises LMS::Canvas::InvalidTokenException if the token was refreshed more than once for the same request" do
+        auth_state_model = TestAuthStateModel.new(@token, @base_uri)
+        LMS::Canvas.auth_state_model = auth_state_model
+
+        api = LMS::Canvas.new(@authentication.provider_url, @authentication, REFRESH_OPTIONS)
+
+        expect(HTTParty).to receive(:post).
+          with("#{@base_uri}/login/oauth2/token",
+               headers: @api.headers,
+               body: { grant_type: "refresh_token" }.merge(REFRESH_OPTIONS)).
+          and_return(@refresh_result).ordered
+
+        expect(HTTParty).to receive(:post).
+          with("#{@base_uri}/login/oauth2/token",
+               headers: { "Authorization" => "Bearer anewtoken", "User-Agent" => "LMS-API Ruby" },
+               body: { grant_type: "refresh_token" }.merge(REFRESH_OPTIONS)).
+          and_return(@refresh_result).ordered
+
+        expect(HTTParty).to receive(:get).
+          with("#{@base_uri}/api/v1/courses", headers: @api.headers).
+          and_return(@initial_result)
+        expect(HTTParty).to receive(:get).
+          with(
+            "#{@base_uri}/api/v1/courses",
+            headers: {"Authorization" => "Bearer anewtoken", "User-Agent" => "LMS-API Ruby" },
+          ).
+          and_return(@initial_result)
+
+        expect do
+          api.api_get_request("courses")
+        end.to raise_exception(LMS::Canvas::InvalidTokenException)
       end
 
       describe "default reauthentication model with multiple processes" do
