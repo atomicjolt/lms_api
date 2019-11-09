@@ -5,7 +5,6 @@ require "lms_api"
 require "ostruct"
 require "thread"
 require "byebug"
-require "pry-byebug"
 def thread_log(msg)
   print "[#{Thread.current.object_id}] #{msg}\n" if ENV["THREAD_LOG"]
 end
