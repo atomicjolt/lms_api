@@ -161,12 +161,29 @@ module LMS
     end
 
     def refreshably
-      result = yield
-      check_result(result)
-    rescue LMS::Canvas::RefreshTokenRequired => ex
-      raise ex if @refresh_token_options.blank?
-      @authentication = @@on_auth.call(self)
-      retry
+      refresh_attempts = 0
+
+      begin
+        result = yield
+        check_result(result)
+      rescue LMS::Canvas::RefreshTokenRequired => ex
+        raise ex if @refresh_token_options.blank?
+
+        refresh_attempts += 1
+
+        @authentication = @@on_auth.call(self)
+
+        if refresh_attempts < 2
+          retry
+        else
+          raise LMS::Canvas::InvalidTokenException.new(
+            "Refreshing the token gives an invalid token. The developer key may have been disabled.",
+            result&.response&.code&.to_i,
+            result,
+            @authentication
+          )
+        end
+      end
     end
 
     def refresh_token
@@ -424,5 +441,7 @@ module LMS
     class MissingRequiredParameterException < CanvasException
     end
 
+    class InvalidTokenException < TokenException
+    end
   end
 end
