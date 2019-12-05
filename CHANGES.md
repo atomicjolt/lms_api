@@ -1,3 +1,6 @@
+#1.14.0
+Updated Canvas API definitions
+
 #1.13.0
 Updated Canvas API definitions
 

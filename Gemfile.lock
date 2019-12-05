@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lms-api (1.13.0)
+    lms-api (1.14.0)
       activesupport (>= 3.0)
       httparty
 
@@ -27,8 +27,8 @@ GEM
       concurrent-ruby (~> 1.0)
     mime-types (3.3)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2019.0904)
-    minitest (5.12.2)
+    mime-types-data (3.2019.1009)
+    minitest (5.13.0)
     multi_xml (0.6.0)
     rake (12.0.0)
     rspec (3.5.0)
