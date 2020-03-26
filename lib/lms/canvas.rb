@@ -423,7 +423,7 @@ module LMS
     class RefreshTokenFailedException < TokenException
     end
 
-    class RefreshToken500Exception < RefreshTokenFailedException
+    class RefreshToken500Exception < TokenException
     end
 
     class InvalidRefreshOptionsException < CanvasException
