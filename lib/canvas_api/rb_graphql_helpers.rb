@@ -8,7 +8,6 @@ module CanvasApi
         enum_class_name(model, name)
       else
         type = property["type"].downcase
-
         case type
         when "{success: true}"
           "String"
@@ -19,25 +18,27 @@ module CanvasApi
         when "array"
           begin
             type = if property["items"]["$ref"] == "[Integer]"
-                     "[Int]"
-                   elsif property["items"]["$ref"] == "Array"
-                     "[String]"
-                   elsif property["items"]["$ref"] == "[String]"
-                     "[String]"
+                    "[Int]"
+                  elsif property["items"]["$ref"] == "Array"
+                    "[String]"
+                  elsif property["items"]["$ref"] == "[String]"
+                    "[String]"
                   elsif property["items"]["$ref"] == "DateTime" || property["items"]["$ref"] == "Date"
-                     "[LMSGraphQL::Types::DateTimeType]"
-                   elsif property["items"]["$ref"]
-                     # HACK on https://canvas.instructure.com/doc/api/submissions.json
-                     # the ref value is set to a full sentence rather than a
-                     # simple type, so we look for that specific value
-                     if property["items"]["$ref"].include?("UserDisplay if anonymous grading is not enabled")
-                       "[LMSGraphQL::Types::Canvas::CanvasUserDisplay]"
-                     else
-                       "[#{canvas_name(property["items"]["$ref"], input_type)}]"
-                     end
-                   else
-                     graphql_primitive(name, property["items"]["type"].downcase, property["items"]["format"])
-                   end
+                    "[LMSGraphQL::Types::DateTimeType]"
+                  elsif property["items"]["$ref"]
+                    # HACK on https://canvas.instructure.com/doc/api/submissions.json
+                    # the ref value is set to a full sentence rather than a
+                    # simple type, so we look for that specific value
+                    if property["items"]["$ref"].include?("UserDisplay if anonymous grading is not enabled")
+                      "[LMSGraphQL::Types::Canvas::CanvasUserDisplay]"
+                    elsif property["items"]["$ref"].include?("Url String The url to the result that was created")
+                      "String"
+                    else
+                      "[#{canvas_name(property["items"]["$ref"], input_type)}]"
+                    end
+                  else
+                    graphql_primitive(name, property["items"]["type"].downcase, property["items"]["format"])
+                  end
           rescue
             puts "Unable to discover list type for '#{name}' ('#{property}'). Defaulting to String"
             type = "String"
@@ -50,6 +51,14 @@ module CanvasApi
           if property["type"] == "TermsOfService"
             # HACK There's no TermsOfService object so we return a string
             "String"
+          elsif property["type"] == "list of content items"
+            # HACK There's no list of content items object so we return an array of string
+            # byebug
+            # TODO "Figure out what to do about this type")
+            "[String]"
+          elsif property["type"].include?('{ "unread_count": "integer" }')
+            # TODO this should probably be a different type.
+            "Int"
           elsif return_type
             canvas_name(property["type"], input_type)
           else
@@ -61,7 +70,8 @@ module CanvasApi
     end
 
     def canvas_name(type, input_type = false)
-      name = type.split('|').first.strip.singularize
+      # Remove chars and fix spelling errors
+      name = type.split('|').first.strip.gsub(" ", "_").singularize.gsub("MediaTrackk", "MediaTrack")
       "LMSGraphQL::Types::Canvas::Canvas#{name}#{input_type ? 'Input' : ''}"
     end
 
@@ -127,6 +137,9 @@ module CanvasApi
         description << "#{safe_rb(property['description'])}." if property["description"].present?
         description << "Example: #{safe_rb(property['example'])}".gsub("..", "").gsub("\n", " ") if property["example"].present?
 
+        # clean up name
+        name = nested_arg(name)
+
         if type = graphql_type(name, property, false, model, input_type)
           if argument
             <<-CODE
@@ -161,11 +174,11 @@ module CanvasApi
     end
 
     def no_brackets(str)
-      str.gsub("[", "").gsub("]", "")
+      str.gsub("[", "").gsub("]", "").gsub(".", "")
     end
 
     def make_file_name(str)
-      str.underscore.split("/").last.split("|").first.gsub("canvas_", "").strip.singularize
+      str.underscore.split("/").last.split("|").first.gsub("canvas_", "").gsub(" ", "_").strip.singularize
     end
 
     def require_from_operation(operation)
@@ -201,7 +214,18 @@ module CanvasApi
       # TODO/HACK we are replacing values from the string here to get things to work for now.
       # However, removing these symbols means that the methods that use the arguments
       # generated herein will have bugs and be unusable.
-      str.gsub("[", "_").gsub("]", "").gsub("*", "star").gsub("<", "_").gsub(">", "_")
+      str.gsub("[", "_").
+        gsub("]", "").
+        gsub("*", "star").
+        gsub("<", "_").
+        gsub(">", "_").
+        gsub("`", "").
+        gsub("https://canvas.instructure.com/lti/", "").
+        gsub("https://www.instructure.com/", "").
+        gsub("https://purl.imsglobal.org/spec/lti/claim/", "").
+        gsub("`", "").
+        gsub(".", "")
+
     end
 
     def params_as_string(parameters, paramTypes)
