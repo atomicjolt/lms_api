@@ -53,11 +53,9 @@ module CanvasApi
             "String"
           elsif property["type"] == "list of content items"
             # HACK There's no list of content items object so we return an array of string
-            # byebug
-            # TODO "Figure out what to do about this type")
             "[String]"
           elsif property["type"].include?('{ "unread_count": "integer" }')
-            # TODO this should probably be a different type.
+            # HACK TODO this should probably be a different type.
             "Int"
           elsif return_type
             canvas_name(property["type"], input_type)
@@ -161,7 +159,7 @@ module CanvasApi
     end
 
     def name_from_operation(operation)
-      type = no_brackets(type_from_operation(@operation))
+      type = no_brackets_period(type_from_operation(@operation))
       if !is_basic_type(type)
         make_file_name(type)
       else
@@ -173,7 +171,7 @@ module CanvasApi
       ["Int", "String", "Boolean", "LMSGraphQL::Types::DateTimeType", "Float", "ID"].include?(type)
     end
 
-    def no_brackets(str)
+    def no_brackets_period(str)
       str.gsub("[", "").gsub("]", "").gsub(".", "")
     end
 
@@ -182,7 +180,7 @@ module CanvasApi
     end
 
     def require_from_operation(operation)
-      type = no_brackets(type_from_operation(@operation))
+      type = no_brackets_period(type_from_operation(@operation))
       if !is_basic_type(type)
         "require_relative \"../../types/canvas/#{make_file_name(type)}\""
       end
@@ -191,7 +189,7 @@ module CanvasApi
     def require_from_properties(model)
       return unless model["properties"]
       requires = model["properties"].map do |name, property|
-        type = no_brackets(graphql_type(name, property, true, model))
+        type = no_brackets_period(graphql_type(name, property, true, model))
         if !is_basic_type(type) && !property["allowableValues"]
           "require_relative \"#{make_file_name(type)}\""
         end
@@ -223,9 +221,7 @@ module CanvasApi
         gsub("https://canvas.instructure.com/lti/", "").
         gsub("https://www.instructure.com/", "").
         gsub("https://purl.imsglobal.org/spec/lti/claim/", "").
-        gsub("`", "").
         gsub(".", "")
-
     end
 
     def params_as_string(parameters, paramTypes)
