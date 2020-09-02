@@ -35,8 +35,17 @@ module CanvasApi
       directory["apis"].each do |api|
         puts "Generating #{api['description']}"
         resource = HTTParty.get("#{endpoint}#{api['path']}")
+
+        # HACK The canvas docs are missing one of the allowable value in modules
+        # TODO we might want to create a hacks class at some point to contain all these
+        if api['path'] == "/modules.json"
+          if !resource["models"]["CompletionRequirement"]["properties"]["type"]["allowableValues"]["values"].include?("must_mark_done")
+            resource["models"]["CompletionRequirement"]["properties"]["type"]["allowableValues"]["values"].push("must_mark_done")
+          end
+        end
+
         constants = []
-        resource["apis"].each do |resource_api|
+        resource["apis"]&.each do |resource_api|
           resource_api["operations"].each do |operation|
 
             # Prevent duplicates
