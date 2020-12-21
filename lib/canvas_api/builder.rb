@@ -124,7 +124,8 @@ module CanvasApi
       CanvasApi::Render.new("./templates/rb_graphql_root_query.erb", nil, nil, nil, nil, nil, rb_graphql_fields, nil).save("#{rb_graphql_app_path}/lib/lms_graphql/types/canvas/query_type.rb")
       CanvasApi::Render.new("./templates/rb_graphql_mutations.erb", nil, nil, nil, nil, nil, rb_graphql_mutations, nil).save("#{rb_graphql_app_path}/lib/lms_graphql/mutations/canvas/mutations.rb")
     end
-
   end
-
 end
+
+
+

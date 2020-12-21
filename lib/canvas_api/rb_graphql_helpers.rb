@@ -1,5 +1,9 @@
 module CanvasApi
   module GraphQLHelpers
+    # list of names that conflict with built in methods,
+    # Instead of generating a regular field for these ones,
+    # generate a resolver method
+    CONFLICTING_NAMES = ["end", "context", "next", "module"]
 
     def graphql_type(name, property, return_type = false, model = nil, input_type = false)
       if property["$ref"]
@@ -140,19 +144,37 @@ module CanvasApi
 
         if type = graphql_type(name, property, false, model, input_type)
           if argument
-            <<-CODE
-  argument :#{name.underscore}, #{type}, "#{description}", required: false
-            CODE
+            argument_format(name, type, description)
           else
-            <<-CODE
-  field :#{name.underscore}, #{type}, "#{description}", null: true
-            CODE
+            if CONFLICTING_NAMES.include?(name.underscore)
+              field_resolver_format(name, type, description)
+            else
+              field_format(name, type, description)
+            end
           end
         else
           puts "Unable to determine type for #{name}"
         end
       end.compact
     end
+
+    def argument_format(name, type, description)
+      "\targument :#{name.underscore}, #{type}, \"#{description}\", required: false\n"
+    end
+
+    def field_format(name, type, description)
+      "\tfield :#{name.underscore}, #{type}, \"#{description}\", null: true\n"
+    end
+
+    def field_resolver_format(name, type, description)
+      <<-CODE
+        field :#{name.underscore}, #{type}, "#{description}", resolver_method: :resolve_#{name.underscore}, null: true
+        def resolve_#{name.underscore}
+          object[:#{name.underscore}]
+        end
+      CODE
+    end
+
 
     def type_from_operation(operation)
       type = graphql_type("operation", operation, true)
