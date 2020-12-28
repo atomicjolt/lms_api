@@ -158,12 +158,12 @@ module CanvasApi
       end.compact
     end
 
-    def argument_format(name, type, description)
-      "\targument :#{name.underscore}, #{type}, \"#{description}\", required: false\n"
+    def argument_format(name, type, description="")
+      "argument :#{name.underscore}, #{type}, \"#{description}\", required: false\n"
     end
 
-    def field_format(name, type, description)
-      "\tfield :#{name.underscore}, #{type}, \"#{description}\", null: true\n"
+    def field_format(name, type, description="")
+      "field :#{name.underscore}, #{type}, \"#{description}\", null: true\n"
     end
 
     def field_resolver_format(name, type, description)

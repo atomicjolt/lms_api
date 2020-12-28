@@ -6,7 +6,15 @@ module LMSGraphQL
     module Canvas
       class <%= @nickname.classify %> < BaseMutation
 <%= @parameters.map{|p| "        argument :#{nested_arg(p["name"])}, #{graphql_type(p["name"], p, false, nil, true)}, required: #{p["required"]}"}.join("\n") %>
-        field :<%= name_from_operation(operation) %>, <%= type_from_operation(operation) %>, null: false
+        <% name = name_from_operation(operation)%>
+        <% if CONFLICTING_NAMES.include?(name)%>
+        field :<%= name %>, <%= type_from_operation(operation) %>, null: false, resolver_method: :resolve_<%= name %>
+        def resolve_<%= name %>
+          object[:<%= name %>]
+        end
+        <% else %>
+        field :<%= name %>, <%= type_from_operation(operation) %>, null: false
+        <% end %>
         def resolve(<%= @parameters.map{|p| "#{nested_arg(p['name'])}#{p['required'] ? ':' : ': nil'}"}.join(", ") %>)
           context[:canvas_api].call("<%= @nickname.upcase %>").proxy(
             "<%= @nickname.upcase %>",
