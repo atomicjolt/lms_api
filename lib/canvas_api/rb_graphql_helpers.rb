@@ -168,7 +168,7 @@ module CanvasApi
 
     def field_resolver_format(name, type, description)
       <<-CODE
-        field :#{name.underscore}, #{type}, "#{description}", resolver_method: :resolve_#{name.underscore}, null: true
+field :#{name.underscore}, #{type}, "#{description}", resolver_method: :resolve_#{name.underscore}, null: true
         def resolve_#{name.underscore}
           object[:#{name.underscore}]
         end

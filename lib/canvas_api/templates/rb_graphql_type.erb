@@ -7,7 +7,7 @@ module LMSGraphQL
 <%=graphql_field_enums(@model)-%>
       class Canvas<%=@model['id'].singularize%> < BaseType
         description "<%=@description%>. API Docs: https://canvas.instructure.com/doc/api/<%=@name%>.html"
-      <%=graphql_fields(@model, @resource_name).join("      ")%>
+        <%=graphql_fields(@model, @resource_name).join("        ")%>
       end
     end
   end
