@@ -1,5 +1,7 @@
 require "canvas_api/render"
 require "byebug"
+require "set"
+
 module CanvasApi
 
   class Builder
@@ -56,7 +58,7 @@ module CanvasApi
             nicknames << nickname
             operation["nickname"] = nickname
 
-            parameters = operation["parameters"]
+            parameters = filter_duplicate_parameters(operation["parameters"])
             constants << CanvasApi::Render.new("./templates/constant.erb", api, resource, resource_api, operation, parameters, nil, nil).render
             lms_urls_rb << CanvasApi::Render.new("./templates/rb_url.erb", api, resource, resource_api, operation, parameters, nil, nil).render
             lms_urls_js << CanvasApi::Render.new("./templates/js_url.erb", api, resource, resource_api, operation, parameters, nil, nil).render
@@ -123,6 +125,20 @@ module CanvasApi
       CanvasApi::Render.new("./templates/rb_forward_declarations.erb", nil, nil, nil, nil, nil, rb_forward_declarations, nil).save("#{rb_graphql_app_path}/lib/lms_graphql/types/canvas_forward_declarations.rb")
       CanvasApi::Render.new("./templates/rb_graphql_root_query.erb", nil, nil, nil, nil, nil, rb_graphql_fields, nil).save("#{rb_graphql_app_path}/lib/lms_graphql/types/canvas/query_type.rb")
       CanvasApi::Render.new("./templates/rb_graphql_mutations.erb", nil, nil, nil, nil, nil, rb_graphql_mutations, nil).save("#{rb_graphql_app_path}/lib/lms_graphql/mutations/canvas/mutations.rb")
+    end
+
+    def self.filter_duplicate_parameters(parameters)
+      # Canvas placed a deprecation warning
+      # at the bottom of their documentation
+      # for editing an assignment. This caused
+      # us to create two instances of that specific field
+      # this will filter that out (and ony other instances where they might do that)
+      names = Set.new
+      parameters.select do |param|
+        included = names.include? param["name"]
+        names.add(param["name"]) if !included
+        !included
+      end
     end
   end
 end
