@@ -1,0 +1,35 @@
+<%
+	fields, time_required = struct_fields(@model, @resource_name)
+	field_validations = go_field_validation(@model)
+-%>
+package models
+
+<% if time_required || field_validations -%>
+import (
+	<% if time_required -%>
+  "time"
+	<% end -%>
+	<% if field_validations && field_validations.length > 0 -%>
+	"fmt"
+
+  "github.com/atomicjolt/string_utils"
+	<% end -%>
+)
+<% end -%>
+
+type <%=struct_name(@model['id'])%> struct {
+	<%=fields&.join("\n  ")%>
+}
+
+func (t *<%=struct_name(@model['id'])%>) HasError() error {
+	<% if field_validations && field_validations.length > 0 -%>
+		var s []string
+		<%field_validations.each do |name, values|-%>
+			s = []string{<%=values.join(",")%>}
+			if !string_utils.Include(s, t.<%=go_name(name)%>) {
+				return fmt.Errorf("expected '<%=name%>' to be one of %v", s)
+			}
+		<% end -%>
+	<% end -%>
+	return nil
+}
