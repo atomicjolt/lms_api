@@ -75,6 +75,8 @@ module CanvasApi
       nested.each do |name, val|
         if val["paramType"]
           out << "\n" + go_param_to_field(val, name)
+        elsif val[:array_of]
+          out << "\n#{struct_name(name)} #{val[:array_of]}"
         elsif val[:map_of]
           out << "\n#{struct_name(name)} #{val[:map_of]}"
         else
@@ -98,7 +100,22 @@ module CanvasApi
       out
     end
 
+    # HACK for https://canvas.instructure.com/doc/api/quiz_submissions.html
+    # update_student_question_scores_and_comments has a param with the following form
+    # {"paramType"=>"form", "name"=>"quiz_submissions[questions]", "type"=>"array", "format"=>nil, "required"=>false, "deprecated"=>false, "items"=>{"$ref"=>"Hash"}}
+    QuizSubmissionOverrides = "QuizSubmissionOverrides"
+
     def go_to_tree(nickname, nested, structs, name, param)
+      @child_structs ||= {}
+
+      # HACK for https://canvas.instructure.com/doc/api/quiz_submissions.html
+      if nickname == "update_student_question_scores_and_comments"
+        @child_structs[QuizSubmissionOverrides] = {
+          "score" => {"name"=>"score", "type"=>"float"},
+          "comment" => {"name"=>"comment", "type"=>"string"},
+        }
+      end
+
       if structs.length > 0
         struct, rest = structs.first, structs[1..-1]
         nested[struct] ||= {}
@@ -107,7 +124,6 @@ module CanvasApi
             type = go_property_type(name, param)
             child_name = rest[0]
             child_struct = "#{struct_name(nickname)}#{struct_name(child_name)}"
-            @child_structs ||= {}
             @child_structs[child_struct] ||= {}
             @child_structs[child_struct][name] = param
             nested[struct][child_name] = {
@@ -119,8 +135,16 @@ module CanvasApi
             rest.shift
             rest.shift
           elsif is_x_param?(rest[0])
-            type = go_property_type(name, param)
-            nested[struct][:map_of] = "map[string]#{type}"
+            if rest[0] == structs[1]
+              child_name = structs[0]
+              child_struct = "#{struct_name(nickname)}#{struct_name(child_name)}"
+              nested[struct][:map_of] = "map[string]#{child_struct}"
+              @child_structs[child_struct] ||= {}
+              @child_structs[child_struct][name] = param
+            else
+              type = go_property_type(name, param)
+              nested[struct][:map_of] = "map[string]#{type}"
+            end
             rest.shift
           end
         end
@@ -128,10 +152,21 @@ module CanvasApi
         if rest && rest.length > 0
           go_to_tree(nickname, nested[struct], rest, name, param)
         else
-          nested[struct][name] = param
+          if @child_structs && child_struct = nested[struct][:array_of]
+            @child_structs[child_struct][name] = param
+          else
+            nested[struct][name] = param
+          end
         end
       else
         nested[name] = param
+        if param["type"] == "array" && ["events"].include?(param["name"])
+          child_struct = "#{struct_name(nickname)}#{struct_name(param["name"])}"
+          @child_structs ||= {}
+          @child_structs[child_struct] ||= {}
+          nested[name][:array_of] = child_struct
+          puts "******** Using custom struct #{child_struct}"
+        end
       end
     end
 
@@ -151,7 +186,8 @@ module CanvasApi
         name.include?("[<X>]") ||
         name.include?("<X>") ||
         name.include?("X") ||
-        name.include?("<student_id>")
+        name.include?("<student_id>") ||
+        name.include?("0")
       end
     end
 
@@ -224,7 +260,7 @@ module CanvasApi
     end
 
     def go_declaration(name, type)
-      json = name.underscore.split("[")[0]
+      json = name.underscore.split("[")[0].gsub("`rlid`", "rlid")
       out = "#{go_name(name)} #{type} `json:\"#{json}\"`"
     end
 
@@ -237,7 +273,6 @@ module CanvasApi
         .gsub("Sis", "SIS")
         .gsub("MediaTrackk", "MediaTrack")
         .gsub("Https:::::Canvas.instructure.com::Lti::Submission", "CanvasLTISubmission")
-
     end
 
     def struct_name(type)
@@ -254,8 +289,19 @@ module CanvasApi
       parameters.any? { |p| go_type(p["name"], p).include?("time.Time") }
     end
 
+    def go_type(name, property, return_type = false, model = nil, namespace = "models.")
+      if property["$ref"]
+        "*#{namespace}#{struct_name(property['$ref'])}"
+      elsif property["allowableValues"]
+        "string"
+      else
+        go_property_type(name, property, return_type, model, namespace)
+      end
+    end
+
     def go_property_type(name, property, return_type = false, model = nil, namespace = "models.")
       return property["type"] if property["keep_type"]
+      return property[:array_of] if property[:array_of]
 
       type = property["type"].downcase
       case type
@@ -266,34 +312,7 @@ module CanvasApi
       when "void"
         "bool"
       when "array"
-        begin
-          type = if property["items"]["$ref"] == "[Integer]"
-                  "[]int"
-                elsif property["items"]["$ref"] == "Array"
-                  "[]string"
-                elsif property["items"]["$ref"] == "[String]"
-                  "[]string"
-                elsif property["items"]["$ref"] == "DateTime" || property["items"]["$ref"] == "Date"
-                  "[]time.Time"
-                elsif property["items"]["$ref"]
-                  # HACK on https://canvas.instructure.com/doc/api/submissions.json
-                  # the ref value is set to a full sentence rather than a
-                  # simple type, so we look for that specific value
-                  if property["items"]["$ref"].include?("UserDisplay if anonymous grading is not enabled")
-                    "[]*#{namespace}UserDisplay"
-                  elsif property["items"]["$ref"].include?("Url String The url to the result that was created")
-                    "string"
-                  else
-                    "[]*#{namespace}#{struct_name(property["items"]["$ref"])}"
-                  end
-                else
-                  "[]#{go_primitive(name, property["items"]["type"].downcase, property["items"]["format"])}"
-                end
-        rescue
-          puts "Unable to discover list type for '#{name}' ('#{property}'). Defaulting to String"
-          type = "string"
-        end
-        type
+        go_ref_property_type(property, namespace)
       when "object"
         puts "Using string type for '#{name}' ('#{property}') of type object."
         "string"
@@ -316,14 +335,40 @@ module CanvasApi
       end
     end
 
-    def go_type(name, property, return_type = false, model = nil, namespace = "models.")
-      if property["$ref"]
-        "*#{namespace}#{struct_name(property['$ref'])}"
-      elsif property["allowableValues"]
-        "string"
+    def go_ref_property_type(property, namespace)
+      ref_type = property["items"]["$ref"]
+      if ref_type == "Hash"
+        # HACK for https://canvas.instructure.com/doc/api/quiz_submissions.html
+        if property["name"] == "quiz_submissions[questions]"
+          "map[string]QuizSubmissionOverrides"
+        else
+          raise "No type available for #{property}"
+        end
+      elsif ref_type == "[Integer]"
+        "[]int"
+      elsif ref_type == "Array"
+        "[]string"
+      elsif ref_type == "[String]"
+        "[]string"
+      elsif ref_type == "DateTime" || ref_type == "Date"
+        "[]time.Time"
+      elsif ref_type
+        # HACK on https://canvas.instructure.com/doc/api/submissions.json
+        # the ref value is set to a full sentence rather than a
+        # simple type, so we look for that specific value
+        if ref_type.include?("UserDisplay if anonymous grading is not enabled")
+          "[]*#{namespace}UserDisplay"
+        elsif ref_type.include?("Url String The url to the result that was created")
+          "string"
+        else
+          "[]*#{namespace}#{struct_name(ref_type)}"
+        end
       else
-        go_property_type(name, property, return_type, model, namespace)
+        "[]#{go_primitive(name, property["items"]["type"].downcase, property["items"]["format"])}"
       end
+    rescue
+      puts "Unable to discover Go list type for '#{name}' ('#{property}'). Defaulting to String"
+      "string"
     end
 
     def go_primitive(name, type, format)
@@ -410,7 +455,6 @@ module CanvasApi
       end
       url
     end
-
 
   end
 end

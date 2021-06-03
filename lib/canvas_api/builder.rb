@@ -47,6 +47,29 @@ module CanvasApi
           end
         end
 
+        models = []
+        resource["models"].map do |name, model|
+          models << name
+
+          if model["properties"] # Don't generate models without properties
+            models << CanvasApi::Render.new("./templates/js_graphql_model.erb", api, resource, nil, nil, nil, nil, model, api_path).render
+          end
+
+          # Generate one file for each Canvas graphql type
+          canvas_graphql_type_render = CanvasApi::Render.new("./templates/rb_graphql_type.erb", api, resource, nil, nil, nil, nil, model, api_path)
+          canvas_graphql_type_render.save("#{rb_graphql_app_path}/lib/lms_graphql/types/canvas/#{model['id'].underscore.singularize}.rb")
+
+          canvas_graphql_input_render = CanvasApi::Render.new("./templates/rb_graphql_input_type.erb", api, resource, nil, nil, nil, nil, model, api_path)
+          canvas_graphql_input_render.save("#{rb_graphql_app_path}/lib/lms_graphql/types/canvas/#{model['id'].underscore.singularize}_input.rb")
+
+          # Generate go structs
+          go_type_render = CanvasApi::Render.new("./templates/go_struct.erb", api, resource, nil, nil, nil, nil, model, api_path)
+          go_type_render.save("#{go_app_path}/models/#{model['id'].underscore}.go")
+
+          rb_forward_declarations << "class Canvas#{model['id'].singularize}Input < BaseInputObject;end"
+          rb_forward_declarations << "class Canvas#{model['id'].singularize} < BaseType;end"
+        end
+
         constants = []
         resource["apis"]&.each do |resource_api|
           resource_api["operations"].each do |operation|
@@ -94,26 +117,6 @@ module CanvasApi
             end
 
           end
-        end
-
-        resource["models"].map do |_name, model|
-          if model["properties"] # Don't generate models without properties
-            models << CanvasApi::Render.new("./templates/js_graphql_model.erb", api, resource, nil, nil, nil, nil, model, api_path).render
-          end
-
-          # Generate one file for each Canvas graphql type
-          canvas_graphql_type_render = CanvasApi::Render.new("./templates/rb_graphql_type.erb", api, resource, nil, nil, nil, nil, model, api_path)
-          canvas_graphql_type_render.save("#{rb_graphql_app_path}/lib/lms_graphql/types/canvas/#{model['id'].underscore.singularize}.rb")
-
-          canvas_graphql_input_render = CanvasApi::Render.new("./templates/rb_graphql_input_type.erb", api, resource, nil, nil, nil, nil, model, api_path)
-          canvas_graphql_input_render.save("#{rb_graphql_app_path}/lib/lms_graphql/types/canvas/#{model['id'].underscore.singularize}_input.rb")
-
-          # Generate go structs
-          go_type_render = CanvasApi::Render.new("./templates/go_struct.erb", api, resource, nil, nil, nil, nil, model, api_path)
-          go_type_render.save("#{go_app_path}/models/#{model['id'].underscore.singularize}.go")
-
-          rb_forward_declarations << "class Canvas#{model['id'].singularize}Input < BaseInputObject;end"
-          rb_forward_declarations << "class Canvas#{model['id'].singularize} < BaseType;end"
         end
 
         # Generate one file of constants for every LMS API

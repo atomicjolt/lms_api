@@ -1,4 +1,4 @@
-<% string_utils_required = @parameters.any?{|p| p["enum"] } -%>
+<% string_utils_required = @parameters.any?{|p| p["enum"] && !is_x_param?(p["name"]) } -%>
 <% errors_required = @parameters.any?{|p| p["enum"] || is_required_field(p) }-%>
 <% query_params = go_query_params(@parameters) -%>
 package requests
@@ -97,7 +97,7 @@ func (t *<%= struct_name(@nickname) %>) HasErrors() []error {
             errs = append(errs, errors.New("<%=go_name(p["name"])%> must be one of <%= p["enum"].join(", ") %>"))
           }
         }
-      <% else -%>
+      <% elsif !is_x_param?(p["name"]) -%>
         if !string_utils.Include([]string{"<%= p["enum"].join("\", \"") %>"}, t.<%=go_param_path(p)%>) {
           errs = append(errs, errors.New("<%=go_name(p["name"])%> must be one of <%= p["enum"].join(", ") %>"))
         }
