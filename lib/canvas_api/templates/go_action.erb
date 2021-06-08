@@ -1,21 +1,34 @@
 <% string_utils_required = @parameters.any?{|p| p["enum"] && !is_x_param?(p["name"]) } -%>
 <% errors_required = @parameters.any?{|p| p["enum"] || is_required_field(p) }-%>
 <% query_params = go_query_params(@parameters) -%>
+<% form_params = go_form_params(@parameters) -%>
+<% has_return = !!go_return_type(operation) -%>
 package requests
 
 import (
-  <% if errors_required -%>
-  "errors"
+  <% if has_return -%>
+  "encoding/json"
   <% end -%>
-  <% if query_params -%>
+  <% if query_params || form_params || errors_required -%>
   "fmt"
+  <% end -%>
+  <% if has_return -%>
+  "io/ioutil"
+  <% end -%>
+  <% if errors_required -%>
+  "strings"
   <% end -%>
   <% if time_required?(@parameters) -%>
   "time"
   <% end -%>
 
-  <% if go_require_models(@parameters) -%>
-  "github.com/atomicjolt/go_canvas_api/models"
+  <% if query_params || go_form_params(@parameters) -%>
+  "github.com/google/go-querystring/query"
+  <% end -%>
+
+  "github.com/atomicjolt/canvasapi"
+  <% if go_require_models(@parameters) || has_return -%>
+  "github.com/atomicjolt/canvasapi/models"
   <% end -%>
   <% if string_utils_required -%>
   "github.com/atomicjolt/string_utils"
@@ -47,15 +60,15 @@ type <%= struct_name(@nickname) %> struct {
   } `json:"path"`
   <% end -%>
 
-  <% if params = query_params -%>
+  <% if query_params -%>
   Query struct {
-    <%= go_struct_fields(@nickname, params) %>
+    <%= go_struct_fields(@nickname, query_params) %>
   } `json:"query"`
   <% end -%>
 
-  <% if params = go_form_params(@parameters) -%>
+  <% if form_params -%>
   Form struct {
-    <%= go_struct_fields(@nickname, params) %>
+    <%= go_struct_fields(@nickname, form_params) %>
   } `json:"form"`
   <% end -%>
 }
@@ -68,25 +81,43 @@ func (t *<%= struct_name(@nickname) %>) GetURLPath() string {
   return "<%= go_api_url %>"
 }
 
-func (t *<%= struct_name(@nickname) %>) GetQuery() string {
+func (t *<%= struct_name(@nickname) %>) GetQuery()(string, error) {
   <% if query_params -%>
-    return fmt.Sprintf("?<%=query_params&.map{|p| "#{p["name"]}=%v"}.join("&")%>", <%= query_params.map{|p| "t.#{go_param_path(p)}"}.join(", ")%>)
+    v, err := query.Values(t.Query)
+    if err != nil {
+      return "", err
+    }
+    return fmt.Sprintf("?%v", v.Encode()), nil
   <% else -%>
-    return ""
+    return "", nil
   <% end -%>
 }
 
-func (t *<%= struct_name(@nickname) %>) HasErrors() []error {
-  errs := []error{}
+func (t *<%= struct_name(@nickname) %>) GetBody() (string, error) {
+  <% if form_params -%>
+	v, err := query.Values(t.Form)
+  if err != nil {
+    return "", err
+  }
+	return fmt.Sprintf("%v", v.Encode()), nil
+  <% else -%>
+  return "", nil
+  <% end -%>
+}
+
+func (t *<%= struct_name(@nickname) %>) HasErrors() error {
+  <% if errors_required -%>
+  errs := []string{}
+  <% end -%>
   <% @parameters.each do |p| -%>
     <% if is_required_field(p) -%>
       <% if go_type(p["name"], p) == "time.Time" -%>
         if t.<%=go_param_path(p)%>.IsZero() {
-          errs = append(errs, errors.New("'<%=go_name(p["name"])%>' is required"))
+          errs = append(errs, "'<%=go_name(p["name"])%>' is required")
         }
       <% else -%>
         if t.<%=go_param_path(p)%> == <%=go_param_empty_value(p)%> {
-          errs = append(errs, errors.New("'<%=go_name(p["name"])%>' is required"))
+          errs = append(errs, "'<%=go_name(p["name"])%>' is required")
         }
       <% end -%>
     <% end -%>
@@ -94,17 +125,50 @@ func (t *<%= struct_name(@nickname) %>) HasErrors() []error {
       <% if p["type"] == "array" -%>
         for _, v := range t.<%=go_param_path(p)%> {
           if !string_utils.Include([]string{"<%= p["enum"].join("\", \"") %>"}, v) {
-            errs = append(errs, errors.New("<%=go_name(p["name"])%> must be one of <%= p["enum"].join(", ") %>"))
+            errs = append(errs, "<%=go_name(p["name"])%> must be one of <%= p["enum"].join(", ") %>")
           }
         }
       <% elsif !is_x_param?(p["name"]) -%>
         if !string_utils.Include([]string{"<%= p["enum"].join("\", \"") %>"}, t.<%=go_param_path(p)%>) {
-          errs = append(errs, errors.New("<%=go_name(p["name"])%> must be one of <%= p["enum"].join(", ") %>"))
+          errs = append(errs, "<%=go_name(p["name"])%> must be one of <%= p["enum"].join(", ") %>")
         }
       <% end -%>
     <% end -%>
   <% end -%>
-  return errs
+  <% if errors_required -%>
+  if len(errs) > 0 {
+    return fmt.Errorf(strings.Join(errs, ", "))
+  }
+  <% end -%>
+  return nil
+}
+
+func (t *<%= struct_name(@nickname) %>) Do(c *canvasapi.Canvas) <%=go_do_return_value(@operation)%> {
+  <% ret_type = go_return_type(@operation, true) -%>
+  <% if ret_type -%>
+  response, err := c.SendRequest(t)
+  <% else -%>
+  _, err := c.SendRequest(t)
+  <% end -%>
+	if err != nil {
+		<%= go_do_return_statement(operation) %>
+	}
+
+  <% if ret_type -%>
+	body, err := ioutil.ReadAll(response.Body)
+	response.Body.Close()
+	if err != nil {
+		<%= go_do_return_statement(operation) %>
+	}
+
+	ret := <%=ret_type%>
+	err = json.Unmarshal(body, &ret)
+	if err != nil {
+		<%= go_do_return_statement(operation) %>
+	}
+  <% end -%>
+
+  <%= go_do_final_return_statement(operation) %>
 }
 
 <%= go_render_child_structs %>

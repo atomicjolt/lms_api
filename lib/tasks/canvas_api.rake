@@ -16,7 +16,7 @@ namespace :canvas do
     client_app_path = File.expand_path(File.join(current_path, "../../../atomic-canvas/src/constants"))
     server_app_path = File.expand_path(File.join(current_path, "../../../atomic-lti"))
     elixir_app_path = File.expand_path(File.join(current_path, "../../../catalyst"))
-    go_app_path = File.expand_path(File.join(current_path, "../../../go_canvas_api"))
+    go_app_path = File.expand_path(File.join(current_path, "../../../canvasapi"))
     rb_graphql_app_path = File.expand_path(File.join(current_path, "../../../lms_graphql_api"))
     project_root = File.expand_path(File.join(current_path, "../../"))
     CanvasApi::Builder.build(project_root, client_app_path, server_app_path, elixir_app_path, rb_graphql_app_path, go_app_path)

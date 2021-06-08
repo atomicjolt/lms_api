@@ -456,5 +456,47 @@ module CanvasApi
       url
     end
 
+    def go_do_return_statement(operation)
+      if go_return_type(operation)
+        "return nil, err"
+      else
+        "return err"
+      end
+    end
+
+    def go_do_final_return_statement(operation)
+      if go_return_type(operation)
+        if operation["type"] == "array"
+          "return ret, nil"
+        else
+          "return &ret, nil"
+        end
+      else
+        "return nil"
+      end
+    end
+
+    def go_do_return_value(operation)
+      if type = go_return_type(operation)
+        "(#{type}, error)"
+      else
+        "error"
+      end
+    end
+
+    def go_return_type(operation, is_decl = false)
+      prefix = is_decl ? "" : "*"
+      suffix = is_decl ? "{}" : ""
+      if @operation["type"] == "void"
+        nil
+      elsif @operation["type"] == "array"
+        model = @operation.dig("items", "$ref")
+        "[]*models.#{go_name(model)}#{suffix}"
+      elsif model = @operation["type"]
+        "#{prefix}models.#{go_name(model)}#{suffix}"
+      else
+        raise "No return type found for #{operation}"
+      end
+    end
   end
 end
