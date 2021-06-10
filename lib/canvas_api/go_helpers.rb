@@ -281,8 +281,15 @@ module CanvasApi
       go_name(cleaned)
     end
 
-    def go_require_models(parameters)
-      parameters.any? { |p| go_type(p["name"], p).include?("models") }
+    def go_require_models(parameters, nickname, return_type)
+      parameters.any? { |p| go_type(p["name"], p).include?("models") } ||
+      ["assign_unassigned_members"].include?(@nickname) ||
+      (return_type &&
+        return_type != "bool" &&
+        !return_type.include?("string") &&
+        !return_type.include?("SuccessResponse") &&
+        !return_type.include?("UnreadCount")
+      )
     end
 
     def time_required?(parameters)
@@ -306,26 +313,22 @@ module CanvasApi
       type = property["type"].downcase
       case type
       when "{success: true}"
-        "string"
+        "canvasapi.SuccessResponse"
       when "integer", "string", "boolean", "datetime", "number", "date"
         go_primitive(name, type, property["format"])
       when "void"
-        "bool"
+        "bool" # TODO this doesn't seem right?
       when "array"
         go_ref_property_type(property, namespace)
       when "object"
         puts "Using string type for '#{name}' ('#{property}') of type object."
         "string"
       else
-        if property["type"] == "TermsOfService"
-          # HACK There's no TermsOfService object so we return a string
-          "string"
-        elsif property["type"] == "list of content items"
+        if property["type"] == "list of content items"
           # HACK There's no list of content items object so we return an array of string
           "[]string"
         elsif property["type"].include?('{ "unread_count": "integer" }')
-          # HACK TODO this should probably be a different type.
-          "int"
+          "canvasapi.UnreadCount"
         elsif return_type
           "*#{namespace}#{struct_name(property["type"])}"
         else
@@ -456,17 +459,29 @@ module CanvasApi
       url
     end
 
-    def go_do_return_statement(operation)
-      if go_return_type(operation)
-        "return nil, err"
+    def go_do_return_statement(operation, nickname)
+      if nickname == "assign_unassigned_members"
+        "return nil, nil, err"
+      elsif type = go_return_type(operation)
+        if type == "bool"
+          "return false, err"
+        elsif type == "string"
+          'return "", err'
+        elsif type == "integer"
+          "return 0, err"
+        else
+          "return nil, err"
+        end
       else
         "return err"
       end
     end
 
-    def go_do_final_return_statement(operation)
-      if go_return_type(operation)
-        if operation["type"] == "array"
+    def go_do_final_return_statement(operation, nickname)
+      if nickname == "assign_unassigned_members"
+        "return &groupMembership, &progress, nil"
+      elsif go_return_type(operation)
+        if operation["type"] == "array" || operation["type"] == "boolean" || operation["type"] == "string" || operation["type"] == "integer"
           "return ret, nil"
         else
           "return &ret, nil"
@@ -476,8 +491,12 @@ module CanvasApi
       end
     end
 
-    def go_do_return_value(operation)
-      if type = go_return_type(operation)
+    def go_do_return_value(operation, nickname)
+      if nickname == "assign_unassigned_members"
+        # HACK. harded coded because Assign unassigned members returns different values based on input
+        # see https://canvas.instructure.com/doc/api/group_categories.html#method.group_categories.assign_unassigned_members
+        "(*models.GroupMembership, *models.Progress, error)"
+      elsif type = go_return_type(operation)
         "(#{type}, error)"
       else
         "error"
@@ -487,13 +506,36 @@ module CanvasApi
     def go_return_type(operation, is_decl = false)
       prefix = is_decl ? "" : "*"
       suffix = is_decl ? "{}" : ""
-      if @operation["type"] == "void"
+      if operation["type"] == "void"
         nil
-      elsif @operation["type"] == "array"
-        model = @operation.dig("items", "$ref")
-        "[]*models.#{go_name(model)}#{suffix}"
-      elsif model = @operation["type"]
-        "#{prefix}models.#{go_name(model)}#{suffix}"
+      elsif operation["type"] == "array"
+        model = operation.dig("items", "$ref")
+        if model.include?(" ")
+          # Handle cases with spaces using go_property_type
+          type = go_property_type(operation["nickname"], operation)
+          if type == "string"
+            type = "[]#{type}"
+          end
+          "#{type}#{suffix}"
+        else
+          "[]*models.#{go_name(model)}#{suffix}"
+        end
+      elsif operation["type"] == "boolean"
+        "bool"
+      elsif operation["type"] == "integer"
+        "int64"
+      elsif model = operation["type"]
+        if model.include?(" ")
+          # Handle cases with spaces using go_property_type
+          type = go_property_type(operation["nickname"], operation)
+          if type == "string"
+            type
+          else
+            "#{prefix}#{type}#{suffix}"
+          end
+        else
+          "#{prefix}models.#{go_name(model)}#{suffix}"
+        end
       else
         raise "No return type found for #{operation}"
       end

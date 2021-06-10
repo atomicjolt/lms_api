@@ -2,18 +2,21 @@
 <% errors_required = @parameters.any?{|p| p["enum"] || is_required_field(p) }-%>
 <% query_params = go_query_params(@parameters) -%>
 <% form_params = go_form_params(@parameters) -%>
-<% has_return = !!go_return_type(operation) -%>
+<% return_type = go_return_type(operation) -%>
 package requests
 
 import (
-  <% if has_return -%>
+  <% if return_type && return_type != "bool" && return_type != "string" || @nickname == "assign_unassigned_members" -%>
   "encoding/json"
   <% end -%>
   <% if query_params || form_params || errors_required -%>
   "fmt"
   <% end -%>
-  <% if has_return -%>
+  <% if !!return_type -%>
   "io/ioutil"
+  <% end -%>
+  <% if return_type == "int64" -%>
+  "strconv"
   <% end -%>
   <% if errors_required -%>
   "strings"
@@ -27,7 +30,7 @@ import (
   <% end -%>
 
   "github.com/atomicjolt/canvasapi"
-  <% if go_require_models(@parameters) || has_return -%>
+  <% if go_require_models(@parameters, @nickname, return_type)-%>
   "github.com/atomicjolt/canvasapi/models"
   <% end -%>
   <% if string_utils_required -%>
@@ -143,7 +146,7 @@ func (t *<%= struct_name(@nickname) %>) HasErrors() error {
   return nil
 }
 
-func (t *<%= struct_name(@nickname) %>) Do(c *canvasapi.Canvas) <%=go_do_return_value(@operation)%> {
+func (t *<%= struct_name(@nickname) %>) Do(c *canvasapi.Canvas) <%=go_do_return_value(@operation, @nickname)%> {
   <% ret_type = go_return_type(@operation, true) -%>
   <% if ret_type -%>
   response, err := c.SendRequest(t)
@@ -151,24 +154,48 @@ func (t *<%= struct_name(@nickname) %>) Do(c *canvasapi.Canvas) <%=go_do_return_
   _, err := c.SendRequest(t)
   <% end -%>
 	if err != nil {
-		<%= go_do_return_statement(operation) %>
+		<%= go_do_return_statement(operation, @nickname) %>
 	}
 
   <% if ret_type -%>
-	body, err := ioutil.ReadAll(response.Body)
-	response.Body.Close()
-	if err != nil {
-		<%= go_do_return_statement(operation) %>
-	}
-
-	ret := <%=ret_type%>
-	err = json.Unmarshal(body, &ret)
-	if err != nil {
-		<%= go_do_return_statement(operation) %>
-	}
+  body, err := ioutil.ReadAll(response.Body)
+  response.Body.Close()
+  if err != nil {
+    <%= go_do_return_statement(operation, @nickname) %>
+  }
+  <% if @nickname == "assign_unassigned_members" -%>
+    groupMembership := models.GroupMembership{}
+    progress := models.Progress{}
+    if t.Form.Sync {
+      err = json.Unmarshal(body, &groupMembership)
+      if err != nil {
+        return nil, nil, err
+      }
+    } else {
+      err = json.Unmarshal(body, &progress)
+      if err != nil {
+        return nil, nil, err
+      }
+    }
+  <% elsif ret_type == "bool" -%>
+  // TODO. I doubt these conversions to string and int below really work. Figure what Canvas returns and test against that return value
+  ret := string(body) == "true"
+  <% elsif ret_type == "string" -%>
+  // TODO. I doubt these conversions to string and int below really work. Figure what Canvas returns and test against that return value
+  ret := string(body)
+  <% elsif ret_type == "int64" -%>
+  // TODO. I doubt these conversions to string and int below really work. Figure what Canvas returns and test against that return value
+  ret := strconv.ParseInt(string(body), 10, 64)
+  <% else -%>
+  ret := <%=ret_type%>
+  err = json.Unmarshal(body, &ret)
+  if err != nil {
+    <%= go_do_return_statement(operation, @nickname) %>
+  }
+  <% end -%>
   <% end -%>
 
-  <%= go_do_final_return_statement(operation) %>
+  <%= go_do_final_return_statement(operation, @nickname) %>
 }
 
 <%= go_render_child_structs %>
