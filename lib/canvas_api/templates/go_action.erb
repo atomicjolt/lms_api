@@ -1,6 +1,7 @@
 <% string_utils_required = @parameters.any?{|p| p["enum"] && !is_x_param?(p["name"]) } -%>
 <% errors_required = @parameters.any?{|p| p["enum"] || is_required_field(p) }-%>
 <% query_params = go_query_params(@parameters) -%>
+<% path_params = go_path_params(@parameters) -%>
 <% form_params = go_form_params(@parameters) -%>
 <% return_type = go_return_type(operation) -%>
 package requests
@@ -18,7 +19,7 @@ import (
   <% if return_type == "int64" -%>
   "strconv"
   <% end -%>
-  <% if errors_required -%>
+  <% if errors_required || path_params -%>
   "strings"
   <% end -%>
   <% if time_required?(@parameters) -%>
@@ -81,7 +82,15 @@ func (t *<%= struct_name(@nickname) %>) GetMethod() string {
 }
 
 func (t *<%= struct_name(@nickname) %>) GetURLPath() string {
-  return "<%= go_api_url %>"
+  <% if params = go_path_params(@parameters) -%>
+  path := "<%= go_api_url %>"
+  <% params.each do |p| -%>
+  path = strings.ReplaceAll(path, "{<%=p["name"]%>}", t.Path.<%=go_name(p["name"])%>)
+  <% end -%>
+	return path
+  <% else -%>
+  return ""
+  <% end -%>
 }
 
 func (t *<%= struct_name(@nickname) %>) GetQuery()(string, error) {
