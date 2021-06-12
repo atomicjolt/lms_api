@@ -10,7 +10,7 @@ import (
   <% if return_type && return_type != "bool" && return_type != "string" || @nickname == "assign_unassigned_members" -%>
   "encoding/json"
   <% end -%>
-  <% if query_params || form_params || errors_required -%>
+  <% if query_params || form_params || path_params || errors_required -%>
   "fmt"
   <% end -%>
   <% if !!return_type -%>
@@ -85,7 +85,7 @@ func (t *<%= struct_name(@nickname) %>) GetURLPath() string {
   <% if params = go_path_params(@parameters) -%>
   path := "<%= go_api_url %>"
   <% params.each do |p| -%>
-  path = strings.ReplaceAll(path, "{<%=p["name"]%>}", t.Path.<%=go_name(p["name"])%>)
+  path = strings.ReplaceAll(path, "{<%=p["name"]%>}", fmt.Sprintf("%v", t.Path.<%=go_name(p["name"])%>))
   <% end -%>
 	return path
   <% else -%>
