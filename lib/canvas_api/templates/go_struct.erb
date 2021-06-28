@@ -26,7 +26,7 @@ func (t *<%=struct_name(@model['id'])%>) HasError() error {
 		var s []string
 		<%field_validations.each do |name, values|-%>
 			s = []string{<%=values.join(",")%>}
-			if !string_utils.Include(s, t.<%=go_name(name)%>) {
+			if t.<%=go_name(name)%> != "" && !string_utils.Include(s, t.<%=go_name(name)%>) {
 				return fmt.Errorf("expected '<%=name%>' to be one of %v", s)
 			}
 		<% end -%>

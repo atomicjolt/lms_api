@@ -7,15 +7,16 @@
 package requests
 
 import (
-  <% if return_type && return_type != "bool" && return_type != "string" || @nickname == "assign_unassigned_members" -%>
+  <% if return_type && return_type != "bool" && return_type != "string" || @nickname == "assign_unassigned_members" || form_params -%>
   "encoding/json"
   <% end -%>
-  <% if query_params || form_params || path_params || errors_required -%>
+  <% if query_params || path_params || errors_required -%>
   "fmt"
   <% end -%>
   <% if !!return_type -%>
   "io/ioutil"
   <% end -%>
+  "net/url"
   <% if return_type == "int64" -%>
   "strconv"
   <% end -%>
@@ -105,17 +106,26 @@ func (t *<%= struct_name(@nickname) %>) GetQuery()(string, error) {
   <% end -%>
 }
 
-func (t *<%= struct_name(@nickname) %>) GetBody() (string, error) {
+func (t *<%= struct_name(@nickname) %>) GetBody() (url.Values, error) {
   <% if form_params -%>
-	v, err := query.Values(t.Form)
-  if err != nil {
-    return "", err
-  }
-	return fmt.Sprintf("%v", v.Encode()), nil
+	return query.Values(t.Form)
   <% else -%>
-  return "", nil
+  return nil, nil
   <% end -%>
 }
+
+func (t *<%= struct_name(@nickname) %>) GetJSON() ([]byte, error) {
+  <% if form_params -%>
+  j, err := json.Marshal(t.Form)
+  if err != nil {
+    return nil, nil
+  }
+  return j, nil
+  <% else -%>
+  return nil, nil
+  <% end -%>
+}
+
 
 func (t *<%= struct_name(@nickname) %>) HasErrors() error {
   <% if errors_required -%>
@@ -136,12 +146,12 @@ func (t *<%= struct_name(@nickname) %>) HasErrors() error {
     <% if p["enum"] -%>
       <% if p["type"] == "array" -%>
         for _, v := range t.<%=go_param_path(p)%> {
-          if !string_utils.Include([]string{"<%= p["enum"].join("\", \"") %>"}, v) {
+          if v != "" && !string_utils.Include([]string{"<%= p["enum"].join("\", \"") %>"}, v) {
             errs = append(errs, "<%=go_name(p["name"])%> must be one of <%= p["enum"].join(", ") %>")
           }
         }
       <% elsif !is_x_param?(p["name"]) -%>
-        if !string_utils.Include([]string{"<%= p["enum"].join("\", \"") %>"}, t.<%=go_param_path(p)%>) {
+        if t.<%=go_param_path(p)%> != "" && !string_utils.Include([]string{"<%= p["enum"].join("\", \"") %>"}, t.<%=go_param_path(p)%>) {
           errs = append(errs, "<%=go_name(p["name"])%> must be one of <%= p["enum"].join(", ") %>")
         }
       <% end -%>

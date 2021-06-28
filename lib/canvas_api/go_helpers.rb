@@ -82,7 +82,7 @@ module CanvasApi
         else
           out << "\n#{struct_name(name)} struct {"
           out << go_render_params(val)
-          out << "\n} `json:\"#{name.underscore.gsub("`", "")}\"`\n"
+          out << "\n} `json:\"#{name.underscore.gsub("`", "")}\" url:\"#{name.underscore.gsub("`", "")},omitempty\"`\n"
         end
       end
       out
@@ -261,7 +261,7 @@ module CanvasApi
 
     def go_declaration(name, type)
       json = name.underscore.split("[")[0].gsub("`rlid`", "rlid")
-      out = "#{go_name(name)} #{type} `json:\"#{json}\"`"
+      out = "#{go_name(name)} #{type} `json:\"#{json}\" url:\"#{json},omitempty\"`"
     end
 
     def go_name(name)
