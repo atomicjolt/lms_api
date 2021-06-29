@@ -21,7 +21,7 @@ module CanvasApi
           end
           go_declaration(name, type) + " // #{description}"
         else
-          puts "Unable to determine type for #{name}"
+          raise "Unable to determine type for #{name}"
         end
       end.compact
 
@@ -226,7 +226,7 @@ module CanvasApi
 
     def go_parameter_doc(parameter)
       name = parameter["name"]
-      out = "# #{go_name(name)}"
+      out = "# #{go_param_path(parameter)}"
       out << go_comments(parameter)
       out
     end
@@ -245,6 +245,8 @@ module CanvasApi
       when "string"
         '""'
       when "time.Time"
+        "nil"
+      when "map[string](interface{})"
         "nil"
       else
         if type.include?("[]")
@@ -299,8 +301,6 @@ module CanvasApi
     def go_type(name, property, return_type = false, model = nil, namespace = "models.")
       if property["$ref"]
         "*#{namespace}#{struct_name(property['$ref'])}"
-      elsif property["allowableValues"]
-        "string"
       else
         go_property_type(name, property, return_type, model, namespace)
       end
@@ -309,7 +309,6 @@ module CanvasApi
     def go_property_type(name, property, return_type = false, model = nil, namespace = "models.")
       return property["type"] if property["keep_type"]
       return property[:array_of] if property[:array_of]
-
       type = property["type"].downcase
       case type
       when "{success: true}"
@@ -322,7 +321,7 @@ module CanvasApi
         go_ref_property_type(property, namespace)
       when "object"
         puts "Using string type for '#{name}' ('#{property}') of type object."
-        "string"
+        "map[string](interface{})"
       else
         if property["type"] == "list of content items"
           # HACK There's no list of content items object so we return an array of string
@@ -331,16 +330,53 @@ module CanvasApi
           "canvasapi.UnreadCount"
         elsif return_type
           "*#{namespace}#{struct_name(property["type"])}"
-        else
-          puts "Unable to match '#{name}' requested property '#{property}' to GraphQL Type."
+        elsif property["type"] == "Hash"
+          "map[string](interface{})"
+        elsif property["type"] == "String[]"
+          "[]string"
+        elsif property["type"] == "[Answer]"
+          "[]*models.Answer"
+        elsif property["type"] == "QuizUserConversation"
+          "canvasapi.QuizUserConversation"
+        elsif [
+          "Assignment",
+          "BlueprintRestriction",
+          "RubricAssessment",
+        ].include?(property["type"])
+          "*models.#{property["type"]}"
+        elsif property["type"] == "multiple BlueprintRestrictions"
+          "[]*models.BlueprintRestriction"
+        elsif property["type"] == "File"
+          # This won't work. If we ever need to use this type we'll need to do some refactoring
           "string"
+        elsif property["type"] == "Deprecated"
+          "string"
+        elsif property["type"] == "SerializedHash"
+          # Not sure this will work
+          "map[string](interface{})"
+        elsif property["type"].downcase == "json"
+          "map[string](interface{})"
+        elsif ["Numeric", "float"].include?(property["type"])
+          "float64"
+        elsif property["type"] == "GroupMembership | Progress"
+          "no-op"
+        elsif property["type"] == "URL"
+          "string"
+        else
+          raise "Unable to match '#{name}' requested property '#{property}' to Go Type."
         end
       end
     end
 
     def go_ref_property_type(property, namespace)
-      ref_type = property["items"]["$ref"]
-      if ref_type == "Hash"
+      ref_type = property.dig("items", "$ref")
+      if ref_type == nil
+        if property["type"] == "array"
+          "[]string"
+        else
+          "string"
+        end
+      elsif ref_type == "Hash"
         # HACK for https://canvas.instructure.com/doc/api/quiz_submissions.html
         if property["name"] == "quiz_submissions[questions]"
           "map[string]QuizSubmissionOverrides"
@@ -355,6 +391,8 @@ module CanvasApi
         "[]string"
       elsif ref_type == "DateTime" || ref_type == "Date"
         "[]time.Time"
+      elsif ref_type == "object"
+        "map[string](interface{})"
       elsif ref_type
         # HACK on https://canvas.instructure.com/doc/api/submissions.json
         # the ref value is set to a full sentence rather than a
@@ -370,8 +408,7 @@ module CanvasApi
         "[]#{go_primitive(name, property["items"]["type"].downcase, property["items"]["format"])}"
       end
     rescue
-      puts "Unable to discover Go list type for '#{name}' ('#{property}'). Defaulting to String"
-      "string"
+      raise "Unable to discover Go list type for '#{name}' ('#{property}')."
     end
 
     def go_primitive(name, type, format)
@@ -411,7 +448,10 @@ module CanvasApi
           values = property["allowableValues"]["values"].map do |value|
             "\"#{value}\""
           end
-          allowable[name] = values
+          allowable[name] = {
+            values: values,
+            type: property["type"],
+          }
         end
       end
       allowable

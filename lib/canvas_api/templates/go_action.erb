@@ -126,14 +126,14 @@ func (t *<%= struct_name(@nickname) %>) GetJSON() ([]byte, error) {
   <% end -%>
 }
 
-
 func (t *<%= struct_name(@nickname) %>) HasErrors() error {
   <% if errors_required -%>
   errs := []string{}
   <% end -%>
   <% @parameters.each do |p| -%>
+    <% type = go_type(p["name"], p) -%>
     <% if is_required_field(p) -%>
-      <% if go_type(p["name"], p) == "time.Time" -%>
+      <% if type == "time.Time" -%>
         if t.<%=go_param_path(p)%>.IsZero() {
           errs = append(errs, "'<%=go_param_path(p)%>' is required")
         }
@@ -143,8 +143,8 @@ func (t *<%= struct_name(@nickname) %>) HasErrors() error {
         }
       <% end -%>
     <% end -%>
-    <% if p["enum"] -%>
-      <% if p["type"] == "array" -%>
+    <% if p["enum"] && ["string", "[]string"].include?(type) -%>
+      <% if p["type"] == "array" || type == "[]string" -%>
         for _, v := range t.<%=go_param_path(p)%> {
           if v != "" && !string_utils.Include([]string{"<%= p["enum"].join("\", \"") %>"}, v) {
             errs = append(errs, "<%=go_name(p["name"])%> must be one of <%= p["enum"].join(", ") %>")
