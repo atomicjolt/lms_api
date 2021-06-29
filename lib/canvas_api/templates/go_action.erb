@@ -10,7 +10,7 @@ import (
   <% if return_type && return_type != "bool" && return_type != "string" || @nickname == "assign_unassigned_members" || form_params -%>
   "encoding/json"
   <% end -%>
-  <% if query_params || path_params || errors_required -%>
+  <% if path_params || errors_required -%>
   "fmt"
   <% end -%>
   <% if !!return_type -%>
@@ -100,7 +100,7 @@ func (t *<%= struct_name(@nickname) %>) GetQuery()(string, error) {
     if err != nil {
       return "", err
     }
-    return fmt.Sprintf("?%v", v.Encode()), nil
+    return v.Encode(), nil
   <% else -%>
     return "", nil
   <% end -%>
@@ -135,11 +135,11 @@ func (t *<%= struct_name(@nickname) %>) HasErrors() error {
     <% if is_required_field(p) -%>
       <% if go_type(p["name"], p) == "time.Time" -%>
         if t.<%=go_param_path(p)%>.IsZero() {
-          errs = append(errs, "'<%=go_name(p["name"])%>' is required")
+          errs = append(errs, "'<%=go_param_path(p)%>' is required")
         }
       <% else -%>
         if t.<%=go_param_path(p)%> == <%=go_param_empty_value(p)%> {
-          errs = append(errs, "'<%=go_name(p["name"])%>' is required")
+          errs = append(errs, "'<%=go_param_path(p)%>' is required")
         }
       <% end -%>
     <% end -%>
