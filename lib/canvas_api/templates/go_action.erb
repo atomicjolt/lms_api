@@ -197,13 +197,10 @@ func (t *<%= struct_name(@nickname) %>) Do(c *canvasapi.Canvas) <%=go_do_return_
       }
     }
   <% elsif ret_type == "bool" -%>
-  // TODO. I doubt these conversions to string and int below really work. Figure what Canvas returns and test against that return value
   ret := string(body) == "true"
   <% elsif ret_type == "string" -%>
-  // TODO. I doubt these conversions to string and int below really work. Figure what Canvas returns and test against that return value
   ret := string(body)
   <% elsif ret_type == "int64" -%>
-  // TODO. I doubt these conversions to string and int below really work. Figure what Canvas returns and test against that return value
   ret := strconv.ParseInt(string(body), 10, 64)
   <% else -%>
   ret := <%=ret_type%>

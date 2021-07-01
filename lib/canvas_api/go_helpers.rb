@@ -309,6 +309,10 @@ module CanvasApi
     def go_property_type(name, property, return_type = false, model = nil, namespace = "models.")
       return property["type"] if property["keep_type"]
       return property[:array_of] if property[:array_of]
+
+      # Canvas API docs are wrong for these so we HACK in the right type
+      return "float64" if name.downcase == "points_possible"
+
       type = property["type"].downcase
       case type
       when "{success: true}"
