@@ -359,7 +359,7 @@ module CanvasApi
         elsif ["Numeric", "float"].include?(property["type"])
           "float64"
         elsif property["type"] == "GroupMembership | Progress"
-          "no-op"
+          "no-op" # this is handled further up the stack
         elsif property["type"] == "URL"
           "string"
         else
@@ -500,7 +500,7 @@ module CanvasApi
     end
 
     def go_do_return_statement(operation, nickname)
-      if nickname == "assign_unassigned_members"
+      if nickname == "assign_unassigned_members" || operation["type"] == "array"
         "return nil, nil, err"
       elsif type = go_return_type(operation)
         if type == "bool"
@@ -521,7 +521,9 @@ module CanvasApi
       if nickname == "assign_unassigned_members"
         "return &groupMembership, &progress, nil"
       elsif go_return_type(operation)
-        if operation["type"] == "array" || operation["type"] == "boolean" || operation["type"] == "string" || operation["type"] == "integer"
+        if operation["type"] == "array"
+          "return ret, pagedResource, nil"
+        elsif operation["type"] == "boolean" || operation["type"] == "string" || operation["type"] == "integer"
           "return ret, nil"
         else
           "return &ret, nil"
@@ -537,7 +539,11 @@ module CanvasApi
         # see https://canvas.instructure.com/doc/api/group_categories.html#method.group_categories.assign_unassigned_members
         "(*models.GroupMembership, *models.Progress, error)"
       elsif type = go_return_type(operation)
-        "(#{type}, error)"
+        if operation["type"] == "array"
+          "(#{type}, *canvasapi.PagedResource, error)"
+        else
+          "(#{type}, error)"
+        end
       else
         "error"
       end

@@ -214,6 +214,13 @@ func (t *<%= struct_name(@nickname) %>) Do(c *canvasapi.Canvas) <%=go_do_return_
   <% end -%>
   <% end -%>
 
+  <% if @operation["type"] == "array" -%>
+  pagedResource, err := canvasapi.ExtractPagedResource(response.Header)
+	if err != nil {
+		return nil, nil, err
+	}
+  <% end -%>
+
   <%= go_do_final_return_statement(operation, @nickname) %>
 }
 
