@@ -16,6 +16,9 @@ import (
   <% if !!return_type -%>
   "io/ioutil"
   <% end -%>
+  <% if is_paged?(@operation) -%>
+  "net/http"
+  <% end -%>
   "net/url"
   <% if return_type == "int64" -%>
   "strconv"
@@ -165,10 +168,24 @@ func (t *<%= struct_name(@nickname) %>) HasErrors() error {
   return nil
 }
 
-func (t *<%= struct_name(@nickname) %>) Do(c *canvasapi.Canvas) <%=go_do_return_value(@operation, @nickname)%> {
+func (t *<%= struct_name(@nickname) %>) Do(c *canvasapi.Canvas<%=next_param(@operation)%>) <%=go_do_return_value(@operation, @nickname)%> {
   <% ret_type = go_return_type(@operation, true) -%>
   <% if ret_type -%>
-  response, err := c.SendRequest(t)
+    <% if is_paged?(@operation) -%>
+      var err error
+      var response *http.Response
+      if next != nil {
+        response, err = c.Send(next, t.GetMethod(), nil)
+      } else {
+        response, err = c.SendRequest(t)
+      }
+
+      if err != nil {
+        return nil, nil, err
+      }
+    <% else -%>
+      response, err := c.SendRequest(t)
+    <% end -%>
   <% else -%>
   _, err := c.SendRequest(t)
   <% end -%>

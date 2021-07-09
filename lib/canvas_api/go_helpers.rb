@@ -503,8 +503,18 @@ module CanvasApi
       url
     end
 
+    def is_paged?(operation)
+      operation["type"] == "array"
+    end
+
+    def next_param(operation)
+      if is_paged?(operation)
+        ", next *url.URL"
+      end
+    end
+
     def go_do_return_statement(operation, nickname)
-      if nickname == "assign_unassigned_members" || operation["type"] == "array"
+      if nickname == "assign_unassigned_members" || is_paged?(operation)
         "return nil, nil, err"
       elsif type = go_return_type(operation)
         if type == "bool"
@@ -525,7 +535,7 @@ module CanvasApi
       if nickname == "assign_unassigned_members"
         "return &groupMembership, &progress, nil"
       elsif go_return_type(operation)
-        if operation["type"] == "array"
+        if is_paged?(operation)
           "return ret, pagedResource, nil"
         elsif operation["type"] == "boolean" || operation["type"] == "string" || operation["type"] == "integer"
           "return ret, nil"
@@ -543,7 +553,7 @@ module CanvasApi
         # see https://canvas.instructure.com/doc/api/group_categories.html#method.group_categories.assign_unassigned_members
         "(*models.GroupMembership, *models.Progress, error)"
       elsif type = go_return_type(operation)
-        if operation["type"] == "array"
+        if is_paged?(operation)
           "(#{type}, *canvasapi.PagedResource, error)"
         else
           "(#{type}, error)"
@@ -558,7 +568,7 @@ module CanvasApi
       suffix = is_decl ? "{}" : ""
       if operation["type"] == "void"
         nil
-      elsif operation["type"] == "array"
+      elsif is_paged?(operation)
         model = operation.dig("items", "$ref")
         if model.include?(" ")
           # Handle cases with spaces using go_property_type
