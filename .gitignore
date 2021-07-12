@@ -1,3 +1,4 @@
 .bundle/
 pkg/
 .byebug_history
+.env

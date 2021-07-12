@@ -1,0 +1,44 @@
+<%
+	fields, time_required = struct_fields(@model, @resource_name)
+	field_validations = go_field_validation(@model)
+-%>
+package models
+
+<% if time_required || field_validations -%>
+import (
+	<% if time_required -%>
+  "time"
+	<% end -%>
+	<% if (field_validations && field_validations.length > 0) -%>
+	"fmt"
+
+  "github.com/atomicjolt/string_utils"
+	<% end -%>
+)
+<% end -%>
+
+type <%=struct_name(@model['id'])%> struct {
+	<%=fields&.join("\n  ")%>
+}
+
+func (t *<%=struct_name(@model['id'])%>) HasErrors() error {
+	<% if field_validations && field_validations.length > 0 -%>
+		var s []string
+		errs := []string{}
+		<%field_validations.each do |name, prop|-%>
+			s = []string{<%=prop[:values].join(",")%>}
+			<% if prop[:type] == "array" %>
+				for _, v := range t.<%=go_name(name)%> {
+          if v != "" && !string_utils.Include(s, v) {
+						errs = append(errs, fmt.Sprintf("expected '<%=go_name(name)%>' to be one of %v", s))
+          }
+        }
+			<% else -%>
+				if t.<%=go_name(name)%> != "" && !string_utils.Include(s, t.<%=go_name(name)%>) {
+					errs = append(errs, fmt.Sprintf("expected '<%=go_name(name)%>' to be one of %v", s))
+				}
+			<% end -%>
+		<% end -%>
+	<% end -%>
+	return nil
+}
