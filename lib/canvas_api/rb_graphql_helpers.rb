@@ -41,11 +41,13 @@ module CanvasApi
                       "[#{canvas_name(property["items"]["$ref"], input_type)}]"
                     end
                   else
-                    graphql_primitive(name, property["items"]["type"].downcase, property["items"]["format"])
+                    array_type = graphql_primitive(name, property["items"]["type"].downcase, property["items"]["format"])
+                    array_type = "[#{array_type}]" if array_type != "[ID]"
+                    array_type
                   end
           rescue
             puts "Unable to discover list type for '#{name}' ('#{property}'). Defaulting to String"
-            type = "String"
+            type = "[String]"
           end
           type
         when "object"
