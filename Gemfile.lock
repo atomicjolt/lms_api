@@ -58,6 +58,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activesupport
   byebug
   lms-api!
   rake
