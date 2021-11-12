@@ -1,5 +1,6 @@
 require "canvas_api/js_graphql_helpers"
 require "canvas_api/js_helpers"
+require "canvas_api/ts_helpers"
 require "canvas_api/ruby_helpers"
 require "canvas_api/rb_graphql_helpers"
 require "byebug"
@@ -8,6 +9,7 @@ module CanvasApi
   class Render
     include CanvasApi::GraphQLHelpers
     include CanvasApi::JsHelpers
+    include CanvasApi::TsHelpers
     include CanvasApi::RubyHelpers
     attr_accessor :template, :description, :resource, :api_url, :operation,
                   :args, :method, :api, :name, :resource_name, :resource_api,

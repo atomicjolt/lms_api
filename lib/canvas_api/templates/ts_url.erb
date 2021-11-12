@@ -1,0 +1,36 @@
+<%= ts_type_creator(@nickname, @parameters) %>
+<% if @parameters.present? || @method == "POST" %>
+interface <%=@nickname.camelize%>InputType {
+  <% if @method == "POST" %>
+    body: Record<string, unknown>;
+  <% end %>
+  <% if @parameters.present? %>
+  params: <%=@nickname.camelize%>InputParamsType;
+  <% end %>
+}
+<% end %>
+export class <%=@nickname.camelize%>Action implements CanvasApiAction {
+<% if @parameters.present? %>
+  public readonly params: <%=@nickname.camelize%>InputParamsType;
+<% end %>
+<% if @method == "POST" %>
+  public readonly body: Record<string, unknown>;
+<% end %>
+
+<% if @parameters.present? || @method == "POST" %>
+  constructor(<%=@nickname.camelize%>Input: <%=@nickname.camelize%>InputType) {
+  <% if @parameters.present? %>
+    this.params = <%=@nickname.camelize%>Input.params;
+  <% end %>
+  <% if @method == "POST" %>
+    this.body = <%=@nickname.camelize%>Input.body;
+  <% end %>
+  }
+<% end %>
+  get uri():string {
+    return <%=ts_url_parts(@api_url).join(' + ')%>;
+  }
+  get method():string {
+    return "<%=@method%>";
+  }
+}
