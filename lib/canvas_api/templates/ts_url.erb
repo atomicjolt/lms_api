@@ -30,7 +30,7 @@ export class <%=@nickname.camelize%>Action implements CanvasApiAction {
   get uri():string {
     return <%=ts_url_parts(@api_url).join(' + ')%>;
   }
-  get method():string {
+  get method():HttpMethod {
     return "<%=@method%>";
   }
 }

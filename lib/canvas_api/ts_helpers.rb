@@ -102,9 +102,8 @@ module CanvasApi
       params.each do |param|
         if param["enum"]
           result += <<-TS
-  enum #{ts_enum_name(nickname, param)} {
-    #{param["enum"].map { |t| "\"#{t}\" = \"#{t}\"" }.uniq.join(",\n")}
-  }
+  type #{ts_enum_name(nickname, param)} =
+    #{param["enum"].map { |t| "\"#{t}\"" }.uniq.join("|\n")}
           TS
         end
       end

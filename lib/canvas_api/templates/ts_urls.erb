@@ -1,6 +1,20 @@
-interface CanvasApiAction {
+export type HttpMethod =
+  | "get" | "GET"
+  | "delete" | "DELETE"
+  | "head" | "HEAD"
+  | "options" | "OPTIONS"
+  | "post" | "POST"
+  | "put" | "PUT"
+  | "patch" | "PATCH"
+  | "purge" | "PURGE"
+  | "link" | "LINK"
+  | "unlink" | "UNLINK";
+
+export interface CanvasApiAction {
   uri: string;
-  method: string;
+  method: HttpMethod;
+  params?: unknown;
+  body?: unknown;
 }
 
 <%=@content.join("\n")%>
