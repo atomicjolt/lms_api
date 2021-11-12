@@ -1,0 +1,241 @@
+<% string_utils_required = @parameters.any?{|p| p["enum"] && !is_x_param?(p["name"]) } -%>
+<% errors_required = @parameters.any?{|p| p["enum"] || is_required_field(p) }-%>
+<% query_params = go_query_params(@parameters) -%>
+<% path_params = go_path_params(@parameters) -%>
+<% form_params = go_form_params(@parameters) -%>
+<% return_type = go_return_type(operation) -%>
+package requests
+
+import (
+  <% if return_type && return_type != "bool" && return_type != "string" || @nickname == "assign_unassigned_members" || form_params -%>
+  "encoding/json"
+  <% end -%>
+  <% if path_params || errors_required -%>
+  "fmt"
+  <% end -%>
+  <% if !!return_type -%>
+  "io/ioutil"
+  <% end -%>
+  <% if is_paged?(@operation) -%>
+  "net/http"
+  <% end -%>
+  "net/url"
+  <% if return_type == "int64" -%>
+  "strconv"
+  <% end -%>
+  <% if errors_required || path_params -%>
+  "strings"
+  <% end -%>
+  <% if time_required?(@parameters) -%>
+  "time"
+  <% end -%>
+
+  <% if query_params || go_form_params(@parameters) -%>
+  "github.com/google/go-querystring/query"
+  <% end -%>
+
+  "github.com/atomicjolt/canvasapi"
+  <% if go_require_models(@parameters, @nickname, return_type)-%>
+  "github.com/atomicjolt/canvasapi/models"
+  <% end -%>
+  <% if string_utils_required -%>
+  "github.com/atomicjolt/string_utils"
+  <% end -%>
+)
+
+// <%= go_name(@nickname) %> <%= @notes %>
+// https://canvas.instructure.com/doc/api<%=@api_path.gsub(".json", ".html")%>
+<% if params = go_path_params(@full_parameters)-%>
+//
+// Path Parameters:
+// <%= params.map { |p| go_parameter_doc(p) }.join("\n// ") %>
+<% end -%>
+<% if params = go_query_params(@full_parameters) -%>
+//
+// Query Parameters:
+// <%= params.map { |p| go_parameter_doc(p) }.join("\n// ") %>
+<% end -%>
+<% if params = go_form_params(@full_parameters) -%>
+//
+// Form Parameters:
+// <%= params.map { |p| go_parameter_doc(p) }.join("\n// ") %>
+<% end -%>
+//
+type <%= struct_name(@nickname) %> struct {
+  <% if params = go_path_params(@parameters) -%>
+  Path struct {
+    <%= go_struct_fields(@nickname, params) %>
+  } `json:"path"`
+  <% end -%>
+
+  <% if query_params -%>
+  Query struct {
+    <%= go_struct_fields(@nickname, query_params) %>
+  } `json:"query"`
+  <% end -%>
+
+  <% if form_params -%>
+  Form struct {
+    <%= go_struct_fields(@nickname, form_params) %>
+  } `json:"form"`
+  <% end -%>
+}
+
+func (t *<%= struct_name(@nickname) %>) GetMethod() string {
+  return "<%=@method%>"
+}
+
+func (t *<%= struct_name(@nickname) %>) GetURLPath() string {
+  <% if params = go_path_params(@parameters) -%>
+  path := "<%= go_api_url %>"
+  <% params.each do |p| -%>
+  path = strings.ReplaceAll(path, "{<%=p["name"]%>}", fmt.Sprintf("%v", t.Path.<%=go_name(p["name"])%>))
+  <% end -%>
+	return path
+  <% else -%>
+  return ""
+  <% end -%>
+}
+
+func (t *<%= struct_name(@nickname) %>) GetQuery()(string, error) {
+  <% if query_params -%>
+    v, err := query.Values(t.Query)
+    if err != nil {
+      return "", err
+    }
+    return v.Encode(), nil
+  <% else -%>
+    return "", nil
+  <% end -%>
+}
+
+func (t *<%= struct_name(@nickname) %>) GetBody() (url.Values, error) {
+  <% if form_params -%>
+	return query.Values(t.Form)
+  <% else -%>
+  return nil, nil
+  <% end -%>
+}
+
+func (t *<%= struct_name(@nickname) %>) GetJSON() ([]byte, error) {
+  <% if form_params -%>
+  j, err := json.Marshal(t.Form)
+  if err != nil {
+    return nil, nil
+  }
+  return j, nil
+  <% else -%>
+  return nil, nil
+  <% end -%>
+}
+
+func (t *<%= struct_name(@nickname) %>) HasErrors() error {
+  <% if errors_required -%>
+  errs := []string{}
+  <% end -%>
+  <% @parameters.each do |p| -%>
+    <% type = go_type(p["name"], p) -%>
+    <% if is_required_field(p) -%>
+      <% if type == "time.Time" -%>
+        if t.<%=go_param_path(p)%>.IsZero() {
+          errs = append(errs, "'<%=go_param_path(p)%>' is required")
+        }
+      <% else -%>
+        if t.<%=go_param_path(p)%> == <%=go_param_empty_value(p)%> {
+          errs = append(errs, "'<%=go_param_path(p)%>' is required")
+        }
+      <% end -%>
+    <% end -%>
+    <% if p["enum"] && ["string", "[]string"].include?(type) -%>
+      <% if p["type"] == "array" || type == "[]string" -%>
+        for _, v := range t.<%=go_param_path(p)%> {
+          if v != "" && !string_utils.Include([]string{"<%= p["enum"].join("\", \"") %>"}, v) {
+            errs = append(errs, "<%=go_name(p["name"])%> must be one of <%= p["enum"].join(", ") %>")
+          }
+        }
+      <% elsif !is_x_param?(p["name"]) -%>
+        if t.<%=go_param_path(p)%> != "" && !string_utils.Include([]string{"<%= p["enum"].join("\", \"") %>"}, t.<%=go_param_path(p)%>) {
+          errs = append(errs, "<%=go_name(p["name"])%> must be one of <%= p["enum"].join(", ") %>")
+        }
+      <% end -%>
+    <% end -%>
+  <% end -%>
+  <% if errors_required -%>
+  if len(errs) > 0 {
+    return fmt.Errorf(strings.Join(errs, ", "))
+  }
+  <% end -%>
+  return nil
+}
+
+func (t *<%= struct_name(@nickname) %>) Do(c *canvasapi.Canvas<%=next_param(@operation)%>) <%=go_do_return_value(@operation, @nickname)%> {
+  <% ret_type = go_return_type(@operation, true) -%>
+  <% if ret_type -%>
+    <% if is_paged?(@operation) -%>
+      var err error
+      var response *http.Response
+      if next != nil {
+        response, err = c.Send(next, t.GetMethod(), nil)
+      } else {
+        response, err = c.SendRequest(t)
+      }
+
+      if err != nil {
+        return nil, nil, err
+      }
+    <% else -%>
+      response, err := c.SendRequest(t)
+    <% end -%>
+  <% else -%>
+  _, err := c.SendRequest(t)
+  <% end -%>
+	if err != nil {
+		<%= go_do_return_statement(operation, @nickname) %>
+	}
+
+  <% if ret_type -%>
+  body, err := ioutil.ReadAll(response.Body)
+  response.Body.Close()
+  if err != nil {
+    <%= go_do_return_statement(operation, @nickname) %>
+  }
+  <% if @nickname == "assign_unassigned_members" -%>
+    groupMembership := models.GroupMembership{}
+    progress := models.Progress{}
+    if t.Form.Sync {
+      err = json.Unmarshal(body, &groupMembership)
+      if err != nil {
+        return nil, nil, err
+      }
+    } else {
+      err = json.Unmarshal(body, &progress)
+      if err != nil {
+        return nil, nil, err
+      }
+    }
+  <% elsif ret_type == "bool" -%>
+  ret := string(body) == "true"
+  <% elsif ret_type == "string" -%>
+  ret := string(body)
+  <% elsif ret_type == "int64" -%>
+  ret := strconv.ParseInt(string(body), 10, 64)
+  <% else -%>
+  ret := <%=ret_type%>
+  err = json.Unmarshal(body, &ret)
+  if err != nil {
+    <%= go_do_return_statement(operation, @nickname) %>
+  }
+  <% end -%>
+  <% end -%>
+
+  <% if @operation["type"] == "array" -%>
+  pagedResource, err := canvasapi.ExtractPagedResource(response.Header)
+	if err != nil {
+		return nil, nil, err
+	}
+  <% end -%>
+
+  <%= go_do_final_return_statement(operation, @nickname) %>
+}
+
+<%= go_render_child_structs %>
