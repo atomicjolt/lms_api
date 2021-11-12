@@ -18,8 +18,9 @@ namespace :canvas do
     elixir_app_path = File.expand_path(File.join(current_path, "../../../catalyst"))
     go_app_path = File.expand_path(File.join(current_path, "../../../canvasapi"))
     rb_graphql_app_path = File.expand_path(File.join(current_path, "../../../lms_graphql_api"))
+    ts_app_path = File.expand_path(File.join(current_path, "../../../pansophic/offline-tracker/server/src"))
     project_root = File.expand_path(File.join(current_path, "../../"))
-    CanvasApi::Builder.build(project_root, client_app_path, server_app_path, elixir_app_path, rb_graphql_app_path, go_app_path)
+    CanvasApi::Builder.build(project_root, client_app_path, server_app_path, elixir_app_path, rb_graphql_app_path, go_app_path, ts_app_path)
 
     # Format the go code
     `gofmt -s -w #{go_app_path}`

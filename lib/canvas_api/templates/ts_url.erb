@@ -1,7 +1,7 @@
 <%= ts_type_creator(@nickname, @parameters) %>
-<% if @parameters.present? || @method == "POST" %>
+<% if @parameters.present? || ["POST", "PUT"].include?(@method) %>
 interface <%=@nickname.camelize%>InputType {
-  <% if @method == "POST" %>
+  <% if ["POST", "PUT"].include?(@method) %>
     body: Record<string, unknown>;
   <% end %>
   <% if @parameters.present? %>
@@ -13,16 +13,16 @@ export class <%=@nickname.camelize%>Action implements CanvasApiAction {
 <% if @parameters.present? %>
   public readonly params: <%=@nickname.camelize%>InputParamsType;
 <% end %>
-<% if @method == "POST" %>
+<% if ["POST", "PUT"].include?(@method) %>
   public readonly body: Record<string, unknown>;
 <% end %>
 
-<% if @parameters.present? || @method == "POST" %>
+<% if @parameters.present? || ["POST", "PUT"].include?(@method) %>
   constructor(<%=@nickname.camelize%>Input: <%=@nickname.camelize%>InputType) {
   <% if @parameters.present? %>
     this.params = <%=@nickname.camelize%>Input.params;
   <% end %>
-  <% if @method == "POST" %>
+  <% if ["POST", "PUT"].include?(@method) %>
     this.body = <%=@nickname.camelize%>Input.body;
   <% end %>
   }

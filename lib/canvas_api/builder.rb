@@ -13,12 +13,13 @@ module CanvasApi
     # server_app_path: This is where all server side Javascript for accessing the Canvas API will be written.
     # Currently, this is generating GraphQL for Javascript and Ruby
     #
-    def self.build(project_root, client_app_path, server_app_path, elixir_app_path, rb_graphql_app_path, go_app_path)
+    def self.build(project_root, client_app_path, server_app_path, elixir_app_path, rb_graphql_app_path, go_app_path, ts_app_path)
       endpoint = "https://canvas.instructure.com/doc/api"
       directory = HTTParty.get("#{endpoint}/api-docs.json")
 
       lms_urls_rb = []
       lms_urls_js = []
+      lms_urls_ts = []
       lms_urls_ex = []
       course_ids_required_rb = []
       models = []
@@ -86,6 +87,7 @@ module CanvasApi
             constants << CanvasApi::Render.new("./templates/constant.erb", api, resource, resource_api, operation, parameters, nil, nil, api_path).render
             lms_urls_rb << CanvasApi::Render.new("./templates/rb_url.erb", api, resource, resource_api, operation, parameters, nil, nil, api_path).render
             lms_urls_js << CanvasApi::Render.new("./templates/js_url.erb", api, resource, resource_api, operation, parameters, nil, nil, api_path).render
+            lms_urls_ts << CanvasApi::Render.new("./templates/ts_url.erb", api, resource, resource_api, operation, parameters, nil, nil, api_path).render
             lms_urls_ex << CanvasApi::Render.new("./templates/ex_url.erb", api, resource, resource_api, operation, parameters, nil, nil, api_path).render
             lms_urls_ex << CanvasApi::Render.new("./templates/ex_action.erb", api, resource, resource_api, operation, parameters, nil, nil, api_path).render
 
@@ -126,6 +128,7 @@ module CanvasApi
 
       CanvasApi::Render.new("./templates/rb_urls.erb", nil, nil, nil, nil, nil, lms_urls_rb, nil, "").save("#{project_root}/lib/lms/canvas_urls.rb")
       CanvasApi::Render.new("./templates/js_urls.erb", nil, nil, nil, nil, nil, lms_urls_js, nil, "").save("#{server_app_path}/lib/canvas/urls.js")
+      CanvasApi::Render.new("./templates/ts_urls.erb", nil, nil, nil, nil, nil, lms_urls_ts, nil, "").save("#{ts_app_path}/lib/canvas_actions.ts")
 
       # The elixir urls are sorted, to prevent linter errors
       CanvasApi::Render.new("./templates/ex_urls.erb", nil, nil, nil, nil, nil, lms_urls_ex.sort, nil, "").save("#{elixir_app_path}/lib/canvas/actions.ex")

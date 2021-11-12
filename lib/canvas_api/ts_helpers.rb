@@ -99,10 +99,6 @@ module CanvasApi
 
       result = ""
 
-      if (nested_types.present? || non_nested_params.present?)
-        result += "interface #{nickname.camelize}InputParamsType {\n#{nested_types}\n}\n"
-      end
-
       params.each do |param|
         if param["enum"]
           result += <<-TS
@@ -111,6 +107,10 @@ module CanvasApi
   }
           TS
         end
+      end
+
+      if (nested_types.present? || non_nested_params.present?)
+        result += "interface #{nickname.camelize}InputParamsType {\n#{nested_types}\n}\n"
       end
 
       result
