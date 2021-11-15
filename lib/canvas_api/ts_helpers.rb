@@ -109,7 +109,7 @@ module CanvasApi
       end
 
       if (nested_types.present? || non_nested_params.present?)
-        result += "interface #{nickname.camelize}InputParamsType {\n#{nested_types}\n}\n"
+        result += "interface #{nickname.camelize}InputType {\n#{nested_types}\n}\n"
       end
 
       result
