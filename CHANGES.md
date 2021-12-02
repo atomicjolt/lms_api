@@ -1,3 +1,7 @@
+#1.23.0
+Updated Canvas API definitions
+Support for graphql 1.13
+
 #1.14.0
 Updated Canvas API definitions
 

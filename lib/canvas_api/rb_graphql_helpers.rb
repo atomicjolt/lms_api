@@ -9,7 +9,7 @@ module CanvasApi
       if property["$ref"]
         canvas_name(property['$ref'], input_type)
       elsif property["allowableValues"]
-        enum_class_name(model, name)
+        enum_class_name(model, name, input_type)
       else
         type = property["type"].downcase
         case type
@@ -106,11 +106,11 @@ module CanvasApi
       end
     end
 
-    def enum_class_name(model, field_name)
-      "#{model['id'].classify}#{field_name.classify}Enum"
+    def enum_class_name(model, field_name, input_type)
+      "#{model['id'].classify}#{input_type ? 'Input' : ''}#{field_name.classify}Enum"
     end
 
-    def graphql_field_enums(model)
+    def graphql_field_enums(model, input_type = false)
       return unless model["properties"]
       enums = model["properties"].map do |name, property|
         if property["allowableValues"]
@@ -118,7 +118,7 @@ module CanvasApi
             "value \"#{value}\""
           end.join("\n          ")
           <<-CODE
-        class #{enum_class_name(model, name)} < ::GraphQL::Schema::Enum
+        class #{enum_class_name(model, name, input_type)} < ::GraphQL::Schema::Enum
           #{values}
         end
           CODE
@@ -200,7 +200,7 @@ field :#{name.underscore}, #{type}, "#{description}", resolver_method: :resolve_
     end
 
     def make_file_name(str)
-      str.underscore.split("/").last.split("|").first.gsub("canvas_", "").gsub(" ", "_").strip.singularize
+      str.underscore.split("/").last.split("|").first.gsub(/^canvas_?/, "").gsub(" ", "_").strip.singularize
     end
 
     def require_from_operation(operation)
