@@ -37,6 +37,11 @@ module CanvasApi
       end
       if operation
         nickname = operation["nickname"]
+
+        if nickname == "save_enabled_account_calendars_creates_and_updates_enabled_account_calendars_and_mark_feature_as_seen_user_preferences_argument_mark_feature_as_seen_optional_boolean_flag_to_mark_account_calendars_feature_as_seen_argument_enabled_account_calendars_optional_array_array_of_account_ids_to_remember_in_calendars_list_of_user_curl_https_canvas_api_v_calendar_events_save_enabled_account_calendars_x_post_f_mark_feature_as_seen_true_f_enabled_account_calendars_f_enabled_account_calendars_h_authorization_bearer_token"
+          nickname = "save_enabled_account_calendars"
+        end
+
         nickname = "#{@name}_#{nickname}" if [
           "upload_file",
           "query_by_course",

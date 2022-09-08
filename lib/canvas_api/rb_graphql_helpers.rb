@@ -6,7 +6,11 @@ module CanvasApi
     CONFLICTING_NAMES = ["end", "context", "next", "module"]
 
     def graphql_type(name, property, return_type = false, model = nil, input_type = false)
-      if property["$ref"]
+      if property["nickname"] == "get_bulk_user_progress"
+        # custom type specific to the get_bulk_user_progress endpoint. The type from canvas is void but
+        # we have to use a custom type in order to return data.
+        "LMSGraphQL::Types::CanvasBespoke::CanvasModuleUser"
+      elsif property["$ref"]
         canvas_name(property['$ref'], input_type)
       elsif property["allowableValues"]
         enum_class_name(model, name, input_type)
@@ -28,7 +32,7 @@ module CanvasApi
                   elsif property["items"]["$ref"] == "[String]"
                     "[String]"
                   elsif property["items"]["$ref"] == "DateTime" || property["items"]["$ref"] == "Date"
-                    "[LMSGraphQL::Types::DateTimeType]"
+                    "[GraphQL::Types::ISO8601DateTime]"
                   elsif property["items"]["$ref"]
                     # HACK on https://canvas.instructure.com/doc/api/submissions.json
                     # the ref value is set to a full sentence rather than a
@@ -54,13 +58,21 @@ module CanvasApi
           puts "Using string type for '#{name}' ('#{property}') of type object."
           "String"
         else
-          if property["type"] == "TermsOfService"
+          if property["type"] == "array of outcome ids"
+            "[String]"
+          elsif property["type"] == "TermsOfService"
             # HACK There's no TermsOfService object so we return a string
             "String"
           elsif property["type"] == "list of content items"
             # HACK There's no list of content items object so we return an array of string
             "[String]"
+          elsif property["type"] == "uuid"
+            # uuid is a string
+            "String"
           elsif property["type"].include?('{ "unread_count": "integer" }')
+            # HACK TODO this should probably be a different type.
+            "Int"
+          elsif property["type"].include?('{ "count": "integer" }')
             # HACK TODO this should probably be a different type.
             "Int"
           elsif return_type
@@ -76,6 +88,12 @@ module CanvasApi
     def canvas_name(type, input_type = false)
       # Remove chars and fix spelling errors
       name = type.split('|').first.strip.gsub(" ", "_").singularize.gsub("MediaTrackk", "MediaTrack")
+
+      # Handle comment in type
+      if name.include?("BlackoutDate_The_result_(which_should_match_the_input_with_maybe_some_different_IDs).")
+        name = "BlackoutDate"
+      end
+
       "LMSGraphQL::Types::Canvas::Canvas#{name}#{input_type ? 'Input' : ''}"
     end
 
@@ -98,9 +116,9 @@ module CanvasApi
       when "boolean"
         "Boolean"
       when "datetime"
-        "LMSGraphQL::Types::DateTimeType"
+        "GraphQL::Types::ISO8601DateTime"
       when "date"
-        "LMSGraphQL::Types::DateTimeType"
+        "GraphQL::Types::ISO8601DateTime"
       else
         raise "Unable to match requested primitive '#{type}' to GraphQL Type."
       end
@@ -192,7 +210,7 @@ field :#{name.underscore}, #{type}, "#{description}", resolver_method: :resolve_
     end
 
     def is_basic_type(type)
-      ["Int", "String", "Boolean", "LMSGraphQL::Types::DateTimeType", "Float", "ID"].include?(type)
+      ["Int", "String", "Boolean", "GraphQL::Types::ISO8601DateTime", "Float", "ID"].include?(type)
     end
 
     def no_brackets_period(str)
@@ -203,9 +221,15 @@ field :#{name.underscore}, #{type}, "#{description}", resolver_method: :resolve_
       str.underscore.split("/").last.split("|").first.gsub(/^canvas_?/, "").gsub(" ", "_").strip.singularize
     end
 
+    def make_bespoke_file_name(str)
+      str.underscore.split("/").last.split("|").first.gsub(" ", "_").strip.singularize
+    end
+
     def require_from_operation(operation)
       type = no_brackets_period(type_from_operation(@operation))
-      if !is_basic_type(type)
+      if type.include?("CanvasBespoke")
+        "require_relative \"../../types/canvas_bespoke/#{make_bespoke_file_name(type)}\""
+      elsif !is_basic_type(type)
         "require_relative \"../../types/canvas/#{make_file_name(type)}\""
       end
     end
