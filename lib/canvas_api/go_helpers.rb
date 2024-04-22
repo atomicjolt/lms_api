@@ -327,7 +327,9 @@ module CanvasApi
         puts "Using string type for '#{name}' ('#{property}') of type object."
         "map[string](interface{})"
       else
-        if property["type"] == "list of content items"
+        if property["type"] == "array of outcome ids"
+          "[]string"
+        elsif property["type"] == "list of content items"
           # HACK There's no list of content items object so we return an array of string
           "[]string"
         elsif property["type"].include?('{ "unread_count": "integer" }')
@@ -365,6 +367,8 @@ module CanvasApi
         elsif property["type"] == "GroupMembership | Progress"
           "no-op" # this is handled further up the stack
         elsif property["type"] == "URL"
+          "string"
+        elsif property["type"] == "uuid"
           "string"
         else
           raise "Unable to match '#{name}' requested property '#{property}' to Go Type."

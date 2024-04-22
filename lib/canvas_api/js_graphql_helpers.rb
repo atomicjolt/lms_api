@@ -93,6 +93,13 @@ module CanvasApi
       return str unless str.is_a?(String)
       str.gsub('"', "'")
     end
+
+    def graphql_resolver_class(name)
+      # HACK Some resolvers have both singular and plural versions, so keep the plural on those
+      return name.camelize if name == "get_custom_colors"
+
+      name.classify
+    end
   end
 
 end

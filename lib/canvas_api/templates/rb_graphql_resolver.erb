@@ -4,7 +4,7 @@ require_relative "../canvas_base_resolver"
 module LMSGraphQL
   module Resolvers
     module Canvas
-      class <%= @nickname.classify %> < CanvasBaseResolver
+      class <%= graphql_resolver_class(@nickname) %> < CanvasBaseResolver
         type <%= type_from_operation(operation) %>, null: false
 <% if operation["type"] == "array"
 %>        argument :get_all, Boolean, required: false
