@@ -532,6 +532,20 @@ describe LMS::Canvas do
     end
   end
 
+  describe "delete_token" do
+    it "deletes the token" do
+      api = LMS::Canvas.new(@authentication.provider_url, @authentication, REFRESH_OPTIONS)
+      result = http_party_post_response(200, "OK", '')
+      expect(HTTParty).to receive(:delete).
+        with("#{@base_uri}/login/oauth2/token",
+          headers: @api.headers,
+          query: {},
+        ).and_return(result).ordered
+      api.delete_token
+    end
+  end
+
+
   it "only allows query params in the query" do
     id = 5
     course_id = 6

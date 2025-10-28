@@ -186,6 +186,18 @@ module LMS
       end
     end
 
+    def delete_token(expire_sessions: false)
+      url = full_url("login/oauth2/token", false)
+      params = if expire_sessions
+                  {expire_sessions: true}
+                else
+                  {}
+               end
+      refreshably do
+        HTTParty.delete(url, headers: headers, query: params)
+      end
+    end
+
     def refresh_token
       payload = {
         grant_type: "refresh_token"
