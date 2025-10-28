@@ -318,7 +318,7 @@ describe LMS::Canvas do
 
         expect(HTTParty).to receive(:post).
           with("#{@base_uri}/login/oauth2/token",
-               headers: { "Authorization" => "Bearer anewtoken", "User-Agent" => "LMS-API Ruby" },
+               headers: { "Authorization" => "Bearer anewtoken"},
                body: { grant_type: "refresh_token" }.merge(REFRESH_OPTIONS)).
           and_return(@refresh_result).ordered
 
@@ -328,7 +328,7 @@ describe LMS::Canvas do
         expect(HTTParty).to receive(:get).
           with(
             "#{@base_uri}/api/v1/courses",
-            headers: {"Authorization" => "Bearer anewtoken", "User-Agent" => "LMS-API Ruby" },
+            headers: {"Authorization" => "Bearer anewtoken"},
           ).
           and_return(@initial_result)
 

@@ -96,7 +96,6 @@ module LMS
     def headers(additional_headers = {})
       {
         "Authorization" => "Bearer #{@authentication.token}",
-        "User-Agent" => "LMS-API Ruby"
       }.merge(additional_headers)
     end
 
