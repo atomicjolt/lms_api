@@ -318,7 +318,7 @@ describe LMS::Canvas do
 
         expect(HTTParty).to receive(:post).
           with("#{@base_uri}/login/oauth2/token",
-               headers: { "Authorization" => "Bearer anewtoken", "User-Agent" => "LMS-API Ruby" },
+               headers: { "Authorization" => "Bearer anewtoken"},
                body: { grant_type: "refresh_token" }.merge(REFRESH_OPTIONS)).
           and_return(@refresh_result).ordered
 
@@ -328,7 +328,7 @@ describe LMS::Canvas do
         expect(HTTParty).to receive(:get).
           with(
             "#{@base_uri}/api/v1/courses",
-            headers: {"Authorization" => "Bearer anewtoken", "User-Agent" => "LMS-API Ruby" },
+            headers: {"Authorization" => "Bearer anewtoken"},
           ).
           and_return(@initial_result)
 
@@ -531,6 +531,20 @@ describe LMS::Canvas do
       expect(@api.check_result(result)).to eq(result)
     end
   end
+
+  describe "delete_token" do
+    it "deletes the token" do
+      api = LMS::Canvas.new(@authentication.provider_url, @authentication, REFRESH_OPTIONS)
+      result = http_party_post_response(200, "OK", '')
+      expect(HTTParty).to receive(:delete).
+        with("#{@base_uri}/login/oauth2/token",
+          headers: @api.headers,
+          query: {},
+        ).and_return(result).ordered
+      api.delete_token
+    end
+  end
+
 
   it "only allows query params in the query" do
     id = 5
