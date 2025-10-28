@@ -2,3 +2,4 @@
 pkg/
 .byebug_history
 .env
+vendor/
